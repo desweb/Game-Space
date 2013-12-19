@@ -13,14 +13,7 @@
 
 App::before(function($request)
 {
-	if (App::environment() == 'production')
-	{
-		Config::set('cache.query_remember', 30);
-	}
-	else if (App::environment() == 'development')
-	{
-		Config::set('cache.query_remember', 0);
-	}
+	setlocale (LC_ALL, 'fr_FR.UTF8');
 });
 
 

@@ -1,15 +1,43 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
+// Erreur
+//App::error(function(Exception $exception) { return Response::view('error.index'); });
+
+App::missing(function($exception) { return Response::view('error.404', array(), 404); });
+
+/**
+ * Backoffice
+ */
+
+Route::group(array('prefix' => 'administration'), function()
+{
+	// Home
+	Route::get('/', array('as' => 'admin_home', 'uses' => 'Admin_HomeController@index'));
+});
+
+/**
+ * API
+ */
+
+Route::group(array('prefix' => 'api'), function()
+{
+	// Home
+	Route::get('/', array('as' => 'admin_home', 'uses' => 'Admin_HomeController@index'));
+});
+
+/**
+ * API-documentation
+ */
+
+Route::group(array('prefix' => 'api-documentation'), function()
+{
+	// Home
+	Route::get('/', array('as' => 'admin_home', 'uses' => 'Admin_HomeController@index'));
+});
+
+/**
+ * Front
+ */
 
 Route::get('/', function()
 {
