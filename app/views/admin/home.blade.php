@@ -24,5 +24,12 @@
 				@endif
 			</a>
 		</div>
+		<hr/>
+		<div class="text-center">
+			<a href="{{ Config::get('url_sensiolab_project') }}" target="_blank">
+				{{ HTML::image(Config::get('url_sensiolab_insight_medal'), 'Médaille Sensiolab Insight') }}
+			</a>
+		</div>
 	</div>
 @stop
+

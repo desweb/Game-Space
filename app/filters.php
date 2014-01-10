@@ -17,6 +17,9 @@ App::before(function($request)
 
 	Config::set('title', 'GameSpace');
 
+	Config::set('url_sensiolab_insight_medal', 'https://insight.sensiolabs.com/projects/b53d9e87-a580-4503-bf10-9fc2e0d2de5f/big.png');
+	Config::set('url_sensiolab_project', 'https://insight.sensiolabs.com/account/widget?project=b53d9e87-a580-4503-bf10-9fc2e0d2de5f');
+
 	Config::set('url_analytics', 'https://www.google.com/analytics/web/?hl=fr&pli=1#report/visitors-overview/a46865258w77998084p80641792/');
 
 	Config::set('email_signature', '<p>L\'équipe GameSpace</p>');
