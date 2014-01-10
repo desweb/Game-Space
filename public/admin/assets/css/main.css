@@ -115,6 +115,7 @@ body.padTop53 {
 @media (min-width: 992px) {
   #left {
     width: 220px;
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
   }
   #left #menu.affix {
     width: 220px;
@@ -525,8 +526,8 @@ body.padTop53 {
   #menu:after,
   .mini-sidebar #menu:after {
     display: block;
-    -webkit-box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
-    box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    /*-webkit-box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);*/
     content: " ";
     position: absolute;
     left: 0px;
@@ -538,8 +539,8 @@ body.padTop53 {
   }
   .side-right #menu:after,
   .side-right.mini-sidebar #menu:after {
-    -webkit-box-shadow: 3px 1px 5px 2px rgba(0, 0, 0, 0.6);
-    box-shadow: 3px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    /*-webkit-box-shadow: 3px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 3px 1px 5px 2px rgba(0, 0, 0, 0.6);*/
   }
 }
 @media (min-width: 992px) {
@@ -557,12 +558,12 @@ body.padTop53 {
     position: relative;
   }
   #menu:after {
-    -webkit-box-shadow: 217px 1px 5px 2px rgba(0, 0, 0, 0.6);
-    box-shadow: 217px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    /*-webkit-box-shadow: 217px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 217px 1px 5px 2px rgba(0, 0, 0, 0.6);*/
   }
   .mini-sidebar #menu:after {
-    -webkit-box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
-    box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    /*-webkit-box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);
+    box-shadow: 97px 1px 5px 2px rgba(0, 0, 0, 0.6);*/
   }
 }
 #menu .fa.arrow {
@@ -672,8 +673,8 @@ body.padTop53 {
 /* END CONTENT STYLES */
 /* BEGIN FOOTER */
 #footer {
-  background-image: url("../img/pattern/px_by_Gre3g.png");
-  background-repeat: repeat;
+  /*background-image: url("../img/pattern/px_by_Gre3g.png");
+  background-repeat: repeat;*/
   color: #f9f9f9;
   margin: 0 auto;
 }
@@ -2638,7 +2639,8 @@ body.error .logo h1 {
 .login {
   padding-top: 40px;
   padding-bottom: 40px;
-  background: url("../img/pattern/black_paper.png") repeat #444444;
+  /*background: url("../img/pattern/black_paper.png") repeat #444444;*/
+  background-color:#333;
 }
 .login .form-signin {
   max-width: 330px;
@@ -2665,7 +2667,7 @@ body.error .logo h1 {
 .login .form-signin input[type="email"]:focus {
   z-index: 2;
 }
-.login .form-signin input[type="text"] {
+.login .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -2675,8 +2677,8 @@ body.error .logo h1 {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-.login .form-signin input[type="email"] {
+/*.login .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-radius: 0;
-}
+}*/
 /* END LOGIN PAGE STYLES */

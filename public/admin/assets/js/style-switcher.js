@@ -27,23 +27,23 @@ var styleSwitcher = {
         // Style Switcher CSS
         yepnope([
         {
-            load: 'assets/css/style-switcher.css'
+            load: 'admin/assets/css/style-switcher.css'
         },
         {
-            load: 'assets/lib/colorpicker/css/colorpicker.css'
+            load: 'admin/assets/lib/colorpicker/css/colorpicker.css'
         },
         {
-            load: 'assets/lib/cssbeautify/cssbeautify.js'
+            load: 'admin/assets/lib/cssbeautify/cssbeautify.js'
         },
         {
-            load: 'assets/lib/colorpicker/js/bootstrap-colorpicker.js',
+            load: 'admin/assets/lib/colorpicker/js/bootstrap-colorpicker.js',
             complete: function () {
                 yepnope([
                 {
-                    load: 'less!assets/less/theme.less'
+                    load: 'less!admin/assets/less/theme.less'
                 },
                 {
-                    load: 'assets/lib/less-1.5.1.min.js',
+                    load: 'admin/assets/lib/less-1.5.1.min.js',
                     complete: function () {
                         $this.build();
                         if (Modernizr.localstorage) {
@@ -76,7 +76,7 @@ var styleSwitcher = {
             }
             if (localStorage.pattern) {
                 $('body') .css({
-                    'background': 'url(assets/img/pattern/' + localStorage.pattern + '.png) repeat'
+                    'background': 'url(admin/assets/img/pattern/' + localStorage.pattern + '.png) repeat'
                 });
             }
         }

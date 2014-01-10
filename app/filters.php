@@ -13,7 +13,13 @@
 
 App::before(function($request)
 {
-	setlocale (LC_ALL, 'fr_FR.UTF8');
+	LocaleManager::current();
+
+	Config::set('title', 'GameSpace');
+
+	Config::set('url_analytics', 'https://www.google.com/analytics/web/?hl=fr&pli=1#report/visitors-overview/a46865258w77998084p80641792/');
+
+	Config::set('email_signature', '<p>L\'équipe GameSpace</p>');
 });
 
 
