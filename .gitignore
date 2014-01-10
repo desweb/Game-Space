@@ -8,3 +8,7 @@ sftp-config.json
 /bootstrap/start.php
 /app/config/app.php
 /app/config/database.php
+/public/admin/*
+/public/images/*
+/public/css/*
+/public/js/*
