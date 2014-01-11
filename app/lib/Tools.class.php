@@ -8,7 +8,7 @@ class Tools
 
 	public static function generateReference()
 	{
-		return uniqid();
+		return md5(uniqid(rand(), true));
 	}
 
 	public static function generatePassword($length = 8)
