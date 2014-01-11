@@ -43,7 +43,7 @@
     </a>
     <ul>
       <li>
-        <a href="icon.html">
+        <a href="{{ route('admin_manage_main') }}" target="_blank">
           <i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Gestion de la carte principale
         </a>
       </li>

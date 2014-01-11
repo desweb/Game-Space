@@ -17,4 +17,9 @@ class Admin_MapController extends BaseController
 	{
 		return View::make('admin.map.index');
 	}
+
+	public function manageMain()
+	{
+		return View::make('admin.map.manageMain');
+	}
 }

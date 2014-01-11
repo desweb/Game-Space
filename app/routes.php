@@ -59,6 +59,9 @@ Route::group(array('prefix' => 'administration'), function()
 
 	Route::post('utilisateur/{id}/editer/validation', array('as' => 'admin_user_edit_validation', 'uses' => 'Admin_UserController@editValidation'))->where('id', '^\d+$');
 
+	// Map
+	Route::get('carte/gestion-carte-principale', array('as' => 'admin_manage_main', 'uses' => 'Admin_MapController@manageMain'));
+
 	// Game
 	Route::get('jeu',					array('as' => 'admin_game',			'uses' => 'Admin_GameController@index'));
 	Route::get('jeu/ajouter',			array('as' => 'admin_game_add',		'uses' => 'Admin_GameController@add'));
