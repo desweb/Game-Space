@@ -76,4 +76,13 @@ class MailManager
 	 * Front
 	 */
 
+	public static function userAdd($user)
+	{
+		Mail::send('emails.user.add',
+			array('user' => $user),
+			function($message) use ($user)
+		{
+			$message->to($user->email, $user->username)->subject('Création de votre compte');
+		});
+	}
 }

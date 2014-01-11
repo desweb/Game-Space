@@ -29,14 +29,14 @@ class Admin_AdministratorController extends BaseController
 
 		if ($validator->fails()) return Redirect::to(URL::previous())->withErrors($validator)->withInput();
 
-		if (User::byEmail(Input::get('email'))) return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utilisé.')->withInput();
+		if (User::byEmail(Input::get('email')))			return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utilisé.')	->withInput();
+		if (User::byUsername(Input::get('username')))	return Redirect::to(URL::previous())->with('message_error', 'Ce pseudo est déjà utilisé.')	->withInput();
 
 		$administrator = new User;
-		$administrator->setUsername(Input::get('username'));
+		$administrator->username	= Input::get('username');
 		$administrator->email		= Input::get('email');
 		$administrator->birthday_at	= date('Y-m-d', strtotime(Input::get('birthday_at')));
 		$administrator->setTypeAdministrator();
-		$administrator->setStatusActive();
 
 		$password = Tools::generatePassword();
 		$administrator->setPassword($password);
@@ -65,8 +65,8 @@ class Admin_AdministratorController extends BaseController
 		if (User::checkUsernameExist(Input::get('username'),$administrator->id)) return Redirect::to(URL::previous())->with('message_error', 'Ce pseudo est déjà utlisé.');
 		if (User::checkEmailExist(Input::get('email'),		$administrator->id)) return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utlisé.');
 
-		$administrator->setUsername(Input::get('username'));
-		$administrator->email = Input::get('email');
+		$administrator->username= Input::get('username');
+		$administrator->email	= Input::get('email');
 		$administrator->setBirthdayAt(Input::get('birthday_at'));
 		$administrator->save();
 

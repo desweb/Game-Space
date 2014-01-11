@@ -103,7 +103,7 @@ Route::group(array('prefix' => 'api'), function()
 	Route::post('auth/add/{hash}',	array('as' => 'api_auth_add',		'uses' => 'Api_AuthController@add'));
 	Route::post('auth/password',	array('as' => 'api_auth_password',	'uses' => 'Api_AuthController@password'));
 
-	Route::put('auth/{token}', array('as' => 'api_auth_update','uses' => 'Api_AuthController@update'))->where('token', '^[0-9a-f]{32}$');
+	Route::post('auth/update/{hash}', array('as' => 'api_auth_update','uses' => 'Api_AuthController@update'))->where('hash', '^[0-9a-f]{32}$');
 
 	Route::delete('auth/{token}', array('as' => 'api_auth_delete','uses' => 'Api_AuthController@delete'))->where('token', '^[0-9a-f]{32}$');
 

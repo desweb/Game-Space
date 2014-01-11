@@ -2,11 +2,11 @@
 
 class UserToken extends Eloquent
 {
-	const LIFE_TIME_REGISTRATION_VALIDATION	= 2592000;
-	const LIFE_TIME_PASSWORD_LOST			= 1800;
+	const LIFE_TIME_PASSWORD_LOST	= 1800;
+	const LIFE_TIME_AUTH			= 3600;
 
-	const TYPE_REGISTRATION_VALIDATION	= 1;
-	const TYPE_PASSWORD_LOST			= 2;
+	const TYPE_AUTH			= 1;
+	const TYPE_PASSWORD_LOST= 2;
 
 	/**
 	 * The database table used by the model.
@@ -14,6 +14,15 @@ class UserToken extends Eloquent
 	 * @var string
 	 */
 	protected $table = 'user_token';
+
+	/**
+	 * Magic methods
+	 */
+
+	public function __construct()
+	{
+		$this->token = Tools::generateUniqId();
+	}
 
 	/**
 	 * Specify
@@ -46,32 +55,43 @@ class UserToken extends Eloquent
 	 * Getters
 	 */
 
-	public function getLifeTime()
+	private function getLifeTime()
 	{
 		switch ($this->type)
 		{
-			case self::TYPE_REGISTRATION_VALIDATION	: return self::LIFE_TIME_REGISTRATION_VALIDATION;	break;
-			case self::TYPE_PASSWORD_LOST			: return self::LIFE_TIME_PASSWORD_LOST;				break;
+			case self::TYPE_PASSWORD_LOST	: return self::LIFE_TIME_PASSWORD_LOST;	break;
+			case self::TYPE_AUTH			: return self::LIFE_TIME_AUTH;			break;
 			default: throw new Exception('You need to set type before to get token life time.');
 		}
+	}
+
+	public function getApiInformations()
+	{
+		return array(
+			'token'		=> $this->token,
+			'expired_at'=> strtotime($this->expired_at));
 	}
 
 	/**
 	 * Setters
 	 */
 
-	public function setToken()
-	{
-		$this->token = md5(uniqid());
-	}
-
-	public function setExpiredAt()
+	private function setExpiredAt()
 	{
 		$this->expired_at = date('Y-m-d H:i:s', time() + $this->getLifeTime());
 	}
 
-	public function setTypeRegistrationValidation	() { $this->type = self::TYPE_REGISTRATION_VALIDATION; }
-	public function setTypePasswordLost				() { $this->type = self::TYPE_PASSWORD_LOST; }
+	public function setTypePasswordLost()
+	{
+		$this->type = self::TYPE_PASSWORD_LOST;
+		$this->setExpiredAt();
+	}
+
+	public function setTypeAuth()
+	{
+		$this->type = self::TYPE_AUTH;
+		$this->setExpiredAt();
+	}
 
 	/**
 	 * Checks

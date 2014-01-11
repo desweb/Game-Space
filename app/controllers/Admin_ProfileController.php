@@ -32,7 +32,7 @@ class Admin_ProfileController extends BaseController
 
 		if ($user_username && $user_username->id != Auth::user()->id) return Redirect::route('admin_profile')->with('message_error', 'Ce pseudo est déjà utlisé.');
 
-		Auth::user()->setUsername(Input::get('username'));
+		Auth::user()->username		= Input::get('username');
 		Auth::user()->email			= Input::get('email');
 		Auth::user()->birthday_at	= date('Y-m-d', strtotime(Input::get('birthday_at')));
 		Auth::user()->save();

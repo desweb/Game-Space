@@ -49,4 +49,20 @@ class AuthValidator
                 'password_confirm.same'     => 'Mauvaise confirmation du mot de passe.'
             ));
     }
+
+    public static function apiUpdate()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'reference' => array('required', 'regex:/^[0-9a-f]{32}$/'),
+                'time'      => array('required', 'numeric')
+            ),
+            array(
+                'reference.required'=> 'La référence est obligatoire.',
+                'reference.regex'   => 'La référence est incorrect.',
+                'time.required'     => 'Le timestamp est obligatoire.',
+                'time.numeric'      => 'Le timestamp est invalide.'
+            ));
+    }
 }

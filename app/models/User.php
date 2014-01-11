@@ -66,7 +66,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public function __construct()
 	{
-		$this->reference = Tools::generateReference();
+		$this->reference = Tools::generateUniqId();
+		$this->setStateActive();
 	}
 
 	/**
@@ -121,6 +122,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return $is_fail? $q->firstOrFail(): $q->first();
 	}
 
+	public static function userByReference($reference, $is_fail = false)
+	{
+		$q = self::where('type',		self::TYPE_USER)
+					->where('reference',$reference);
+
+		return $is_fail? $q->firstOrFail(): $q->first();
+	}
+
+	public static function userByEmail($email, $is_fail = false)
+	{
+		$q = self::where('type',	self::TYPE_USER)
+					->where('email',$email);
+
+		return $is_fail? $q->firstOrFail(): $q->first();
+	}
+
 	public static function adminById($id, $is_fail = false)
 	{
 		$q = self::where('type',	self::TYPE_ADMINISTRATOR)
@@ -161,7 +178,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public function achievements()
 	{
-		return $this->hasMany('Achievement', 'user_id');
+		return $this->hasMany('UserAchievement', 'user_id');
 	}
 
 	public function games()
@@ -184,6 +201,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 		Session::put('user',	$this);
 		Session::put('user_id',	$this->id);
+
+		$this->setAuthToken();
 	}
 
 	public static function autoLogin()
@@ -201,6 +220,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public static function logout()
 	{
+		if (Auth::user()->token) Auth::user()->token->delete();
+
 		Auth::logout();
 
 		Session::flush();
@@ -225,7 +246,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		$games			= $this->games;
 		$witnesses		= $this->witnesses;
 
-		if ($token)		$token	->delete();
+		if ($token) $token->delete();
 
 		foreach ($achievements	as $achievement)$achievement->delete();
 		foreach ($games			as $game)		$game		->delete();
@@ -245,11 +266,64 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return Cookie::make('remember', array('email' => $this->email, 'password' => $this->password), time() + self::COOKIE_LIFE_TIME);
 	}
 
+	public function getApiInformations()
+	{
+		$user_token = UserToken::byUserIdAndType($this->id, UserToken::TYPE_AUTH);
+
+		$response = array(
+			'user_token' 	=> $user_token->getApiInformations(),
+			'reference'		=> $this->reference,
+			'username'		=> $this->username,
+			'email'			=> $this->email,
+			'birthday_at'	=> strtotime($this->birthday_at),
+			'is_newsletter'	=> $this->is_newsletter? 1: 0,
+			'facebook_id'	=> $this->facebook_id? $this->facebook_id: 0,
+			'photo_url'		=> $this->photo->url);
+
+		$achievements_json	= array();
+		$games_json			= array();
+		$witnesses_json		= array();
+
+		foreach ($this->achievements as $achievement)
+		{
+			$achievement_json = array();
+			$achievement_json['reference']	= $achievement->reference;
+			$achievement_json['score']		= $achievement->score;
+			$achievement_json['is_unlock']	= $achievement->is_unlock? 1: 0;
+
+			$achievements_json[$achievement->achievement->reference] = $achievement_json;
+		}
+
+		foreach ($this->games as $game)
+		{
+			$game_json = array();
+			$game_json['reference']	= $game->reference;
+			$game_json['level']		= $game->score;
+			$game_json['score']		= $game->is_unlock? 1: 0;
+
+			$games_json[$game->game->reference] = $game_json;
+		}
+
+		foreach ($this->witnesses as $witness)
+		{
+			$witness_json = array();
+			$witness_json['star']	= $witness->star;
+			$witness_json['message']= $witness->message;
+			$witness_json['state']	= $witness->state;
+
+			$witnesses_json[$game->game->reference] = $witness_json;
+		}
+
+		$response['achievements']	= $achievements_json;
+		$response['games']			= $games_json;
+		$response['witnesses']		= $witnesses_json;
+
+		return $response;
+	}
+
 	/**
 	 * Setters
 	 */
-
-	public function setUsername	($username)	{ $this->username = $username; }
 
 	public function setPassword	($password)	{ $this->password = self::cryptPassword($password); }
 
@@ -273,10 +347,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 	public function setTypeAdministrator() { $this->type = self::TYPE_ADMINISTRATOR; }
 	public function setTypeUser			() { $this->type = self::TYPE_USER; }
 
-	public function setStatusActive		() { $this->state = self::STATE_ACTIVE; }
-	public function setStatusInactive	() { $this->state = self::STATE_INACTIVE; }
-	public function setStatusBan		() { $this->state = self::STATE_BAN; }
-	public function setStatusValidation	() { $this->state = self::STATE_VALIDATION; }
+	public function setStateActive		() { $this->state = self::STATE_ACTIVE; }
+	public function setStateInactive	() { $this->state = self::STATE_INACTIVE; }
+	public function setStateBan			() { $this->state = self::STATE_BAN; }
+	public function setStateValidation	() { $this->state = self::STATE_VALIDATION; }
+
+	public function setAuthToken()
+	{
+		if ($this->token) $this->token->delete();
+
+		$token = new UserToken;
+		$token->user_id = $this->id;
+		$token->setTypeAuth();
+		$token->save();
+
+		$this->token = $token;
+	}
 
 	/**
 	 * Check

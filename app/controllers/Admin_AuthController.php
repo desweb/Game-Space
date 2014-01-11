@@ -60,9 +60,7 @@ class Admin_AuthController extends BaseController
 
 		$user_token = new UserToken;
 		$user_token->user_id = $user->id;
-		$user_token->setToken();
 		$user_token->setTypePasswordLost();
-		$user_token->setExpiredAt();
 		$user_token->save();
 
 		MailManager::adminLostPassword($user_token);

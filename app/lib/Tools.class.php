@@ -6,7 +6,7 @@ class Tools
 	 * Generation
 	 */
 
-	public static function generateReference()
+	public static function generateUniqId()
 	{
 		return md5(uniqid(rand(), true));
 	}

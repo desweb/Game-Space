@@ -33,8 +33,8 @@ class Admin_UserController extends BaseController
 		if (User::checkUsernameExist(Input::get('username'), $user->id))return Redirect::to(URL::previous())->with('message_error', 'Ce pseudo est déjà utlisé.');
 		if (User::checkEmailExist(Input::get('email'), $user->id))		return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utlisé.');
 
-		$user->setUsername(Input::get('username'));
-		$user->email = Input::get('email');
+		$user->username	= Input::get('username');
+		$user->email	= Input::get('email');
 		$user->setBirthdayAt(Input::get('birthday_at'));
 		$user->save();
 
@@ -68,7 +68,7 @@ class Admin_UserController extends BaseController
 
 		if ($user->isBan()) return Redirect::route('admin_user_edit', array('id' => $user->id))->with('message_error', 'Utilisateur <b>' . $user->username . '</b> déjà banni.');
 
-		$user->setStatusBan();
+		$user->setStateBan();
 		$user->save();
 
 		MailManager::userBan($user);

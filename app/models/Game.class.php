@@ -13,7 +13,7 @@ class Game extends Eloquent
 
 	public function __construct()
 	{
-		$this->reference = Tools::generateReference();
+		$this->reference = Tools::generateUniqId();
 	}
 
 	/**
