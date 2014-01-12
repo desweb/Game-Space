@@ -17,8 +17,8 @@ App::before(function($request)
 
 	Config::set('title', 'GameSpace');
 
-	Config::set('url_sensiolab_insight_medal', 'https://insight.sensiolabs.com/projects/b53d9e87-a580-4503-bf10-9fc2e0d2de5f/big.png');
-	Config::set('url_sensiolab_project', 'https://insight.sensiolabs.com/account/widget?project=b53d9e87-a580-4503-bf10-9fc2e0d2de5f');
+	Config::set('url_sensiolab_insight_medal',	'https://insight.sensiolabs.com/projects/b53d9e87-a580-4503-bf10-9fc2e0d2de5f/big.png');
+	Config::set('url_sensiolab_project',		'https://insight.sensiolabs.com/account/widget?project=b53d9e87-a580-4503-bf10-9fc2e0d2de5f');
 
 	Config::set('url_analytics', 'https://www.google.com/analytics/web/?hl=fr&pli=1#report/visitors-overview/a46865258w77998084p80641792/');
 
@@ -29,6 +29,21 @@ App::before(function($request)
 App::after(function($request, $response)
 {
 	//
+});
+
+Route::when('api/*', 'api_ajax');
+
+Route::filter('api_ajax', function()
+{
+    //if (!Request::ajax()) return ApiErrorManager::errorLogs(array('It\'s not a ajax request.'));
+});
+
+Route::filter('api_token', function($route)
+{
+	if (!$user_token = UserToken::byTokenAndValid($route->getParameter('token'))) return ApiErrorManager::errorLogs(array('Token invalide.'));
+
+	Auth::login($user_token->user);
+	Config::set('api_user_id', $user_token->user->id);
 });
 
 /*

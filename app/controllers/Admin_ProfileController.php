@@ -65,5 +65,4 @@ class Admin_ProfileController extends BaseController
 
 		return  Redirect::to(URL::previous())->with('message_success', 'Mot de passe mis à jour.');
 	}
-
 }

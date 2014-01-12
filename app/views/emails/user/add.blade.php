@@ -2,4 +2,4 @@
 
 <p>Bienvenue sur la GameSpace!</p>
 
-<p>L'équipe GameSpace</p>
+{{ Config::get('email_signature') }}

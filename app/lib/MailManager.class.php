@@ -85,4 +85,15 @@ class MailManager
 			$message->to($user->email, $user->username)->subject('Création de votre compte');
 		});
 	}
+
+	public static function lostPassword($user_token)
+	{
+		Mail::send('emails.auth.password',
+			array('user_token'=> $user_token),
+			function($message) use ($user_token)
+		{
+			$message->to($user_token->user->email, $user_token->user->username)->subject('Réinitialiser mon mot de passe');
+		});
+	}
+
 }

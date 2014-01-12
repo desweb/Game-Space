@@ -327,7 +327,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public function setPassword	($password)	{ $this->password = self::cryptPassword($password); }
 
-	public function setBirthdayAt($birthday_at) { $this->birthday_at = date('Y-m-d', strtotime($birthday_at)); }
+	public function setBirthdayAt	($birthday_at)	{ $this->birthday_at = date('Y-m-d', strtotime($birthday_at)); }
+	public function setBirthdayTime	($birthday_time){ $this->birthday_at = date('Y-m-d', (int) $birthday_time); }
 
 	public function setPhoto()
 	{
@@ -359,6 +360,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		$token = new UserToken;
 		$token->user_id = $this->id;
 		$token->setTypeAuth();
+		$token->save();
+
+		$this->token = $token;
+	}
+
+	public function setPasswordLostToken()
+	{
+		if ($this->token) $this->token->delete();
+
+		$token = new UserToken;
+		$token->user_id = $this->id;
+		$token->setTypePasswordLost();
 		$token->save();
 
 		$this->token = $token;

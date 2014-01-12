@@ -98,38 +98,48 @@ Route::group(array('prefix' => 'api'), function()
 	// Home
 	Route::get('/', array('as' => 'api_home', 'uses' => 'Api_HomeController@index'));
 
-	// Auth TODO
-	Route::post('auth',				array('as' => 'api_auth',			'uses' => 'Api_AuthController@index'));
-	Route::post('auth/add/{hash}',	array('as' => 'api_auth_add',		'uses' => 'Api_AuthController@add'));
-	Route::post('auth/password',	array('as' => 'api_auth_password',	'uses' => 'Api_AuthController@password'));
+	// Auth
+	Route::group(array('prefix' => 'auth'), function()
+	{
+		Route::post('/',			array('as' => 'api_auth',			'uses' => 'Api_AuthController@index'));
+		Route::post('add/{hash}',	array('as' => 'api_auth_add',		'uses' => 'Api_AuthController@add'));
+		Route::post('password',		array('as' => 'api_auth_password',	'uses' => 'Api_AuthController@password'));
+		Route::post('update/{hash}',array('as' => 'api_auth_update',	'uses' => 'Api_AuthController@update'))->where('hash', '^[0-9a-f]{32}$');
 
-	Route::post('auth/update/{hash}', array('as' => 'api_auth_update','uses' => 'Api_AuthController@update'))->where('hash', '^[0-9a-f]{32}$');
+		Route::delete('{token}', array('as' => 'api_auth_delete','uses' => 'Api_AuthController@delete'))->where('token', '^[0-9a-f]{32}$');
+	});
 
-	Route::delete('auth/{token}', array('as' => 'api_auth_delete','uses' => 'Api_AuthController@delete'))->where('token', '^[0-9a-f]{32}$');
+	Route::group(array('prefix' => 'me', 'before' => 'api_token'), function()
+	{
+		// User
+		Route::post('{token}',								array('as' => 'api_user_update',			'uses' => 'Api_UserController@update'))		->where('token', '^[0-9a-f]{32}$');
+		Route::post('{token}/photo',						array('as' => 'api_user_update_photo',		'uses' => 'Api_UserController@photo'))		->where('token', '^[0-9a-f]{32}$');
+		Route::post('{token}/password',						array('as' => 'api_user_update_password',	'uses' => 'Api_UserController@password'))	->where('token', '^[0-9a-f]{32}$');
+		Route::post('{token}/newsletter/{is_newsletter}',	array('as' => 'api_user_update_newsletter',	'uses' => 'Api_UserController@newsletter'))	->where('token', '^[0-9a-f]{32}$')->where('is_newsletter', '^1|0$');
 
-	// User TODO
-	Route::put('me/{token}',							array('as' => 'api_user_update',			'uses' => 'Api_UserController@update'))		->where('token', '^[0-9a-f]{32}$');
-	Route::put('me/{token}/photo',						array('as' => 'api_user_update_photo',		'uses' => 'Api_UserController@photo'))		->where('token', '^[0-9a-f]{32}$');
-	Route::put('me/{token}/password',					array('as' => 'api_user_update_password',	'uses' => 'Api_UserController@password'))	->where('token', '^[0-9a-f]{32}$');
-	Route::put('me/{token}/newsletter/{is_newsletter}',	array('as' => 'api_user_update_newsletter',	'uses' => 'Api_UserController@newsletter'))	->where('token', '^[0-9a-f]{32}$');
+		Route::delete('{token}', array('as' => 'api_user_delete', 'uses' => 'Api_UserController@delete'))->where('token', '^[0-9a-f]{32}$');
 
-	Route::delete('me/{token}', array('as' => 'api_user_delete', 'uses' => 'Api_UserController@delete'))->where('token', '^[0-9a-f]{32}$');
+		// Game TODO
+		Route::post('{token}/game/{reference}', array('as' => 'api_game_update', 'uses' => 'Api_GameController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
 
-	// Game TODO
-	Route::put('me/{token}/game/{reference}', array('as' => 'api_game_update', 'uses' => 'Api_GameController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
+		// Achievement TODO
+		Route::post('{token}/achievement/{reference}', array('as' => 'api_achievement_update', 'uses' => 'Api_GameController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
+	});
 
 	// Rank TODO
-	Route::get('rank',					array('as' => 'api_rank',		'uses' => 'Api_RankController@index'));
-	Route::get('rank/game/{reference}',	array('as' => 'api_rank_game',	'uses' => 'Api_RankController@game'));
-
-	// Achievement TODO
-	Route::put('me/{token}/achievement/{reference}', array('as' => 'api_achievement_update', 'uses' => 'Api_GameController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
+	Route::group(array('prefix' => 'rank', 'before' => 'api_token'), function()
+	{
+		Route::get('/',					array('as' => 'api_rank',		'uses' => 'Api_RankController@index'));
+		Route::get('game/{reference}',	array('as' => 'api_rank_game',	'uses' => 'Api_RankController@game'));
+	});
 
 	// Map TODO
-	Route::post('map', array('as' => 'api_map_add', 'uses' => 'Api_MapController@add'));
-
-	Route::put('map/main',			array('as' => 'api_map_main_update','uses' => 'Api_MapController@main'));
-	Route::put('map/{reference}',	array('as' => 'api_map_update',		'uses' => 'Api_MapController@update'))->where('reference', '^[0-9a-f]{32}$');
+	Route::group(array('prefix' => 'map', 'before' => 'api_token'), function()
+	{
+		Route::post('/',			array('as' => 'api_map_add',		'uses' => 'Api_MapController@add'));
+		Route::post('main',			array('as' => 'api_map_main_update','uses' => 'Api_MapController@main'));
+		Route::post('{reference}',	array('as' => 'api_map_update',		'uses' => 'Api_MapController@update'))->where('reference', '^[0-9a-f]{32}$');
+	});
 });
 
 /**

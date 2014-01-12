@@ -42,6 +42,14 @@ class UserToken extends Eloquent
 					->first();
 	}
 
+	public static function byTokenAndValid($token)
+	{
+		return self::where('token',	$token)
+					->where('type',	self::TYPE_AUTH)
+					->where('expired_at', '>', date('Y-m-d H-i-s'))
+					->first();
+	}
+
 	/**
 	 * Joins
 	 */

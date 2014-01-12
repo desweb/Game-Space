@@ -89,6 +89,20 @@ class Api_AuthController extends BaseController
 		return Response::json($user->token->getApiInformations());
 	}
 
+	public function password()
+	{
+		$validator = AuthValidator::lostPassword();
+
+		if ($validator->fails())							return ApiErrorManager::errorLogs($validator->errors()->all());
+		if (!$user = User::userByEmail(Input::get('email')))return ApiErrorManager::errorLogs(array('Identifiants de connexion incorrects.'));
+
+		$user->setPasswordLostToken();
+
+		MailManager::lostPassword($user->token);
+
+		return Response::json(array('is_success' => 1));
+	}
+
 	public function delete()
 	{
 		User::logout();

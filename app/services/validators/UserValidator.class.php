@@ -73,4 +73,51 @@ class UserValidator
             ));
     }
 
+    public static function apiEdit()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'username'      => array('required'),
+                'email'         => array('required', 'email'),
+                'birthday_time' => array('required', 'numeric')
+            ),
+            array(
+                'username.required'     => 'Le pseudo est obligatoire.',
+                'email.required'        => 'L\'email est obligatoire.',
+                'email.email'           => 'L\'email est invalide.',
+                'birthday_time.required'=> 'La date de naissance est obligatoire.',
+                'birthday_time.numeric' => 'La date de naissance est invalide.'
+            ));
+    }
+
+    public static function apiPhoto()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'photo' => array('required', 'mimes:jpeg,png', 'max:1024')
+            ),
+            array(
+                'photo.required'=> 'L\'avatar est obligatoire.',
+                'photo.mimes'   => 'L\'avatar doit être au format JPEG ou PNG.',
+                'photo.size'    => 'L\'avatar ne doit pas dépasser 1Mo.'
+            ));
+    }
+
+    public static function apiPassword()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'old_password'  => array('required', 'regex:/^[0-9a-f]{32}$/'),
+                'password'      => array('required', 'regex:/^[0-9a-f]{32}$/')
+            ),
+            array(
+                'old_password.required' => 'Le mot de passe est obligatoire.',
+                'old_password.regex'    => 'Le mot de passe est invalide.',
+                'password.required'     => 'Le nouveau mot de passe est obligatoire.',
+                'password.regex'        => 'Le nouveau mot de passe est invalide.'
+            ));
+    }
 }
