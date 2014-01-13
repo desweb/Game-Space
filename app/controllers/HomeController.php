@@ -4,6 +4,9 @@ class HomeController extends BaseController
 {
 	public function index()
 	{
+		// TMP Hack
+		if (Auth::check()) User::logout();
+
 		return View::make('home')
 					->with('game',			'')
 					->with('games',			array())

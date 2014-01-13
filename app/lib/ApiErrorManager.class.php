@@ -17,10 +17,16 @@ class ApiErrorManager
 			'logs'			=> $errors_json));
 	}
 
-	public static function error401()
+	public static function error($error = 1)
 	{
+		switch($error)
+		{
+			case 401: $description = 'Unauthorized access'; break;
+			default	: $description = 'Unknown error';
+		}
+
 		return self::generateError(array(
-			'code'			=> 401,
-			'description'	=> 'Unauthorized access'));
+			'code'			=> $error,
+			'description'	=> $description));
 	}
 }

@@ -16,7 +16,7 @@ class Api_UserController extends BaseController
 	{
 		$validator = UserValidator::apiEdit();
 
-		if ($validator->fails())												return Redirect::to(URL::previous())->withErrors($validator);
+		if ($validator->fails())												return ApiErrorManager::errorLogs($validator->errors()->all());
 		if (User::checkUsernameExist(Input::get('username'),$this->user->id))	return ApiErrorManager::errorLogs(array('Ce pseudo est déjà utlisé.'));
 		if (User::checkEmailExist(Input::get('email'),		$this->user->id))	return ApiErrorManager::errorLogs(array('Cet email est déjà utlisé.'));
 
@@ -32,7 +32,7 @@ class Api_UserController extends BaseController
 	{
 		$validator = UserValidator::apiPhoto();
 
-		if ($validator->fails()) return Redirect::to(URL::previous())->withErrors($validator);
+		if ($validator->fails()) return ApiErrorManager::errorLogs($validator->errors()->all());
 
 		$this->user->setPhoto();
 		$this->user->save();
@@ -44,7 +44,7 @@ class Api_UserController extends BaseController
 	{
 		$validator = UserValidator::apiPassword();
 
-		if ($validator->fails()) return Redirect::route('admin_profile')->withErrors($validator);
+		if ($validator->fails()) return ApiErrorManager::errorLogs($validator->errors()->all());
 
 		if (Input::get('old_password') != $this->user->password) return ApiErrorManager::errorLogs(array('Mot de passe incorrect.'));
 

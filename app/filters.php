@@ -31,11 +31,25 @@ App::after(function($request, $response)
 	//
 });
 
+/**
+ * Admin
+ */
+
+Route::filter('admin_auth', function()
+{
+	if (!Auth::check())						return Redirect::route('admin_login');
+	if (!Auth::user()->isAdministrator())	return Redirect::route('home');
+});
+
+/**
+ * API
+ */
+
 Route::when('api/*', 'api_ajax');
 
 Route::filter('api_ajax', function()
 {
-    //if (!Request::ajax()) return ApiErrorManager::errorLogs(array('It\'s not a ajax request.'));
+	//if (!Request::ajax()) return ApiErrorManager::errorLogs(array('It\'s not a ajax request.'));
 });
 
 Route::filter('api_token', function($route)
@@ -43,7 +57,12 @@ Route::filter('api_token', function($route)
 	if (!$user_token = UserToken::byTokenAndValid($route->getParameter('token'))) return ApiErrorManager::errorLogs(array('Token invalide.'));
 
 	Auth::login($user_token->user);
-	Config::set('api_user_id', $user_token->user->id);
+});
+
+Route::filter('api_auth_admin', function()
+{
+	if (!Auth::check())						return ApiErrorManager::error(401);
+	if (!Auth::user()->isAdministrator())	return ApiErrorManager::error(401);
 });
 
 /*

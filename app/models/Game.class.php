@@ -13,7 +13,8 @@ class Game extends Eloquent
 
 	public function __construct()
 	{
-		$this->reference = Tools::generateUniqId();
+		$this->reference= Tools::generateUniqId();
+		$this->datas	= json_encode(array('pos' => array('x' => 0, 'y' => 0)));
 	}
 
 	/**
@@ -34,6 +35,13 @@ class Game extends Eloquent
 	public static function byId($id, $is_fail = false)
 	{
 		return $is_fail? self::findOrFail($id): self::find($id);
+	}
+
+	public static function byReferenceActive($reference)
+	{
+		return self::where('reference',	$reference)
+					->where('state',	self::STATE_ACTIVE)
+					->first();
 	}
 
 	public static function byTitle($title, $is_fail = false)

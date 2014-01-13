@@ -16,6 +16,17 @@ class UserAchievement extends Eloquent
 	}
 
 	/**
+	 * Specify
+	 */
+
+	public static function userByReference($reference)
+	{
+		return self::where('reference',	$reference)
+					->where('user_id',	Auth::user()->id)
+					->first();
+	}
+
+	/**
 	 * Joins
 	 */
 

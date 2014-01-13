@@ -25,9 +25,18 @@ class Init extends Migration {
 		Schema::create('image', function($table)
 		{
 			$table->bigIncrements('id');
-			$table->string('url')->unique();
-			$table->string('server_path')->unique();
+			$table->string('url')			->unique();
+			$table->string('server_path')	->unique();
 			$table->smallInteger('type', 1);
+			$table->timestamps();
+		});
+
+		Schema::create('map', function($table)
+		{
+			$table->bigIncrements('id');
+			$table->string('title')->unique();
+			$table->text('description');
+			$table->text('datas');
 			$table->timestamps();
 		});
 
@@ -38,21 +47,22 @@ class Init extends Migration {
 		Schema::create('game', function($table)
 		{
 			$table->bigIncrements('id');
-			$table->string('reference', 32)->unique();
-			$table->string('title')->unique();
+			$table->string('reference', 32)	->unique();
+			$table->string('title')			->unique();
 			$table->text('description');
+			$table->text('datas');
 			$table->smallInteger('state', 1);
 			$table->unsignedBigInteger('image_id');
-			$table->foreign('image_id')->references('id')->on('image')->onDelete('cascade');
+			$table->foreign('image_id')->references('id')->on('image');
 			$table->timestamps();
 		});
 
 		Schema::create('user', function($table)
 		{
 			$table->bigIncrements('id');
-			$table->string('reference', 32)->unique();
-			$table->string('username', 50)->unique();
-			$table->string('email')->unique();
+			$table->string('reference', 32)	->unique();
+			$table->string('username', 50)	->unique();
+			$table->string('email')			->unique();
 			$table->string('password', 32);
 			$table->date('birthday_at');
 			$table->smallInteger('type', 1);
@@ -60,7 +70,7 @@ class Init extends Migration {
 			$table->boolean('is_newsletter');
 			$table->bigInteger('facebook_id');
 			$table->unsignedBigInteger('photo_id');
-			$table->foreign('photo_id')->references('id')->on('image')->onDelete('cascade');
+			$table->foreign('photo_id')->references('id')->on('image');
 			$table->timestamps();
 		});
 
@@ -92,10 +102,26 @@ class Init extends Migration {
 		{
 			$table->bigIncrements('id');
 			$table->string('reference', 32)->unique();
+			$table->string('title');
+			$table->text('description');
+			$table->integer('score');
+			$table->smallInteger('state', 1);
+			$table->boolean('is_unlock');
+			$table->unsignedBigInteger('image_id');
+			$table->foreign('image_id')->references('id')->on('image');
+			$table->timestamps();
+		});
+
+		Schema::create('user_achievement', function($table)
+		{
+			$table->bigIncrements('id');
+			$table->string('reference', 32)->unique();
 			$table->integer('score');
 			$table->boolean('is_unlock');
+			$table->unsignedBigInteger('achievement_id');
 			$table->unsignedBigInteger('user_id');
-			$table->foreign('user_id')->references('id')->on('user');
+			$table->foreign('achievement_id')	->references('id')->on('achievement');
+			$table->foreign('user_id')			->references('id')->on('user');
 			$table->timestamps();
 		});
 
@@ -127,8 +153,10 @@ class Init extends Migration {
 		// And delete tables without foreign key
 		Schema::drop('game');
 		Schema::drop('user');
-		Schema::drop('user_game');
+		Schema::drop('user_token');
+		Schema::drop('game_user');
 		Schema::drop('achievement');
-		Schema::drop('witness');
+		Schema::drop('user_achievement');
+		Schema::drop('game_witness');
 	}
 }
