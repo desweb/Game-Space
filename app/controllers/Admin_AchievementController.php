@@ -4,15 +4,6 @@ use App\Services\Validators\UserValidator;
 
 class Admin_AchievementController extends BaseController
 {
-	public function __construct()
-	{
-		$this->beforeFilter(function()
-		{
-			if (!Auth::check())						return Redirect::route('admin_login');
-			if (!Auth::user()->isAdministrator())	return Redirect::route('home');
-		});
-	}
-
 	public function index()
 	{
 		return View::make('admin.administrator.index')->with('administrators', User::administrators());

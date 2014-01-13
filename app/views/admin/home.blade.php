@@ -30,5 +30,6 @@
 				{{ HTML::image(Config::get('url_sensiolab_insight_medal'), 'Médaille Sensiolab Insight') }}
 			</a>
 		</div>
+		<hr/>
 	</div>
 @stop

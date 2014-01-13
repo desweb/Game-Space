@@ -4,18 +4,6 @@ use App\Services\Validators\AuthValidator;
 
 class Admin_AuthController extends BaseController
 {
-	public function __construct()
-	{
-		$this->beforeFilter(function()
-		{
-			if (Route::currentRouteName() == 'admin_registration_token_validation') User::logout();
-
-			if (Auth::check() && !Auth::user()->isAdministrator()) return Redirect::route('home');
-
-			if ((Auth::check() && Route::currentRouteName() != 'admin_logout')) return Redirect::route('admin_home');
-		});
-	}
-
 	public function index()
 	{
 		return View::make('admin.auth.index');

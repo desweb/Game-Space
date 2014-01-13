@@ -35,6 +35,13 @@ App::after(function($request, $response)
  * Admin
  */
 
+Route::filter('admin_unauth', function()
+{
+	if (Route::currentRouteName() == 'admin_registration_token_validation')	User::logout();
+	if (Auth::check()	&& !Auth::user()->isAdministrator())				return Redirect::route('home');
+	if ((Auth::check()	&& Route::currentRouteName() != 'admin_logout'))	return Redirect::route('admin_home');
+});
+
 Route::filter('admin_auth', function()
 {
 	if (!Auth::check())						return Redirect::route('admin_login');

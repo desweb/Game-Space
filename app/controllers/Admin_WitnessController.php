@@ -4,15 +4,6 @@ use App\Services\Validators\WitnessValidator;
 
 class Admin_WitnessController extends BaseController
 {
-	public function __construct()
-	{
-		$this->beforeFilter(function()
-		{
-			if (!Auth::check())						return Redirect::route('admin_login');
-			if (!Auth::user()->isAdministrator())	return Redirect::route('home');
-		});
-	}
-
 	public function index()
 	{
 		return View::make('admin.witness.index')->with('witnesses', GameWitness::allList());
