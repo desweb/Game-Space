@@ -29,6 +29,16 @@ class Admin_GameController extends BaseController
 		$game->setImage();
 		$game->save();
 
+		$users = User::users();
+
+		foreach($users as $user)
+		{
+			$game_user = new GameUser;
+			$game_user->game_id = $game->id;
+			$game_user->user_id = $user->id;
+			$game_user->save();
+		}
+
 		return Redirect::route('admin_game_edit', array('id' => $game->id))->with('message_success', 'Jeu <b>' . $game->title . '</b> créé.');
 	}
 
