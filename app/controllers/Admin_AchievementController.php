@@ -1,86 +1,99 @@
 <?php
 
-use App\Services\Validators\UserValidator;
+use App\Services\Validators\AchievementValidator;
 
 class Admin_AchievementController extends BaseController
 {
 	public function index()
 	{
-		return View::make('admin.administrator.index')->with('administrators', User::administrators());
+		return View::make('admin.achievement.index')->with('achievements', Achievement::allList());
 	}
 
 	public function add()
 	{
-		return View::make('admin.administrator.add');
+		return View::make('admin.achievement.add');
 	}
 
 	public function addValidation()
 	{
-		$validator = UserValidator::adminAdd();
+		$validator = AchievementValidator::adminAdd();
 
-		if ($validator->fails()) return Redirect::to(URL::previous())->withErrors($validator)->withInput();
+		if ($validator->fails())						return Redirect::to(URL::previous())->withErrors($validator)->withInput();
+		if (Achievement::byTitle(Input::get('title')))	return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utilisé.')->withInput();
 
-		if (User::byEmail(Input::get('email')))			return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utilisé.')	->withInput();
-		if (User::byUsername(Input::get('username')))	return Redirect::to(URL::previous())->with('message_error', 'Ce pseudo est déjà utilisé.')	->withInput();
+		$achievement = new Achievement;
+		$achievement->title			= Input::get('title');
+		$achievement->score			= Input::get('score');
+		$achievement->description	= Input::get('description');
+		$achievement->setImage();
+		$achievement->save();
 
-		$administrator = new User;
-		$administrator->username	= Input::get('username');
-		$administrator->email		= Input::get('email');
-		$administrator->birthday_at	= date('Y-m-d', strtotime(Input::get('birthday_at')));
-		$administrator->setTypeAdministrator();
+		$users = User::users();
 
-		$password = Tools::generatePassword();
-		$administrator->setPassword($password);
+		foreach($users as $user)
+		{
+			$user_achievement = new UserAchievement;
+			$user_achievement->achievement_id	= $achievement->id;
+			$user_achievement->user_id			= $user->id;
+			$user_achievement->save();
+		}
 
-		$administrator->setPhoto();
-		$administrator->save();
-
-		MailManager::adminAdd($administrator, $password);
-
-		return Redirect::route('admin_administrator_edit', array('id' => $administrator->id))->with('message_success', 'Administrateur <b>' . $administrator->username . '</b> créé.');
+		return Redirect::route('admin_achievement_edit', array('id' => $achievement->id))->with('message_success', 'Trophée <b>' . $achievement->title . '</b> créé.');
 	}
 
 	public function edit($id)
 	{
-		return View::make('admin.administrator.edit', array('administrator' => User::adminById($id, true)));
+		return View::make('admin.achievement.edit', array('achievement' => Achievement::byId($id, true)));
 	}
 
 	public function editValidation($id)
 	{
-		$validator = UserValidator::adminEdit();
+		$validator = AchievementValidator::adminEdit();
 
 		if ($validator->fails()) return Redirect::to(URL::previous())->withErrors($validator);
 
-		$administrator = User::adminById($id, true);
+		$achievement = Achievement::byId($id, true);
 
-		if (User::checkUsernameExist(Input::get('username'),$administrator->id)) return Redirect::to(URL::previous())->with('message_error', 'Ce pseudo est déjà utlisé.');
-		if (User::checkEmailExist(Input::get('email'),		$administrator->id)) return Redirect::to(URL::previous())->with('message_error', 'Cet email est déjà utlisé.');
+		if (Achievement::checkTitleExist(Input::get('title'), $achievement->id)) return Redirect::to(URL::previous())->with('message_error', 'Ce titre est déjà utlisé.')->withInput();
 
-		$administrator->username= Input::get('username');
-		$administrator->email	= Input::get('email');
-		$administrator->setBirthdayAt(Input::get('birthday_at'));
-		$administrator->save();
+		$achievement->title			= Input::get('title');
+		$achievement->score			= Input::get('score');
+		$achievement->description	= Input::get('description');
+		$achievement->save();
 
-		return Redirect::to(URL::previous())->with('message_success', 'Administrateur <b>' . $administrator->username . '</b> mis à jour.');
+		return Redirect::to(URL::previous())->with('message_success', 'Trophée <b>' . $achievement->title . '</b> mis à jour.');
+	}
+
+	public function imageValidation($id)
+	{
+		$validator = AchievementValidator::adminImage();
+
+		if ($validator->fails()) return Redirect::to(URL::previous())->withErrors($validator);
+
+		$achievement = Achievement::byId($id, true);
+		$achievement->setImage();
+		$achievement->save();
+
+		return Redirect::to(URL::previous())->with('message_success', 'Image du trophée <b>' . $achievement->title . '</b> mise à jour.');
 	}
 
 	public function state($id, $state)
 	{
-		$administrator = User::adminById($id, true);
-		$administrator->state = $state;
-		$administrator->save();
+		$achievement = Achievement::byId($id, true);
+		$achievement->state = $state;
+		$achievement->save();
 
-		return Redirect::to(URL::previous())->with('message_success', 'Administrateur <b>' . $administrator->username . '</b> ' . ($administrator->isActive()? 'activé': 'désactivé') . '.');
+		return Redirect::to(URL::previous())->with('message_success', 'Trophée <b>' . $achievement->title . '</b> ' . ($achievement->isActive()? 'activé': 'désactivé') . '.');
 	}
 
 	public function delete($id)
 	{
-		$administrator = User::adminById($id, true);
+		$achievement = Achievement::byId($id, true);
 
-		$username = $administrator->username;
+		$title = $achievement->title;
 
-		$administrator->delete();
+		$achievement->delete();
 
-		return Redirect::route('admin_administrator')->with('message_success', 'Administrateur <b>' . $username . '</b> supprimé.');
+		return Redirect::route('admin_achievement')->with('message_success', 'Trophée <b>' . $title . '</b> supprimé.');
 	}
 }

@@ -15,6 +15,7 @@ class Game extends Eloquent
 	{
 		$this->reference= Tools::generateUniqId();
 		$this->datas	= json_encode(array('pos' => array('x' => 0, 'y' => 0)));
+		$this->setStateInactive();
 	}
 
 	/**
@@ -140,8 +141,8 @@ class Game extends Eloquent
 
 	public function displayState()
 	{
-		return $this->isActive()?	'<a class="actions" href="' . route('admin_game_state', array('id' => $this->id, 'state' => self::STATE_INACTIVE))	. '" title="Désactiver le jeu '	. $this->username . '" data-toggle="tooltip">' . HTML::image('images/icons/online.png')		. '</a>':
-									'<a class="actions" href="' . route('admin_game_state', array('id' => $this->id, 'state' => self::STATE_ACTIVE))	. '" title="Activer le jeu '	. $this->username . '" data-toggle="tooltip">' . HTML::image('images/icons/offline.png')	. '</a>';
+		return $this->isActive()?	'<a class="actions" href="' . route('admin_game_state', array('id' => $this->id, 'state' => self::STATE_INACTIVE))	. '" title="Désactiver le jeu '	. $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/online.png')		. '</a>':
+									'<a class="actions" href="' . route('admin_game_state', array('id' => $this->id, 'state' => self::STATE_ACTIVE))	. '" title="Activer le jeu '	. $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/offline.png')	. '</a>';
 	}
 
 	public function displayEdit()

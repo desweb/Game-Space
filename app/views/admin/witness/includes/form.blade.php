@@ -2,17 +2,21 @@
 
 	<div class="form-group">
 		{{ Form::label('user', 'Propriétaire', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $witness->displayUser() }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('user', $witness->user->username, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('game', 'Jeu', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $witness->displayGame() }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('user', $witness->game->title, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('star', 'Note', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $witness->displayStar() }}</p></div>
+		<div class="col-lg-8"><p class="text-form-control">{{ $witness->displayStar() }}</p></div>
 	</div>
 
 	<div class="form-group">

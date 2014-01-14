@@ -1,3 +1,3 @@
 <div id="footer">
-	<p>2013 &copy; Metis Admin</p>
+	<p>{{ date('Y') }} &copy; GameSpace</p>
 </div>

@@ -3,7 +3,9 @@
 	@if (isset($game))
 		<div class="form-group">
 			{{ Form::label('reference', 'Référence', array('class' => 'control-label col-lg-4')) }}
-			<div class="col-lg-8"><p>{{ $game->reference }}</p></div>
+			<div class="col-lg-8">
+				{{ Form::text('reference', $game->reference, array('class' => 'form-control', 'disabled' => true)) }}
+			</div>
 		</div>
 	@else
 		<div class="form-group">

@@ -2,23 +2,33 @@
 
 	<div class="form-group">
 		{{ Form::label('username', 'Expéditeur', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $contact->username }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('reference', $contact->username, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('email', 'Email', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $contact->email }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('reference', $contact->email, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('object', 'Objet', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $contact->getObject() }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('reference', $contact->getObject(), array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('message', 'Message', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $contact->message }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::textarea('message', $contact->message, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
+
+	<hr/>
 
 	<div class="form-group">
 		{{ Form::label('answer', 'Réponse', array('class' => 'control-label col-lg-4')) }}

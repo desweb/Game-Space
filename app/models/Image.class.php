@@ -2,20 +2,24 @@
 
 class Image extends Eloquent
 {
-	const TYPE_PROFILE	= 1;
-	const TYPE_GAME		= 2;
+	const TYPE_PROFILE		= 1;
+	const TYPE_GAME			= 2;
+	const TYPE_ACHIEVEMENT	= 3;
 
 	private static $server_paths = array(
-		self::TYPE_PROFILE => '/homez.488/deswebcr/www/_game/game-space/public/uploads/profile/',
-		self::TYPE_GAME => '/homez.488/deswebcr/www/_game/game-space/public/uploads/game/');
+		self::TYPE_PROFILE		=> '/homez.488/deswebcr/www/_game/game-space/public/uploads/profile/',
+		self::TYPE_GAME			=> '/homez.488/deswebcr/www/_game/game-space/public/uploads/game/',
+		self::TYPE_ACHIEVEMENT	=> '/homez.488/deswebcr/www/_game/game-space/public/uploads/achievement/');
 
 	private static $url_paths = array(
-		self::TYPE_PROFILE	=> 'http://game-space.desweb-creation.fr/uploads/profile/',
-		self::TYPE_GAME		=> 'http://game-space.desweb-creation.fr/uploads/game/');
+		self::TYPE_PROFILE		=> 'http://game-space.desweb-creation.fr/uploads/profile/',
+		self::TYPE_GAME			=> 'http://game-space.desweb-creation.fr/uploads/game/',
+		self::TYPE_ACHIEVEMENT	=> 'http://game-space.desweb-creation.fr/uploads/achievement/');
 
 	private static $sizes = array(
-		self::TYPE_PROFILE	=> array('width' => 150, 'height' => 150),
-		self::TYPE_GAME		=> array('width' => 250, 'height' => 250));
+		self::TYPE_PROFILE		=> array('width' => 150, 'height' => 150),
+		self::TYPE_GAME			=> array('width' => 250, 'height' => 250),
+		self::TYPE_ACHIEVEMENT	=> array('width' => 250, 'height' => 250));
 
 	protected $table = 'image';
 
@@ -84,8 +88,9 @@ class Image extends Eloquent
 	{
 		switch($this->type)
 		{
-			case self::TYPE_PROFILE	: $this->owner->photo_id = $this->id; break;
-			case self::TYPE_GAME	: $this->owner->image_id = $this->id; break;
+			case self::TYPE_PROFILE		: $this->owner->photo_id = $this->id; break;
+			case self::TYPE_GAME		: $this->owner->image_id = $this->id; break;
+			case self::TYPE_ACHIEVEMENT	: $this->owner->image_id = $this->id; break;
 		}
 
 		if ($this->is_owner_save) $this->owner->save();
@@ -163,6 +168,7 @@ class Image extends Eloquent
 		$this->ownerSave();
 	}
 
-	public function setTypeProfile	() { $this->type = self::TYPE_PROFILE; }
-	public function setTypeGame		() { $this->type = self::TYPE_GAME; }
+	public function setTypeProfile		() { $this->type = self::TYPE_PROFILE; }
+	public function setTypeGame			() { $this->type = self::TYPE_GAME; }
+	public function setTypeAchievement	() { $this->type = self::TYPE_ACHIEVEMENT; }
 }

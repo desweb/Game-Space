@@ -7,7 +7,9 @@
 
 	<div class="form-group">
 		{{ Form::label('reference', 'Référence', array('class' => 'control-label col-lg-4')) }}
-		<div class="col-lg-8"><p>{{ $user->reference }}</p></div>
+		<div class="col-lg-8">
+			{{ Form::text('reference', $user->reference, array('class' => 'form-control', 'disabled' => true)) }}
+		</div>
 	</div>
 
 	<div class="form-group">

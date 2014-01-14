@@ -25,7 +25,6 @@ class Admin_GameController extends BaseController
 		$game = new Game;
 		$game->title		= Input::get('title');
 		$game->description	= Input::get('description');
-		$game->setStateInactive();
 		$game->setImage();
 		$game->save();
 
@@ -74,7 +73,7 @@ class Admin_GameController extends BaseController
 		$game->setImage();
 		$game->save();
 
-		return Redirect::to(URL::previous())->with('message_success', 'Image du jeu <b>' . $game->title . '</b> mis à jour.');
+		return Redirect::to(URL::previous())->with('message_success', 'Image du jeu <b>' . $game->title . '</b> mise à jour.');
 	}
 
 	public function state($id, $state)

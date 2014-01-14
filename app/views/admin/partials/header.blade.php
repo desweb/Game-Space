@@ -65,34 +65,47 @@
 
     <div class="main-bar">
       <h3>
-        @if (Route::currentRouteName() == 'admin_home')
-          <i class="fa fa-dashboard"></i> Dashboard
-        @elseif (Route::currentRouteName() == 'admin_profile')
+        @if (Route::currentRouteName() == 'admin_profile')
           <i class="fa fa-user"></i> Mon profil
+
+        @elseif (Route::currentRouteName() == 'admin_home')
+          <i class="fa fa-dashboard"></i> Dashboard
+
         @elseif (Route::currentRouteName() == 'admin_administrator')
           <i class="fa fa-user"></i> Administrateurs
         @elseif (Route::currentRouteName() == 'admin_administrator_add')
           <i class="fa fa-user"></i> Ajouter un administrateur
         @elseif (Route::currentRouteName() == 'admin_administrator_edit')
           <i class="fa fa-user"></i> Editer l'administrateur
+
         @elseif (Route::currentRouteName() == 'admin_user')
           <i class="fa fa-user"></i> Utilisateurs
         @elseif (Route::currentRouteName() == 'admin_user_edit')
           <i class="fa fa-user"></i> Editer l'utilisateur
-        @elseif (Route::currentRouteName() == 'admin_witness')
-          <i class="fa fa-comment"></i> Témoignages
-        @elseif (Route::currentRouteName() == 'admin_witness_edit')
-          <i class="fa fa-comment"></i> Editer le témoignage
-        @elseif (Route::currentRouteName() == 'admin_contact')
-          <i class="fa fa-envelope"></i> Messages
-        @elseif (Route::currentRouteName() == 'admin_contact_show')
-          <i class="fa fa-envelope"></i> Répondre au message
+
         @elseif (Route::currentRouteName() == 'admin_game')
           <i class="fa fa-bookmark"></i> Jeux
         @elseif (Route::currentRouteName() == 'admin_game_add')
           <i class="fa fa-bookmark"></i> Ajouter un jeu
         @elseif (Route::currentRouteName() == 'admin_game_edit')
           <i class="fa fa-bookmark"></i> Editer le jeu
+
+        @elseif (Route::currentRouteName() == 'admin_achievement')
+          <i class="fa fa-star"></i> Trophée
+        @elseif (Route::currentRouteName() == 'admin_achievement_add')
+          <i class="fa fa-star"></i> Ajouter un trophée
+        @elseif (Route::currentRouteName() == 'admin_achievement_edit')
+          <i class="fa fa-star"></i> Editer le trophée
+
+        @elseif (Route::currentRouteName() == 'admin_witness')
+          <i class="fa fa-comment"></i> Témoignages
+        @elseif (Route::currentRouteName() == 'admin_witness_edit')
+          <i class="fa fa-comment"></i> Editer le témoignage
+
+        @elseif (Route::currentRouteName() == 'admin_contact')
+          <i class="fa fa-envelope"></i> Messages
+        @elseif (Route::currentRouteName() == 'admin_contact_show')
+          <i class="fa fa-envelope"></i> Répondre au message
         @endif
       </h3>
     </div>

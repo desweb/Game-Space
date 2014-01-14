@@ -72,6 +72,24 @@
       </li>
     </ul>
   </li>
+  <li{{ Route::currentRouteName() == 'admin_achievement' || Route::currentRouteName() == 'admin_achievement_add' || Route::currentRouteName() == 'admin_achievement_edit'? ' class="active"': ''}}>
+    <a href="javascript:;">
+      <i class="fa fa-star"></i>&nbsp;&nbsp;&nbsp;Trophée
+      <span class="fa arrow"></span>
+    </a>
+    <ul>
+      <li>
+        <a href="{{ route('admin_achievement') }}">
+          <i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Tous les trophées
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('admin_achievement_add') }}">
+          <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Ajouter un trophée
+        </a>
+      </li>
+    </ul>
+  </li>
   <li{{ Route::currentRouteName() == 'admin_witness' || Route::currentRouteName() == 'admin_witness_edit'? ' class="active"': ''}}>
     <a href="{{ route('admin_witness') }}">
       <i class="fa fa-comment"></i>
