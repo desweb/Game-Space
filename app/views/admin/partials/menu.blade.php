@@ -36,19 +36,24 @@
       <span class="link-title">&nbsp;&nbsp;Utilisateurs</span>
     </a>
   </li>
-  <li>
+  <li{{ Route::currentRouteName() == 'admin_map'? ' class="active"': ''}}>
     <a href="javascript:;">
       <i class="fa fa-globe"></i>&nbsp;&nbsp;&nbsp;Cartes
       <span class="fa arrow"></span>
     </a>
     <ul>
       <li>
-        <a href="{{ route('admin_manage_main') }}" target="_blank">
+        <a href="{{ route('admin_map_main') }}">
+          <i class="fa fa-star"></i>&nbsp;&nbsp;&nbsp;Gestion de la carte principale
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('admin_map') }}" target="_blank">
           <i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Gestion de la carte principale
         </a>
       </li>
       <li>
-        <a href="button.html">
+        <a href="{{ route('admin_map_add') }}" target="_blank">
           <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;G&eacute;n&eacute;rateur de carte
         </a>
       </li>

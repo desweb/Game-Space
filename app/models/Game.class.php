@@ -57,6 +57,11 @@ class Game extends Eloquent
 		return $is_fail? $q->firstOrFail(): $q->first();
 	}
 
+	public static function main()
+	{
+		return self::where('is_main', true)->first();
+	}
+
 	/**
 	 * Joins
 	 */
@@ -122,6 +127,8 @@ class Game extends Eloquent
 
 	public function isActive	() { return $this->state == self::STATE_ACTIVE; }
 	public function isInactive	() { return $this->state == self::STATE_INACTIVE; }
+
+	public function isMain() { return $this->is_main; }
 
 	public static function checkTitleExist($title, $id_exit)
 	{

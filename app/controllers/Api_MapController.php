@@ -4,22 +4,6 @@ use App\Services\Validators\MapValidator;
 
 class Api_MapController extends BaseController
 {
-	public function add()
-	{
-		$validator = MapValidator::add();
-
-		if ($validator->fails())				return ApiErrorManager::errorLogs($validator->errors()->all());
-		if (Map::byTitle(Input::get('title')))	return ApiErrorManager::errorLogs(array('Ce titre est déjà utlisé.'));
-
-		$map = new Map;
-		$map->title			= Input::get('title');
-		$map->description	= Input::get('description');
-		$map->datas			= Input::get('datas');
-		$map->save();
-
-		return Response::json(array('is_success' => 1));
-	}
-
 	public function main()
 	{
 		$games = Input::get('games');
@@ -33,6 +17,24 @@ class Api_MapController extends BaseController
 		}
 
 		return Response::json(array('is_success' => 1));
+	}
+
+	public function add()
+	{
+		$validator = MapValidator::add();
+
+		if ($validator->fails())				return ApiErrorManager::errorLogs($validator->errors()->all());
+		if (Map::byTitle(Input::get('title')))	return ApiErrorManager::errorLogs(array('Ce titre est déjà utlisé.'));
+
+		$map = new Map;
+		$map->title			= Input::get('title');
+		$map->description	= Input::get('description');
+		$map->datas			= Input::get('datas');
+		$map->save();
+
+		return Response::json(array(
+			'is_success'=> 1,
+			'id'		=> $map->id));
 	}
 
 	public function update($id)

@@ -8,7 +8,7 @@
 				<span>U. Analitycs</span>
 			</a>
 			<a class="quick-btn" href="{{ route('admin_witness') }}">
-				<i class="fa fa-envelope fa-2x"></i>
+				<i class="fa fa-comment fa-2x"></i>
 				<span>Témoignages</span>
 
 				@if ($total_witnesses_waiting)
