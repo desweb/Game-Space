@@ -160,6 +160,11 @@ Route::group(array('prefix' => 'api'), function()
 		// Game user
 		Route::post('{token}/game/{reference}', array('as' => 'api_game_update', 'uses' => 'Api_GameUserController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
 
+		// Game witness
+		Route::post('{token}/game/{reference}/witness', array('as' => 'api_witness', 'uses' => 'Api_WitnessController@index'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
+
+		Route::delete('{token}/game/{reference}/witness', array('as' => 'api_witness_delete', 'uses' => 'Api_WitnessController@delete'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
+
 		// User achievement
 		Route::post('{token}/achievement/{reference}', array('as' => 'api_achievement_update', 'uses' => 'Api_UserAchievementController@update'))->where('token', '^[0-9a-f]{32}$')->where('reference', '^[0-9a-f]{32}$');
 	});

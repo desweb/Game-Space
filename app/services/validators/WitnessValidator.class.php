@@ -16,4 +16,19 @@ class WitnessValidator
                 'message.required' => 'Le témoignage est obligatoire.'
             ));
     }
+
+    public static function api()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'star'      => array('required', 'numeric'),
+                'message'   => array('required')
+            ),
+            array(
+                'star.required'     => 'La note est obligatoire.',
+                'star.numeric'      => 'La note doit être un nombre.',
+                'message.required'  => 'Le témoignage est obligatoire.'
+            ));
+    }
 }

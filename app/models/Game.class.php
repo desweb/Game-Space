@@ -38,6 +38,11 @@ class Game extends Eloquent
 		return $is_fail? self::findOrFail($id): self::find($id);
 	}
 
+	public static function byReference($reference)
+	{
+		return self::where('reference', $reference)->first();
+	}
+
 	public static function byReferenceActive($reference)
 	{
 		return self::where('reference',	$reference)

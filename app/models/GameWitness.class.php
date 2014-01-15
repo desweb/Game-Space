@@ -8,6 +8,15 @@ class GameWitness extends Eloquent
 	protected $table = 'game_witness';
 
 	/**
+	 * Magic methods
+	 */
+
+	public function __construct()
+	{
+		$this->setStateWaiting();
+	}
+
+	/**
 	 * Global
 	 */
 
@@ -30,6 +39,13 @@ class GameWitness extends Eloquent
 		return $is_fail? self::findOrFail($id): self::find($id);
 	}
 
+	public static function userByGameId($game_id)
+	{
+		return self::where('user_id',	Auth::user()->id)
+					->where('game_id',	$game_id)
+					->first();
+	}
+
 	/**
 	 * Joins
 	 */
@@ -43,6 +59,13 @@ class GameWitness extends Eloquent
 	{
 		return $this->belongsTo('Game', 'game_id');
 	}
+
+	/**
+	 * Setters
+	 */
+
+	public function setStateValidated	() { $this->state = self::STATE_VALIDATED; }
+	public function setStateWaiting		() { $this->state = self::STATE_WAITING; }
 
 	/**
 	 * Check
