@@ -7,7 +7,7 @@ class HomeController extends BaseController
 		// TMP Hack
 		if (Auth::check()) User::logout();
 
-		return View::make('home')
+		return View::make('front.home')
 					->with('game',			'')
 					->with('games',			array())
 					->with('map',			'')
@@ -16,6 +16,6 @@ class HomeController extends BaseController
 
 	public function token($token)
 	{
-		return View::make('hello');
+		return View::make('front.home');
 	}
 }
