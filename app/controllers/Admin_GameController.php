@@ -4,9 +4,20 @@ use App\Services\Validators\GameValidator;
 
 class Admin_GameController extends BaseController
 {
+	public function __construct()
+	{
+		$this->beforeFilter(function()
+		{
+			if (!Auth::check())						return Redirect::route('admin_login');
+			if (!Auth::user()->isAdministrator())	return Redirect::route('home');
+		});
+	}
+
 	public function index()
 	{
-		return View::make('admin.game.index')->with('games', Game::allList());
+		return View::make('admin.game.index')
+			->with('game_main',	Game::main())
+			->with('games',		Game::allList());
 	}
 
 	public function add()
@@ -25,18 +36,9 @@ class Admin_GameController extends BaseController
 		$game = new Game;
 		$game->title		= Input::get('title');
 		$game->description	= Input::get('description');
+		$game->setStateInactive();
 		$game->setImage();
 		$game->save();
-
-		$users = User::users();
-
-		foreach($users as $user)
-		{
-			$game_user = new GameUser;
-			$game_user->game_id = $game->id;
-			$game_user->user_id = $user->id;
-			$game_user->save();
-		}
 
 		return Redirect::route('admin_game_edit', array('id' => $game->id))->with('message_success', 'Jeu <b>' . $game->title . '</b> créé.');
 	}
@@ -73,12 +75,15 @@ class Admin_GameController extends BaseController
 		$game->setImage();
 		$game->save();
 
-		return Redirect::to(URL::previous())->with('message_success', 'Image du jeu <b>' . $game->title . '</b> mise à jour.');
+		return Redirect::to(URL::previous())->with('message_success', 'Image du jeu <b>' . $game->title . '</b> mis à jour.');
 	}
 
 	public function state($id, $state)
 	{
 		$game = Game::byId($id, true);
+
+		if ($game->isMain()) return Redirect::to(URL::previous())->with('message_error', 'Vous ne pouvez pas désactiver le jeu principal');
+
 		$game->state = $state;
 		$game->save();
 
@@ -88,6 +93,8 @@ class Admin_GameController extends BaseController
 	public function delete($id)
 	{
 		$game = Game::byId($id, true);
+
+		if ($game->isMain()) return Redirect::to(URL::previous())->with('message_error', 'Vous ne pouvez pas supprimer le jeu principal');
 
 		$title = $game->title;
 
