@@ -3,19 +3,16 @@
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 
-class GameUserValidator
+class UserAchievementValidator
 {
-    public static function apiUpdate()
+    public static function api()
     {
         return Validator::make(
             Input::all(),
             array(
-                'level' => array('required', 'numeric'),
                 'score' => array('required', 'numeric')
             ),
             array(
-                'level.required'=> 'Le niveau est obligatoire.',
-                'level.numeric' => 'Le niveau doit être un nombre.',
                 'score.required'=> 'Le score est obligatoire.',
                 'score.numeric' => 'Le score doit être un nombre.',
             ));

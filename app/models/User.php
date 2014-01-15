@@ -284,35 +284,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		$games_json			= array();
 		$witnesses_json		= array();
 
-		foreach ($this->achievements as $achievement)
-		{
-			$achievement_json = array();
-			$achievement_json['reference']	= $achievement->reference;
-			$achievement_json['score']		= $achievement->score;
-			$achievement_json['is_unlock']	= $achievement->is_unlock? 1: 0;
-
-			$achievements_json[$achievement->achievement->reference] = $achievement_json;
-		}
-
-		foreach ($this->games as $game)
-		{
-			$game_json = array();
-			$game_json['reference']	= $game->reference;
-			$game_json['level']		= $game->score;
-			$game_json['score']		= $game->is_unlock? 1: 0;
-
-			$games_json[$game->game->reference] = $game_json;
-		}
-
-		foreach ($this->witnesses as $witness)
-		{
-			$witness_json = array();
-			$witness_json['star']	= $witness->star;
-			$witness_json['message']= $witness->message;
-			$witness_json['state']	= $witness->state;
-
-			$witnesses_json[$game->game->reference] = $witness_json;
-		}
+		foreach ($this->achievements	as $key => $achievement)$achievements_json	[$key] = $achievement	->getApiInformations();
+		foreach ($this->games			as $key => $game)		$games_json			[$key] = $game			->getApiInformations();
+		foreach ($this->witnesses		as $key => $witness)	$witnesses_json		[$key] = $witness		->getApiInformations();
 
 		$response['achievements']	= $achievements_json;
 		$response['games']			= $games_json;

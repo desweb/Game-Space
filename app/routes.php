@@ -90,7 +90,7 @@ Route::group(array('prefix' => 'administration'), function()
 			Route::post('{id}/editer/image/validation',	array('as' => 'admin_game_edit_image_validation',	'uses' => 'Admin_GameController@imageValidation'))	->where('id', '^\d+$');
 		});
 
-		// Achievement TODO
+		// Achievement
 		Route::group(array('prefix' => 'trophee'), function()
 		{
 			Route::get('/',					array('as' => 'admin_achievement',			'uses' => 'Admin_AchievementController@index'));
@@ -141,8 +141,8 @@ Route::group(array('prefix' => 'api'), function()
 	{
 		Route::post('/',			array('as' => 'api_auth',			'uses' => 'Api_AuthController@index'));
 		Route::post('add/{hash}',	array('as' => 'api_auth_add',		'uses' => 'Api_AuthController@add'));
-		Route::post('password',		array('as' => 'api_auth_password',	'uses' => 'Api_AuthController@password'));
 		Route::post('update/{hash}',array('as' => 'api_auth_update',	'uses' => 'Api_AuthController@update'))->where('hash', '^[0-9a-f]{32}$');
+		Route::post('password',		array('as' => 'api_auth_password',	'uses' => 'Api_AuthController@password'));
 
 		Route::delete('{token}', array('as' => 'api_auth_delete','uses' => 'Api_AuthController@delete'))->where('token', '^[0-9a-f]{32}$');
 	});
@@ -181,8 +181,8 @@ Route::group(array('prefix' => 'api'), function()
 	// Map
 	Route::group(array('prefix' => 'map', 'before' => 'api_auth_admin'), function()
 	{
-		Route::post('/',	array('as' => 'api_map_add',		'uses' => 'Api_MapController@add'));
 		Route::post('main',	array('as' => 'api_map_main_update','uses' => 'Api_MapController@main'));
+		Route::post('/',	array('as' => 'api_map_add',		'uses' => 'Api_MapController@add'));
 		Route::post('{id}',	array('as' => 'api_map_update',		'uses' => 'Api_MapController@update'))->where('reference', '^\d+$');
 	});
 });

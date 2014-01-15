@@ -4,6 +4,21 @@ use App\Services\Validators\MapValidator;
 
 class Api_MapController extends BaseController
 {
+	public function main()
+	{
+		$games = Input::get('games');
+
+		foreach ($games as $key => $datas)
+		{
+			if (!$game = Game::byId($key)) return ApiErrorManager::errorLogs(array('Jeu invalide.'));
+
+			$game->datas = $datas;
+			$game->save();
+		}
+
+		return Response::json(array('is_success' => 1));
+	}
+
 	public function add()
 	{
 		$validator = MapValidator::add();
@@ -16,21 +31,6 @@ class Api_MapController extends BaseController
 		$map->description	= Input::get('description');
 		$map->datas			= Input::get('datas');
 		$map->save();
-
-		return Response::json(array('is_success' => 1));
-	}
-
-	public function main()
-	{
-		$games = Input::get('games');
-
-		foreach ($games as $key => $datas)
-		{
-			if (!$game = Game::byId($key)) return ApiErrorManager::errorLogs(array('Jeu invalide.'));
-
-			$game->datas = $datas;
-			$game->save();
-		}
 
 		return Response::json(array('is_success' => 1));
 	}

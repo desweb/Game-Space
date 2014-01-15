@@ -4,26 +4,18 @@ use App\Services\Validators\UserValidator;
 
 class Api_UserController extends BaseController
 {
-	public function __construct()
-	{
-		$this->beforeFilter(function()
-		{
-			if (!$this->user = User::userById(Config::get('api_user_id'))) return ApiErrorManager::errorLogs(array('Utilisateur inconnu.'));
-		});
-	}
-
 	public function update()
 	{
 		$validator = UserValidator::apiEdit();
 
 		if ($validator->fails())												return ApiErrorManager::errorLogs($validator->errors()->all());
-		if (User::checkUsernameExist(Input::get('username'),$this->user->id))	return ApiErrorManager::errorLogs(array('Ce pseudo est déjà utlisé.'));
-		if (User::checkEmailExist(Input::get('email'),		$this->user->id))	return ApiErrorManager::errorLogs(array('Cet email est déjà utlisé.'));
+		if (User::checkUsernameExist(Input::get('username'),Auth::user()->id))	return ApiErrorManager::errorLogs(array('Ce pseudo est déjà utlisé.'));
+		if (User::checkEmailExist(Input::get('email'),		Auth::user()->id))	return ApiErrorManager::errorLogs(array('Cet email est déjà utlisé.'));
 
-		$this->user->username	= Input::get('username');
-		$this->user->email		= Input::get('email');
-		$this->user->setBirthdayTime(Input::get('birthday_time'));
-		$this->user->save();
+		Auth::user()->username	= Input::get('username');
+		Auth::user()->email		= Input::get('email');
+		Auth::user()->setBirthdayTime(Input::get('birthday_time'));
+		Auth::user()->save();
 
 		return Response::json(array('is_success' => 1));
 	}
@@ -34,8 +26,8 @@ class Api_UserController extends BaseController
 
 		if ($validator->fails()) return ApiErrorManager::errorLogs($validator->errors()->all());
 
-		$this->user->setPhoto();
-		$this->user->save();
+		Auth::user()->setPhoto();
+		Auth::user()->save();
 
 		return Response::json(array('is_success' => 1));
 	}
@@ -46,10 +38,10 @@ class Api_UserController extends BaseController
 
 		if ($validator->fails()) return ApiErrorManager::errorLogs($validator->errors()->all());
 
-		if (Input::get('old_password') != $this->user->password) return ApiErrorManager::errorLogs(array('Mot de passe incorrect.'));
+		if (Input::get('old_password') != Auth::user()->password) return ApiErrorManager::errorLogs(array('Mot de passe incorrect.'));
 
-		$this->user->password = Input::get('password');
-		$this->user->save();
+		Auth::user()->password = Input::get('password');
+		Auth::user()->save();
 
 		return Response::json(array('is_success' => 1));
 	}
@@ -58,8 +50,8 @@ class Api_UserController extends BaseController
 	{
 		unset($token);
 
-		$this->user->is_newsletter = $is_newsletter? true: false;
-		$this->user->save();
+		Auth::user()->is_newsletter = $is_newsletter? true: false;
+		Auth::user()->save();
 
 		return Response::json(array('is_success' => 1));
 	}
@@ -68,7 +60,7 @@ class Api_UserController extends BaseController
 	{
 		User::logout();
 
-		$this->user->delete();
+		Auth::user()->delete();
 
 		return Response::json(array('is_success' => 1));
 	}
