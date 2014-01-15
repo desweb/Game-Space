@@ -34,4 +34,17 @@ class UserAchievement extends Eloquent
 	{
 		return $this->belongsTo('Achievement', 'achievement_id');
 	}
+
+	/**
+	 * Getters
+	 */
+
+	public function getApiInformations()
+	{
+		return array(
+			'reference'				=> $this->reference,
+			'score'					=> $this->score,
+			'is_unlock'				=> $this->is_unlock? 1: 0,
+			'achievement_reference'	=> $this->achievement->reference);
+	}
 }

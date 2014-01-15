@@ -1,21 +1,23 @@
 @extends('admin.layouts.default')
 
 @section('content')
-	<div class="pull-right">
-		@if ($game->isActive())
-			<a href="{{ route('admin_game_state', array('id' => $game->id, 'state' => Game::STATE_INACTIVE)) }}">
-				{{ Form::button('<i class="glyphicon glyphicon-ok"></i> Désactiver', array('class' => 'btn btn-default', 'style' => 'margin:10px;')) }}
-			</a>
-		@else
-			<a href="{{ route('admin_game_state', array('id' => $game->id, 'state' => Game::STATE_ACTIVE)) }}">
-				{{ Form::button('<i class="glyphicon glyphicon-ok"></i> Activer', array('class' => 'btn btn-success', 'style' => 'margin:10px;')) }}
-			</a>
-		@endif
+	@if (!$game->isMain())
+		<div class="pull-right">
+			@if ($game->isActive())
+				<a href="{{ route('admin_game_state', array('id' => $game->id, 'state' => Game::STATE_INACTIVE)) }}">
+					{{ Form::button('<i class="glyphicon glyphicon-ok"></i> Désactiver', array('class' => 'btn btn-default', 'style' => 'margin:10px;')) }}
+				</a>
+			@else
+				<a href="{{ route('admin_game_state', array('id' => $game->id, 'state' => Game::STATE_ACTIVE)) }}">
+					{{ Form::button('<i class="glyphicon glyphicon-ok"></i> Activer', array('class' => 'btn btn-success', 'style' => 'margin:10px;')) }}
+				</a>
+			@endif
 
-		<a href="{{ route('admin_game_delete', array('id' => $game->id)) }}">
-			{{ Form::button('<i class="glyphicon glyphicon-trash"></i> Supprimer', array('class' => 'btn btn-danger delete', 'style' => 'margin:10px;')) }}
-		</a>
-	</div>
+			<a href="{{ route('admin_game_delete', array('id' => $game->id)) }}">
+				{{ Form::button('<i class="glyphicon glyphicon-trash"></i> Supprimer', array('class' => 'btn btn-danger delete', 'style' => 'margin:10px;')) }}
+			</a>
+		</div>
+	@endif
 
 	<div class="inner">
 		<div class="row">

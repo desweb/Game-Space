@@ -72,4 +72,17 @@ class GameUser extends Eloquent
 	{
 		return $this->belongsTo('User', 'user_id');
 	}
+
+	/**
+	 * Getters
+	 */
+
+	public function getApiInformations()
+	{
+		return array(
+			'reference'		=> $this->reference,
+			'level'			=> $this->level,
+			'score'			=> $this->score,
+			'game_reference'=> $this->game->reference);
+	}
 }

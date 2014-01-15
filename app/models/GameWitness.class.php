@@ -61,6 +61,19 @@ class GameWitness extends Eloquent
 	}
 
 	/**
+	 * Getters
+	 */
+
+	public function getApiInformations()
+	{
+		return array(
+			'star'			=> $this->star,
+			'message'		=> $this->message,
+			'state'			=> $this->state,
+			'game_reference'=> $this->game->reference);
+	}
+
+	/**
 	 * Setters
 	 */
 

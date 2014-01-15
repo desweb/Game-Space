@@ -1,10 +1,12 @@
 <?php
 
+use App\Services\Validators\UserAchievementValidator;
+
 class Api_UserAchievementController extends BaseController
 {
 	public function update($token, $reference)
 	{
-		$validator = GameUserValidator::apiUpdate();
+		$validator = UserAchievementValidator::api();
 
 		if ($validator->fails())												return ApiErrorManager::errorLogs($validator->errors()->all());
 		if (!$user_achievement = UserAchievement::userByReference($reference))	return ApiErrorManager::errorLogs(array('Trophée invalide.'));
