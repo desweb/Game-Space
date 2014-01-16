@@ -83,6 +83,9 @@
         @elseif (Route::currentRouteName() == 'admin_user_edit')
           <i class="fa fa-user"></i> Editer l'utilisateur
 
+        @elseif (Route::currentRouteName() == 'admin_map')
+          <i class="fa fa-globe"></i> Cartes
+
         @elseif (Route::currentRouteName() == 'admin_game')
           <i class="fa fa-bookmark"></i> Jeux
         @elseif (Route::currentRouteName() == 'admin_game_add')

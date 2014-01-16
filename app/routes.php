@@ -74,7 +74,14 @@ Route::group(array('prefix' => 'administration'), function()
 		});
 
 		// Map
-		Route::get('carte/gestion-carte-principale', array('as' => 'admin_manage_main', 'uses' => 'Admin_MapController@manageMain'));
+		Route::group(array('prefix' => 'carte'), function()
+		{
+			Route::get('/',					array('as' => 'admin_map',			'uses' => 'Admin_MapController@index'));
+			Route::get('gestion',			array('as' => 'admin_map_add',		'uses' => 'Admin_MapController@add'));
+			Route::get('{id}/gestion',		array('as' => 'admin_map_edit',		'uses' => 'Admin_MapController@edit'))	->where('id', '^\d+$');
+			Route::get('{id}/supprimer',	array('as' => 'admin_map_delete',	'uses' => 'Admin_MapController@delete'))->where('id', '^\d+$');
+			Route::get('gestion-principale',array('as' => 'admin_map_main',		'uses' => 'Admin_MapController@main'));
+		});
 
 		// Game
 		Route::group(array('prefix' => 'jeu'), function()

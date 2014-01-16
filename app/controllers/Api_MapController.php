@@ -32,7 +32,9 @@ class Api_MapController extends BaseController
 		$map->datas			= Input::get('datas');
 		$map->save();
 
-		return Response::json(array('is_success' => 1));
+		return Response::json(array(
+			'is_success'=> 1,
+			'id'		=> $map->id));
 	}
 
 	public function update($id)
