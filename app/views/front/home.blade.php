@@ -1,71 +1,160 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>GameSpace</title>
+<head>
+    <meta charset="UTF-8" />
+    <title>GameSpace</title>
 
-        <style type="text/css">
-            body { padding:0; margin:0; background-color:black; }
+    <style type="text/css">
+        body { padding:0; margin:0; background-color:black; }
 
-            #game { margin:auto; width:1200px; height:800px; }
-        </style>
+        #loading { position:fixed; margin:auto; width:100%; height:100%; background-color:rgba(0, 0, 0, .5); font:20px Arial, sans-serif; color:white; text-align:center; }
 
-        {{ HTML::script('js/phaser.min.js') }}
-    </head>
-    <body>
-        <div id="game"></div>
-        <script type="text/javascript">
-        (function()
+        #menu-button { position:absolute; top:10px; left:10px; width:100px; height:50px; background-color:rgba(0, 0, 0, .5); z-index:999; }
+        #menu-button:hover { cursor:pointer; }
+        #menu { position:absolute; left:-200px; width:200px; height:100%; background-color:black; z-index:999; }
+
+        #fullscreen-button { position:absolute; top:10px; right:10px; width:100px; height:50px; background-color:rgba(0, 0, 0, .5); z-index:999; }
+        #fullscreen-button:hover { cursor:pointer; }
+
+        #game { z-index:1; }
+    </style>
+
+    {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
+    {{ HTML::script('js/phaser.min.js') }}
+</head>
+<body>
+<div id="loading">
+    <p>Chargement...</p>
+</div>
+
+<div id="menu-button"></div>
+<div id="menu"></div>
+
+<div id="fullscreen-button"></div>
+
+<div id="game"></div>
+<script type="text/javascript">
+$(function()
+{
+    /**
+     * Init
+     */
+
+    var game = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, 'game', { preload:preload, create:create, update:update });
+
+    var player;
+    var cursors;
+
+    var default_style = { font:'65px Arial', fill:'#ff0044', align:'center' };
+
+    var level_datas = [
         {
-            var game = new Phaser.Game(1200, 800, Phaser.CANVAS, 'game', { preload:preload, create:create, update:update, render:render });
+            pos : { top : 800, left : 900 }
+        },
+        {
+            pos : { top : 700, left : 500 }
+        }
+    ];
 
-            function preload()
-            {
-                game.load.image('background',   '{{ asset('images/map.png') }}');
-                game.load.image('player',       '{{ asset('images/phaser.png') }}');
-            }
+    var game_datas = [
+        {
+            pos : { top : 250, left : 600 }
+        },
+        {
+            pos : { top : 300, left : 200 }
+        }
+    ];
 
-            var player;
-            var cursors;
+    /**
+     * Loading
+     */
 
-            function create()
-            {
-                game.add.tileSprite(0, 0, 2000, 2000, 'background');
+    function preload()
+    {
+        game.load.image('background',   '{{ asset('images/map.png') }}');
+        game.load.image('player',       '{{ asset('images/phaser.png') }}');
+        game.load.image('level',        '{{ asset('images/phaser.png') }}');
+        game.load.image('game-mini',    '{{ asset('images/phaser.png') }}');
+    }
 
-                game.world.setBounds(0, 0, 1500, 1500);
+    function hideLoader()
+    {
+        $('#loading').fadeOut(1000, function()
+        {
+            $('#loading').remove();
+        });
+    }
 
-                player = game.add.sprite(150, 320, 'player');
-                player.scale.setTo(.2, .2);
+    /**
+     * Creation
+     */
 
-                cursors = game.input.keyboard.createCursorKeys();
+    function create()
+    {
+        game.add.tileSprite(0, 0, 1500, 1500, 'background');
 
-                game.camera.follow(player);
+        game.world.setBounds(0, 0, 1500, 1500);
 
-                game.input.onDown.add(clickGame, this);
-            }
+        level_datas.forEach(function(level_data)
+        {
+            var level = game.add.sprite(level_data.pos.left, level_data.pos.top, 'level');
+            level.scale.setTo(.1, .1);
+        });
 
-            function update()
-            {
-                player.body.velocity.setTo(0, 0);
+        game_datas.forEach(function(level_data)
+        {
+            var game_mini = game.add.sprite(level_data.pos.left, level_data.pos.top, 'game-mini');
+            game_mini.scale.setTo(.1, .1);
+        });
 
-                if      (cursors.up.isDown)     player.body.velocity.y = -200;
-                else if (cursors.down.isDown)   player.body.velocity.y = 200;
+        player = game.add.sprite(1400, 1400, 'player');
+        player.scale.setTo(.2, .2);
 
-                if      (cursors.left.isDown)   player.body.velocity.x = -200;
-                else if (cursors.right.isDown)  player.body.velocity.x = 200;
-            }
+        cursors = game.input.keyboard.createCursorKeys();
 
-            function render()
-            {
-                game.debug.renderCameraInfo(game.camera, 32, 32);
-                game.debug.renderSpriteCoords(player, 32, 200);
-            }
+        game.camera.follow(player);
 
-            function clickGame()
-            {
-                game.stage.scale.startFullScreen();
-            }
-        })();
-        </script>
-    </body>
+        hideLoader();
+    }
+
+    function update()
+    {
+        player.body.velocity.setTo(0, 0);
+
+        if      (cursors.up.isDown)     player.body.velocity.y = -200;
+        else if (cursors.down.isDown)   player.body.velocity.y = 200;
+
+        if      (cursors.left.isDown)   player.body.velocity.x = -200;
+        else if (cursors.right.isDown)  player.body.velocity.x = 200;
+    }
+
+    /**
+     * Events
+     */
+
+    $('#menu-button').click(function(e)
+    {
+        var animation = { left : ($('#menu').position().left == 0? '-': '+') + '=200' };
+
+        $('#menu')          .animate(animation, 1000);
+        $('#menu-button')   .animate(animation, 1000);
+    });
+
+    $('#fullscreen-button').click(function(e)
+    {
+        game.stage.scale.startFullScreen();
+    });
+
+    /**
+     * Debug
+     */
+
+    function render()
+    {
+        game.debug.renderCameraInfo(game.camera, 32, 32);
+        game.debug.renderSpriteCoords(player, 32, 200);
+    }
+});
+</script>
+</body>
 </html>
