@@ -156,5 +156,7 @@ $(function()
     }
 });
 </script>
+
+@include('front.universal-analytics')
 </body>
 </html>
