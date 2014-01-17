@@ -43,13 +43,13 @@
     </a>
     <ul>
       <li>
-        <a href="{{ route('admin_map_main') }}">
+        <a href="{{ route('admin_map_main') }}" target="_blank">
           <i class="fa fa-star"></i>&nbsp;&nbsp;&nbsp;Gestion de la carte principale
         </a>
       </li>
       <li>
-        <a href="{{ route('admin_map') }}" target="_blank">
-          <i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Gestion de la carte principale
+        <a href="{{ route('admin_map') }}">
+          <i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Liste des cartes
         </a>
       </li>
       <li>

@@ -91,9 +91,9 @@ $(function()
 
     function create()
     {
-        game.add.tileSprite(0, 0, 1500, 1500, 'background');
+        game.add.tileSprite(0, 0, 4000, 4000, 'background');
 
-        game.world.setBounds(0, 0, 1500, 1500);
+        game.world.setBounds(0, 0, 4000, 4000);
 
         level_datas.forEach(function(level_data)
         {

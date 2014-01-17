@@ -6,6 +6,8 @@ class Api_MapController extends BaseController
 {
 	public function main()
 	{
+		if (!Input::get('games')) return ApiErrorManager::errorLogs(array('Jeu invalide.'));
+
 		$games = Input::get('games');
 
 		foreach ($games as $key => $datas)

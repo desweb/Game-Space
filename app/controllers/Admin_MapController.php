@@ -32,6 +32,8 @@ class Admin_MapController extends BaseController
 
 	public function main()
 	{
-		return View::make('admin.map.manageMain');
+		return View::make('admin.map.main')
+					->with('game_main',	Game::main())
+					->with('games',		Game::allList());
 	}
 }

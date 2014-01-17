@@ -18,4 +18,10 @@ class HomeController extends BaseController
 	{
 		return View::make('front.home');
 	}
+
+	public function victor()
+	{
+		return View::make('front.victor')
+					->with('games', Game::allList());
+	}
 }
