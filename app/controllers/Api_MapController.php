@@ -12,7 +12,8 @@ class Api_MapController extends BaseController
 
 		foreach ($games as $key => $datas)
 		{
-			if (!$game = Game::byId($key)) return ApiErrorManager::errorLogs(array('Jeu invalide.'));
+			if (!$datas || $datas == '')	continue;
+			if (!$game = Game::byId($key))	return ApiErrorManager::errorLogs(array('Jeu invalide.'));
 
 			$game->datas = $datas;
 			$game->save();

@@ -4,28 +4,21 @@
     <meta charset="UTF-8" />
     <title>Gestion de la carte principale</title>
 
-    <style type="text/css">
-        body { padding:0; margin:0; background-color:black; }
-
-        #loading { position:fixed; margin:auto; width:100%; height:100%; background-color:rgba(0, 0, 0, .5); font:20px Arial, sans-serif; color:white; text-align:center; }
-
-        #save-button { position:absolute; top:10px; right:10px; padding:10px 20px; background-color:rgba(0, 0, 0, .5); border-radius:3px; font:bold 15px Arial, sans-serif; color:white; }
-        #save-button:hover { cursor:pointer; }
-
-        #infos { position:absolute; top:10px; right:150px; padding:10px 20px; background-color:rgba(0, 0, 0, .5); border-radius:3px; font:bold 15px Arial, sans-serif; display:none; }
-        #infos .error	{ color:red; }
-        #infos .success	{ color:green; }
-    </style>
+    {{ HTML::style('css/base.css') }}
+    {{ HTML::style('css/map-main.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
     {{ HTML::script('js/phaser.min.js') }}
+
+    {{ HTML::script('js/classes/API.js') }}
+    {{ HTML::script('js/classes/Message.js') }}
 </head>
 <body>
 <div id="loading">
     <p>Chargement...</p>
 </div>
 
-<div id="save-button">Sauvegarder</div>
+<div id="save-button" class="interface">Sauvegarder</div>
 
 <div id="infos"></div>
 
@@ -46,6 +39,7 @@ $(function()
 
     var default_style = { font:'15px Arial', fill:'#fff', align:'center' };
 
+    // Main game
     var level_texts		= new Array();
     var level_sprites	= new Array();
     var level_datas		= {
@@ -53,9 +47,10 @@ $(function()
     	datas	: {{ $game_main->datas }}
     };
 
-    var game_texts		= new Array();
-    var game_sprites	= new Array();
-    var game_datas		= [
+    // Minis games
+    var game_texts	= new Array();
+    var game_sprites= new Array();
+    var game_datas	= [
         @foreach($games as $game)
         	{
     			id		: {{ $game->id }},
@@ -72,16 +67,9 @@ $(function()
     function preload()
     {
         game.load.image('background',   '{{ asset('images/map.png') }}');
+        game.load.image('player',       '{{ asset('images/phaser.png') }}');
         game.load.image('level',        '{{ asset('images/phaser.png') }}');
         game.load.image('game-mini',    '{{ asset('images/phaser.png') }}');
-    }
-
-    function hideLoader()
-    {
-        $('#loading').fadeOut(1000, function()
-        {
-            $('#loading').remove();
-        });
     }
 
     /**
@@ -90,10 +78,12 @@ $(function()
 
     function create()
     {
+        // World
         game.add.tileSprite(0, 0, 4000, 4000, 'background');
 
         game.world.setBounds(0, 0, 4000, 4000);
 
+        // Main game
     	for (var i in level_datas.datas)
     	{
             level_sprites[i] = game.add.sprite(level_datas.datas[i].pos.x, level_datas.datas[i].pos.y, 'level');
@@ -106,6 +96,7 @@ $(function()
     		level_texts[i].anchor.setTo(.5, 2);
     	}
 
+        // Minis games
     	for (var i in game_datas)
     	{
             game_sprites[i] = game.add.sprite(game_datas[i].datas.pos.x, game_datas[i].datas.pos.y, 'game-mini');
@@ -118,13 +109,20 @@ $(function()
     		game_texts[i].anchor.setTo(.5, 2);
     	}
 
-        player = game.add.sprite(0, 0);
+        // Player
+        player = game.add.sprite(0, 0, 'player');
+        player.anchor.setTo(.5, .5);
+        player.scale.setTo(.1, .1);
 
+        // Keyboard
         cursors = game.input.keyboard.createCursorKeys();
 
+        // Camera
         game.camera.follow(player);
 
+        // Display game
         hideLoader();
+        showInterface();
     }
 
     function update()
@@ -141,6 +139,7 @@ $(function()
     		game_texts[i].y = game_sprites[i].y;
     	}
 
+        // Move player & map with arrow
         player.body.velocity.setTo(0, 0);
 
         if      (cursors.up.isDown)     player.body.velocity.y = -200;
@@ -169,27 +168,61 @@ $(function()
       * API
       */
 
-	function apiPostMain()
+    function apiPostMain()
 	{
-		$.post('http://game-space.desweb-creation.fr/api/map/main',
-			{ test : 'test' },
-			function(response)
-			{
-				response = JSON.parse(response);
+        // Init
+        var game_ids_param  = new Array();
+        var games_param     = new Array();
+        var game_main_json  = new Array();
 
-				$('#infos').html(response.error? '<span class="error">' + response.description + '</span>': '<span class="success">Carte sauvegardée</span>');
-				$('#infos').fadeIn();
+        // Main game
+        for (var i in level_sprites)
+            game_main_json[i] = { pos : { x : parseInt(level_sprites[i].x), y : parseInt(level_sprites[i].y) }};
 
-				$('#save-button').html('Sauvegarder');
-				is_save = false;
+        games_param[level_datas.id] = JSON.stringify(game_main_json);
 
-				setTimeout(function()
-				{
-					$('#infos').fadeOut();
-				}, 3000);
-			},
-			'json');
+        // Minis games
+        for (var i in game_sprites)
+            games_param[game_datas[i].id] = JSON.stringify({ pos : { x : parseInt(game_sprites[i].x), y : parseInt(game_sprites[i].y) }});
+
+        // Request
+        API.post_mapMain({
+            'games[]' : games_param
+        },
+        {
+            success : function(response)
+            {
+                if (response.error) return;
+
+                Message.success('Carte sauvegardée');
+            },
+            always : function()
+            {
+                is_save = false;
+
+                $('#save-button').html('Sauvegarder');
+            }
+        });
 	}
+
+    /**
+     * Functionnalities
+     */
+
+    function hideLoader()
+    {
+        $('#loading').fadeOut(1000, function()
+        {
+            $('#loading').remove();
+
+            Message.info('Glisser/Déposer les icônes.');
+        });
+    }
+
+    function showInterface()
+    {
+        $('.interface').fadeIn();
+    }
 
     /**
      * Debug
@@ -201,7 +234,5 @@ $(function()
     }
 });
 </script>
-
-@include('front.universal-analytics')
 </body>
 </html>
