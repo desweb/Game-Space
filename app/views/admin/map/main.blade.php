@@ -18,9 +18,7 @@
     <p>Chargement...</p>
 </div>
 
-<div id="save-button" class="interface">Sauvegarder</div>
-
-<div id="infos"></div>
+<div id="save-button" class="button interface">Sauvegarder</div>
 
 <div id="game"></div>
 <script type="text/javascript">

@@ -4,6 +4,14 @@ use App\Services\Validators\MapValidator;
 
 class Api_MapController extends BaseController
 {
+	public function datas($id)
+	{
+		if (!$map = Map::byId($id)) return ApiErrorManager::errorLogs(array('Carte invalide.'));
+
+		// Json decode to fix json encodage bug => need php array
+		return Response::json(json_decode($map->datas));
+	}
+
 	public function main()
 	{
 		if (!Input::get('games')) return ApiErrorManager::errorLogs(array('Jeu invalide.'));

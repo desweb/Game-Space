@@ -1,1 +1,14 @@
-#create-form { position:absolute; padding:10px; top:20%; left:35%; width:30%; background-color:#A8A8A8; border-radius:5px; text-align:center; }
+.form { position:absolute; padding:10px; top:20%; left:35%; width:30%; background-color:#A8A8A8; border-radius:5px; text-align:center; display:none; }
+
+#tools	{ position:fixed; top:0; left:0; width:100%; height:50px; background-color:#3F3F3F; }
+#game	{ margin-top:60px; }
+
+#save-button { position:absolute; top:10px; right:10px; }
+#edit-button { position:absolute; top:10px; right:150px; }
+
+.select-tilemap { float:left; margin:9px; width:32px; height:32px; }
+.select-tilemap:hover { cursor:pointer; }
+
+#select-tilemap-1 { background:url('../images/tiles.png') -1px -1px; }
+#select-tilemap-2 { background:url('../images/tiles.png') -34px 397px; }
+#select-tilemap-3 { background:url('../images/tiles.png') -67px 198px; }

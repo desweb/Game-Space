@@ -23,9 +23,24 @@ function API()
 	 * Map
 	 */
 
+	this.get_mapDatas = function(id, response_functions)
+	{
+		getRequest('map/' + id + '/main', response_functions);
+	};
+
 	this.post_mapMain = function(datas, response_functions)
 	{
 		postRequest('map/main', datas, response_functions);
+	};
+
+	this.post_map = function(datas, response_functions)
+	{
+		postRequest('map', datas, response_functions);
+	};
+
+	this.post_mapUpdate = function(id, datas, response_functions)
+	{
+		postRequest('map/' + id, datas, response_functions);
 	};
 
 	/**
@@ -80,7 +95,19 @@ function API()
 	{
 		if (!response.error) return;
 
-		if (response.error.description) Message.error(response.error.description);
+		var content = '';
+
+		if (response.error.description) content += response.error.description;
+
+		if (response.error.logs)
+		{
+			response.error.logs.forEach(function(log)
+			{
+				content += '<br/>' + log;
+			});
+		}
+
+		Message.error(content);
 	}
 }
 

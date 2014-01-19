@@ -10,14 +10,12 @@ class MapValidator
 		return Validator::make(
 			Input::all(),
 			array(
-				'title'			=> array('required'),
-				'description'	=> array('required'),
-				'datas'			=> array('required')
+				'title' => array('required'),
+				'datas' => array('required')
 			),
 			array(
-				'title.required'		=> 'Le titre est obligatoire.',
-				'description.required'	=> 'Le titre est obligatoire.',
-				'datas.required'		=> 'Le titre est obligatoire.'
+				'title.required' => 'Le titre est obligatoire.',
+				'datas.required' => 'Les données de mapping sont obligatoires.'
 		));
 	}
 
@@ -26,14 +24,12 @@ class MapValidator
 		return Validator::make(
 			Input::all(),
 			array(
-				'title'			=> array('required'),
-				'description'	=> array('required'),
-				'datas'			=> array('required')
+				'title' => array('required'),
+				'datas' => array('required')
 			),
 			array(
-				'title.required'		=> 'Le titre est obligatoire.',
-				'description.required'	=> 'Le titre est obligatoire.',
-				'datas.required'		=> 'Le titre est obligatoire.'
+				'title.required' => 'Le titre est obligatoire.',
+				'datas.required' => 'Les données de mapping sont obligatoires.'
 		));
 	}
 }

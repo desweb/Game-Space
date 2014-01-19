@@ -10,6 +10,9 @@ button:hover { cursor:pointer; }
 
 .interface { display:none; }
 
+.button { padding:10px 20px; background-color:rgba(0, 0, 0, .5); border-radius:3px; font:bold 15px Arial, sans-serif; color:white; }
+.button:hover { cursor:pointer; }
+
 /**
  * Loading
  */
@@ -20,6 +23,6 @@ button:hover { cursor:pointer; }
  * Messages
  */
 
-#infos { position:absolute; top:5%; left:35%; padding:10px 20px; width:30%; background-color:rgba(0, 0, 0, .5); border-radius:3px; font:bold 15px Arial, sans-serif; color:white; text-align:center; display:none; }
+#infos { position:absolute; top:5%; left:35%; padding:10px 20px; width:30%; background-color:rgba(0, 0, 0, .5); border-radius:3px; font:bold 15px Arial, sans-serif; color:white; text-align:center; display:none; z-index:999; }
 #infos .error	{ color:#F00; }
 #infos .success	{ color:#0F0; }

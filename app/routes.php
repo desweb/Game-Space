@@ -188,6 +188,8 @@ Route::group(array('prefix' => 'api'), function()
 	// Map
 	Route::group(array('prefix' => 'map', 'before' => 'api_auth_admin'), function()
 	{
+		Route::get('{id}/datas', array('as' => 'api_map_datas', 'uses' => 'Api_MapController@datas'))->where('reference', '^\d+$');
+
 		Route::post('main',	array('as' => 'api_map_main_update','uses' => 'Api_MapController@main'));
 		Route::post('/',	array('as' => 'api_map_add',		'uses' => 'Api_MapController@add'));
 		Route::post('{id}',	array('as' => 'api_map_update',		'uses' => 'Api_MapController@update'))->where('reference', '^\d+$');

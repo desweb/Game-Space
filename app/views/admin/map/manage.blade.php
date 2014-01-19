@@ -13,19 +13,42 @@
     {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/API.js') }}
     {{ HTML::script('js/classes/Security.js') }}
+    {{ HTML::script('js/classes/Map.js') }}
+
+    {{ HTML::script('js/default-map.js') }}
 </head>
 <body>
-<div id="create-form">
+
+@if (!isset($map))
+    <div id="create-form" class="form">
+        <input name="title" placeholder="Titre"/>
+        <input name="map-width" placeholder="Nombre de case en largueur"/>
+        <input name="map-height" placeholder="Nombre de case en hauteur"/>
+        <textarea name="description" placeholder="Description"></textarea>
+        <button>Créer ma carte</button>
+    </div>
+@endif
+
+<div id="edit-form" class="form">
     <input name="title" placeholder="Titre"/>
-    <input name="map-width" placeholder="Nombre de case en largueur"/>
-    <input name="map-height" placeholder="Nombre de case en hauteur"/>
     <textarea name="description" placeholder="Description"></textarea>
-    <button>Créer ma carte</button>
+    <button>Enregistrer</button>
 </div>
 
-<div id="infos"></div>
+<div id="loading" class="interface">
+    <p>Chargement...</p>
+</div>
 
-<div id="game"></div>
+<div id="tools" class="interface">
+    <div class="select-tilemap" id="select-tilemap-1" data-id="1"></div>
+    <div class="select-tilemap" id="select-tilemap-2" data-id="2"></div>
+    <div class="select-tilemap" id="select-tilemap-3" data-id="3"></div>
+</div>
+
+<div id="edit-button" class="button interface">Editer informations</div>
+<div id="save-button" class="button interface">Sauvegarder</div>
+
+<div id="game" class="interface"></div>
 <script type="text/javascript">
 $(function()
 {
@@ -34,17 +57,37 @@ $(function()
     var tileset;
     var layer;
 
+    var tilemap_datas = default_map;
+    var map_object = new Map;
+
+    var is_save = false;
+
     var marker;
-    var currentTile = 0;
+    var current_tile = 1;
+
+    @if (isset($map))
+        map_object.setId            ({{ $map->id }});
+        map_object.setTitle         ("{{ $map->title }}");
+        map_object.setDescription   ("{{ $map->description }}");
+        map_object.setTilemap       ({{ $map->datas }});
+
+        launchGame();
+    @else
+        $('#create-form').fadeIn();
+    @endif
 
     function launchGame()
     {
-        game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game', { preload:preload, create:create, update:update });
+        $('#loading').fadeIn();
+
+        game = new Phaser.Game(map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, Phaser.CANVAS, 'game', { preload:preload, create:create, update:update, render:render });
+
+        $('#game').fadeIn();
     }
 
     function preload()
     {
-        game.load.tilemap('desert', '{{ asset('js/default-map.json') }}', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('desert', map_object.getTilemapUrl(), null, Phaser.Tilemap.TILED_JSON);
         game.load.tileset('tiles', '{{ asset('images/tiles.png') }}', 32, 32, -1, 1, 1);
     }
 
@@ -54,13 +97,15 @@ $(function()
 
         tileset = game.add.tileset('tiles');
         
-        layer = game.add.tilemapLayer(10, 10, 800, 600, tileset, map, 0);
-
-        layer.resizeWorld();
+        layer = game.add.tilemapLayer(10, 10, map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, tileset, map, 0);
 
         marker = game.add.graphics();
         marker.lineStyle(2, 0x000000, 1);
         marker.drawRect(0, 0, 32, 32);
+
+        $('#game').css('overflow', 'visible');
+        hideLoader();
+        showInterface();
     }
 
     function update()
@@ -68,19 +113,15 @@ $(function()
         marker.x = layer.getTileX(game.input.activePointer.worldX) * 32;
         marker.y = layer.getTileY(game.input.activePointer.worldY) * 32;
 
-        if (game.input.mousePointer.isDown)
+        if (!game.input.mousePointer.isDown) return;
+
+        if (map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)) != current_tile)
         {
-            if (game.input.keyboard.isDown(Phaser.Keyboard.SHIFT))
-            {
-                currentTile = map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y));
-            }
-            else
-            {
-                if (map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)) != currentTile)
-                {
-                    map.putTile(currentTile, layer.getTileX(marker.x), layer.getTileY(marker.y))
-                }
-            }
+            map.putTile(current_tile, layer.getTileX(marker.x), layer.getTileY(marker.y));
+
+            var index = layer.getTileY(marker.y) * map_object.getTilemap().width + layer.getTileX(marker.x);
+
+            map_object.getTilemap().layers[0].data[index] = current_tile;
         }
     }
 
@@ -88,85 +129,148 @@ $(function()
      * Events
      */
 
-    $('#create-form button').click(function(e)
+    @if (!isset($map))
+        $('#create-form button').click(function(e)
+        {
+            if (is_save) return false;
+
+            is_save = true;
+
+            if (!map_object.checkCreateForm({
+                    title   : $('#create-form input[name=title]')       .val(),
+                    width   : $('#create-form input[name=map-width]')   .val(),
+                    height  : $('#create-form input[name=map-height]')  .val()
+                })) return false;
+
+            $(this).html('Chargement...');
+
+            map_object.setTitle         ($('#create-form input[name=title]')            .val());
+            map_object.setDescription   ($('#create-form textarea[name=description]')   .val());
+
+            map_object.setSize($('#create-form input[name=map-width]').val(), $('#create-form input[name=map-height]').val());
+
+            map_object.save({
+                success : function(response)
+                {
+                    if (response.error) return;
+
+                    $('#create-form').fadeOut(1000, function()
+                    {
+                        $('#create-form').remove();
+                        launchGame();
+                    });
+                },
+                fail : function()
+                {
+
+                },
+                always : function()
+                {
+                    $('#create-form button').html('Créer ma carte');
+
+                    is_save = false;
+                }
+            });
+        });
+    @endif
+
+    $('#edit-button').click(function(e)
     {
-        if (!$('#create-form input[name=title]').val())
-        {
-            Message.error('Le titre est obligatoire.');
-            return false;
-        }
+        $('#edit-form').fadeToggle();
 
-        if (!Security.integer($('#create-form input[name=map-width]').val()))
-        {
-            Message.error('La largueur de la carte doit être un nombre.');
-            return false;
-        }
+        $('#edit-form input[name=title]')           .val(map_object.getTitle);
+        $('#edit-form textarea[name=description]')  .val(map_object.getDescription);
+    });
 
-        if (!Security.integer($('#create-form input[name=map-height]').val()))
-        {
-            Message.error('La hauteur de la carte doit être un nombre.');
-            return false;
-        }
+    $('#edit-form button').click(function(e)
+    {
+        if (is_save) return false;
+
+        is_save = true;
+
+        if (!map_object.checkEditForm({
+                title : $('#edit-form input[name=title]').val()
+            })) return false;
+
+        $(this).html('Chargement...');
+
+        map_object.setTitle         ($('#edit-form input[name=title]')          .val());
+        map_object.setDescription   ($('#edit-form textarea[name=description]') .val());
+
+        map_object.save({
+            success : function(response)
+            {
+                if (response.error) return;
+
+                $('#edit-form').fadeOut();
+
+                Message.success('Carte sauvegardée');
+            },
+            fail : function()
+            {
+
+            },
+            always : function()
+            {
+                $('#edit-form button').html('Enregistrer');
+
+                is_save = false;
+            }
+        });
+    });
+
+    $('.select-tilemap').click(function(e)
+    {
+        current_tile = $(this).data('id');
+    });
+
+    $('#save-button').click(function(e)
+    {
+        if (is_save) return false;
+
+        is_save = true;
+
+        $(this).html('Chargement...');
+
+        map_object.save({
+            success : function(response)
+            {
+                if (response.error) return;
+
+                Message.success('Carte sauvegardée');
+            },
+            fail : function()
+            {
+
+            },
+            always : function()
+            {
+                $('#save-button').html('Sauvegarder');
+
+                is_save = false;
+            }
+        });
     });
 
     /**
      * Functionnalities
      */
 
-    function displayInfos(content)
+    function hideLoader()
     {
-        $('#infos').html(content);
-
-        $('#infos').fadeIn();
-
-        setTimeout(function()
+        $('#loading').removeClass('interface');
+        $('#loading').fadeOut(1000, function()
         {
-            $('#infos').fadeOut();
-        }, 3000);
+            $('#loading').remove();
+
+            Message.info('Sélectionnez la texture et cliquez sur la carte.');
+        });
     }
 
-     /**
-      * API
-      */
-
-    function apiPostMain()
+    function showInterface()
     {
-        // Init
-        var game_ids_param  = new Array();
-        var games_param     = new Array();
-        var game_main_json  = new Array();
-
-        // Main game
-        for (var i in level_sprites)
-            game_main_json[i] = { pos : { x : level_sprites[i].x, y : level_sprites[i].y }};
-
-        games_param[level_datas.id] = JSON.stringify(game_main_json);
-
-        // Minis games
-        for (var i in game_sprites)
-            games_param[game_datas[i].id] = JSON.stringify({ pos : { x : game_sprites[i].x, y : game_sprites[i].y }});
-
-        // Request
-        $.post('http://game-space.desweb-creation.fr/api/map/main',
-            {
-                'games[]' : games_param
-            },
-            function(response)
-            {
-                displayInfos(response.error? '<span class="error">' + response.error.description + '</span>': '<span class="success">Carte sauvegardée</span>');
-            }, 'json')
-            .fail(function()
-            {
-                displayInfos('<span class="error">Une erreur est survenue</span>');
-            })
-            .always(function()
-            {
-                is_save = false;
-
-                $('#save-button').html('Sauvegarder');
-            });
+        $('.interface').fadeIn();
     }
-
 
     /**
      * Debug
@@ -174,6 +278,7 @@ $(function()
 
     function render()
     {
+        //game.debug.renderSpriteInfo(player, 32, 200);
     }
 });
 </script>
