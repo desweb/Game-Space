@@ -1,10 +1,10 @@
 function Message()
 {
-	var DIV_ID = 'infos';
+	var CONTENT_DIV_ID = 'infos';
+	var MESSAGE_DIV_ID = 'message';
 
-	var DISPLAY_TIME = 3000;
-
-	var _timeout;
+	var ANIM_TIME	= 1000;
+	var DISPLAY_TIME= 3000;
 
 	this.info = function(content)
 	{
@@ -27,32 +27,29 @@ function Message()
 
 	function display(content)
 	{
-		$('#' + DIV_ID).remove();
+		if (!$('#' + CONTENT_DIV_ID).length) $('body').prepend('<div id="' + CONTENT_DIV_ID + '"/>');
 
-		destroyTimeout();
+		var message_id = MESSAGE_DIV_ID + '-' + new Date().getTime();
 
-		$('body').prepend('<div id="' + DIV_ID + '"/>');
+		$('#' + CONTENT_DIV_ID).prepend('<div id="' + message_id + '" class="message"/>');
 
-		$('#' + DIV_ID).html(content);
+		$('#' + message_id).html(content);
 
-		$('#' + DIV_ID).fadeIn();
-
-		_timeout = setTimeout(function()
+		$('#' + message_id).fadeIn(ANIM_TIME, function()
 		{
-			$('#' + DIV_ID).fadeOut(function()
+			var timeout = setTimeout(function()
 			{
-				$('#' + DIV_ID).remove();
-				destroyTimeout();
-			});
-		}, DISPLAY_TIME);
-	}
+				$('#' + message_id).fadeOut(ANIM_TIME, function()
+				{
+					$('#' + message_id).remove();
+					
+					clearTimeout(timeout);
+					timeout = null;
+				});
+			}, DISPLAY_TIME);
+		});
 
-	function destroyTimeout()
-	{
-		if (_timeout) clearTimeout(_timeout);
-
-		_timeout = null;
 	}
 }
 
-var Message = new Message();
+var Message = new Message;
