@@ -10,9 +10,10 @@
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
     {{ HTML::script('js/phaser.min.js') }}
 
-    {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/API.js') }}
     {{ HTML::script('js/classes/Security.js') }}
+    {{ HTML::script('js/classes/Interface.js') }}
+    {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/Map.js') }}
 
     {{ HTML::script('js/default-map.js') }}
@@ -35,10 +36,6 @@
     <button>Enregistrer</button>
 </div>
 
-<div id="loading" class="interface">
-    <p>Chargement...</p>
-</div>
-
 <div id="tools" class="interface">
     <div class="select-tilemap" id="select-tilemap-1" data-id="1"></div>
     <div class="select-tilemap" id="select-tilemap-2" data-id="2"></div>
@@ -48,10 +45,13 @@
 <div id="edit-button" class="button interface">Editer informations</div>
 <div id="save-button" class="button interface">Sauvegarder</div>
 
-<div id="game" class="interface"></div>
 <script type="text/javascript">
 $(function()
 {
+    /**
+     * Init
+     */
+
     var game;
     var map;
     var tileset;
@@ -78,11 +78,9 @@ $(function()
 
     function launchGame()
     {
-        $('#loading').fadeIn();
+        Interface.loading();
 
-        game = new Phaser.Game(map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, Phaser.CANVAS, 'game', { preload:preload, create:create, update:update, render:render });
-
-        $('#game').fadeIn();
+        game = new Phaser.Game(map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update, render:render });
     }
 
     function preload()
@@ -103,9 +101,11 @@ $(function()
         marker.lineStyle(2, 0x000000, 1);
         marker.drawRect(0, 0, 32, 32);
 
-        $('#game').css('overflow', 'visible');
-        hideLoader();
-        showInterface();
+        // Display game
+        Interface.show(true, function()
+        {
+            Message.info('Sélectionnez la texture et cliquez sur la carte.');
+        });
     }
 
     function update()
@@ -255,22 +255,6 @@ $(function()
     /**
      * Functionnalities
      */
-
-    function hideLoader()
-    {
-        $('#loading').removeClass('interface');
-        $('#loading').fadeOut(1000, function()
-        {
-            $('#loading').remove();
-
-            Message.info('Sélectionnez la texture et cliquez sur la carte.');
-        });
-    }
-
-    function showInterface()
-    {
-        $('.interface').fadeIn();
-    }
 
     /**
      * Debug

@@ -11,16 +11,13 @@
     {{ HTML::script('js/phaser.min.js') }}
 
     {{ HTML::script('js/classes/API.js') }}
+    {{ HTML::script('js/classes/Interface.js') }}
     {{ HTML::script('js/classes/Message.js') }}
 </head>
 <body>
-<div id="loading">
-    <p>Chargement...</p>
-</div>
 
 <div id="save-button" class="button interface">Sauvegarder</div>
 
-<div id="game"></div>
 <script type="text/javascript">
 $(function()
 {
@@ -28,12 +25,11 @@ $(function()
      * Init
      */
 
-    var game = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, 'game', { preload:preload, create:create, update:update });
+    Interface.loading();
+
+    var game = new Phaser.Game(4000, 4000, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
 
     var is_save = false;
-
-    var player;
-    var cursors;
 
     var default_style = { font:'15px Arial', fill:'#fff', align:'center' };
 
@@ -65,7 +61,6 @@ $(function()
     function preload()
     {
         game.load.image('background',   '{{ asset('images/map.png') }}');
-        game.load.image('player',       '{{ asset('images/phaser.png') }}');
         game.load.image('level',        '{{ asset('images/phaser.png') }}');
         game.load.image('game-mini',    '{{ asset('images/phaser.png') }}');
     }
@@ -107,50 +102,35 @@ $(function()
     		game_texts[i].anchor.setTo(.5, 2);
     	}
 
-        // Player
-        player = game.add.sprite(0, 0, 'player');
-        player.anchor.setTo(.5, .5);
-        player.scale.setTo(.1, .1);
-
-        // Keyboard
-        cursors = game.input.keyboard.createCursorKeys();
-
-        // Camera
-        game.camera.follow(player);
-
         // Display game
-        hideLoader();
-        showInterface();
+        Interface.show(true, function()
+        {
+            Message.info('Glisser/Déposer les icônes.');
+        });
     }
 
     function update()
     {
+        // Main game
     	for (var i in level_sprites)
     	{
     		level_texts[i].x = level_sprites[i].x;
     		level_texts[i].y = level_sprites[i].y;
     	}
 
-    	for (var i in game_sprites)
+        // Minis games
+        for (var i in game_sprites)
     	{
     		game_texts[i].x = game_sprites[i].x;
     		game_texts[i].y = game_sprites[i].y;
     	}
-
-        // Move player & map with arrow
-        player.body.velocity.setTo(0, 0);
-
-        if      (cursors.up.isDown)     player.body.velocity.y = -200;
-        else if (cursors.down.isDown)   player.body.velocity.y = 200;
-
-        if      (cursors.left.isDown)   player.body.velocity.x = -200;
-        else if (cursors.right.isDown)  player.body.velocity.x = 200;
     }
 
     /**
      * Events
      */
 
+    // Click save button
 	$('#save-button').click(function(e)
 	{
 		if (is_save) return false;
@@ -162,10 +142,11 @@ $(function()
 		apiPostMain();
 	});
 
-     /**
-      * API
-      */
+    /**
+     * API
+     */
 
+    // Override API post_mapMain
     function apiPostMain()
 	{
         // Init
@@ -206,21 +187,6 @@ $(function()
     /**
      * Functionnalities
      */
-
-    function hideLoader()
-    {
-        $('#loading').fadeOut(1000, function()
-        {
-            $('#loading').remove();
-
-            Message.info('Glisser/Déposer les icônes.');
-        });
-    }
-
-    function showInterface()
-    {
-        $('.interface').fadeIn();
-    }
 
     /**
      * Debug

@@ -111,4 +111,4 @@ function API()
 	}
 }
 
-var API = new API();
+var API = new API;

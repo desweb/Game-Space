@@ -3,8 +3,8 @@ function Message()
 	var CONTENT_DIV_ID = 'infos';
 	var MESSAGE_DIV_ID = 'message';
 
-	var ANIM_TIME	= 1000;
-	var DISPLAY_TIME= 3000;
+	var ANIM_TIME	= 500;
+	var DISPLAY_TIME= 2000;
 
 	this.info = function(content)
 	{

@@ -10,4 +10,4 @@ function Security()
 	};
 }
 
-var Security = new Security();
+var Security = new Security;
