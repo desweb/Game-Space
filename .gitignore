@@ -2,7 +2,6 @@ composer.phar
 composer.lock
 Thumbs.db
 sftp-config.json
-/vendor
 /bootstrap/compiled.php
 /bootstrap/start.php
 /app/config/app.php
