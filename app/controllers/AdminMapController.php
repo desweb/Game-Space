@@ -1,7 +1,5 @@
 <?php
 
-use App\Services\Validators\MapValidator;
-
 class AdminMapController extends BaseController
 {
 	public function index()
