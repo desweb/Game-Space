@@ -1,4 +1,4 @@
-.form { position:fixed; padding:10px; top:20%; left:35%; width:30%; background-color:#A8A8A8; border-radius:5px; text-align:center; display:none; }
+.form { position:fixed; padding:10px 15px; top:15%; left:35%; width:30%; background-color:#A8A8A8; border-radius:5px; text-align:center; display:none; }
 
 #tools	{ position:fixed; top:0; left:0; width:100%; height:50px; background-color:#3F3F3F; }
 #game	{ margin-top:60px; }

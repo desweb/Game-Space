@@ -74,6 +74,7 @@ function Map()
 	 */
 
 	this.setId			= function(id)			{ _id 			= id; };
+	this.setType		= function(type)		{ _tilemap.tilesets[0].image = type; };
 	this.setTitle		= function(title)		{ _title 		= title; };
 	this.setDescription	= function(description)	{ _description	= description; };
 	this.setTilemap		= function(tilemap)		{ _tilemap		= tilemap; };

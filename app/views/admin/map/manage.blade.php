@@ -22,18 +22,27 @@
 
 @if (!isset($map))
     <div id="create-form" class="form">
-        <input name="title" placeholder="Titre"/>
-        <input name="map-width" placeholder="Nombre de case en largueur"/>
-        <input name="map-height" placeholder="Nombre de case en hauteur"/>
-        <textarea name="description" placeholder="Description"></textarea>
-        <button>Créer ma carte</button>
+        {{ Form::text('title',   '', array('placeholder' => 'Titre')); }}
+
+        <div class="style-select"> 
+            {{ Form::select('type', Map::types()); }}
+        </div>
+
+        {{ Form::text('width',  '', array('placeholder' => 'Nombre de case en largueur')); }}
+        {{ Form::text('height', '', array('placeholder' => 'Nombre de case en hauteur')); }}
+
+        {{ Form::textarea('description', '', array('placeholder' => 'Description')); }}
+
+        {{ Form::button('Créer ma carte'); }}
     </div>
 @endif
 
 <div id="edit-form" class="form">
-    <input name="title" placeholder="Titre"/>
-    <textarea name="description" placeholder="Description"></textarea>
-    <button>Enregistrer</button>
+    {{ Form::text('name', '', array('placeholder' => 'Titre')); }}
+
+    {{ Form::textarea('description', '', array('placeholder' => 'Description')); }}
+
+    {{ Form::button('Enregistrer'); }}
 </div>
 
 <div id="tools" class="interface">
@@ -80,7 +89,7 @@ $(function()
     {
         Interface.loading();
 
-        game = new Phaser.Game(map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update, render:render });
+        game = new Phaser.Game(map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
     }
 
     function preload()
@@ -137,9 +146,9 @@ $(function()
             is_save = true;
 
             if (!map_object.checkCreateForm({
-                    title   : $('#create-form input[name=title]')       .val(),
-                    width   : $('#create-form input[name=map-width]')   .val(),
-                    height  : $('#create-form input[name=map-height]')  .val()
+                    title   : $('#create-form input[name=title]')      .val(),
+                    width   : $('#create-form input[name=width]')   .val(),
+                    height  : $('#create-form input[name=height]')  .val()
                 })) return false;
 
             $(this).html('Chargement...');
@@ -147,7 +156,9 @@ $(function()
             map_object.setTitle         ($('#create-form input[name=title]')            .val());
             map_object.setDescription   ($('#create-form textarea[name=description]')   .val());
 
-            map_object.setSize($('#create-form input[name=map-width]').val(), $('#create-form input[name=map-height]').val());
+            map_object.setSize($('#create-form input[name=width]').val(), $('#create-form input[name=height]').val());
+
+            map_object.setType($('#create-form select[name=type]').val());
 
             map_object.save({
                 success : function(response)

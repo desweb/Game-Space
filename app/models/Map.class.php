@@ -2,6 +2,10 @@
 
 class Map extends Eloquent
 {
+	const TILEMAP_PATH = 'http://game-space.desweb-creation.fr/images/tilemap/';
+
+	const TYPE_DESERT = 1;
+
 	protected $table = 'map';
 
 	/**
@@ -30,6 +34,16 @@ class Map extends Eloquent
 	public static function byTitle($title)
 	{
 		return self::where('title', $title)->first();
+	}
+
+	/**
+	 * Getters
+	 */
+
+	public static function types()
+	{
+		return array(
+			self::TILEMAP_PATH . 'desert.png' => 'Desert');
 	}
 
 	/**

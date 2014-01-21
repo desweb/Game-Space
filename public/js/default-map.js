@@ -22,7 +22,7 @@ var default_map = {
     "tilesets"      : [
         {
             "firstgid"     : 1,
-            "image"        : "http://game-space.desweb-creation.fr/images/tiles.png",
+            "image"        : "",
             "imageheight"  : 199,
             "imagewidth"   : 265,
             "margin"       : 1,
