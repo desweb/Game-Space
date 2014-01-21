@@ -2,7 +2,7 @@
 
 use App\Services\Validators\WitnessValidator;
 
-class Api_WitnessController extends BaseController
+class ApiWitnessController extends BaseController
 {
 	public function index($token, $reference)
 	{

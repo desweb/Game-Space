@@ -2,7 +2,7 @@
 
 use App\Services\Validators\GameUserValidator;
 
-class Api_GameUserController extends BaseController
+class ApiGameUserController extends BaseController
 {
 	public function update($token, $reference)
 	{

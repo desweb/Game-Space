@@ -1,6 +1,6 @@
 <?php
 
-class Admin_HomeController extends BaseController
+class AdminHomeController extends BaseController
 {
 	public function index()
 	{

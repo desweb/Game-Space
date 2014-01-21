@@ -3,7 +3,7 @@
 use App\Services\Validators\AuthValidator;
 use App\Services\Validators\UserValidator;
 
-class Api_AuthController extends BaseController
+class ApiAuthController extends BaseController
 {
 	const HASH_ADD		= 'FP2zCdnmaYGP9X2E';
 	const HASH_UPDATE	= 'ATxuV3HbVn';

@@ -2,7 +2,7 @@
 
 use App\Services\Validators\UserValidator;
 
-class Api_UserController extends BaseController
+class ApiUserController extends BaseController
 {
 	public function update()
 	{

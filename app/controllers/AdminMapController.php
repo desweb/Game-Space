@@ -2,7 +2,7 @@
 
 use App\Services\Validators\MapValidator;
 
-class Admin_MapController extends BaseController
+class AdminMapController extends BaseController
 {
 	public function index()
 	{

@@ -2,7 +2,7 @@
 
 use App\Services\Validators\UserAchievementValidator;
 
-class Api_UserAchievementController extends BaseController
+class ApiUserAchievementController extends BaseController
 {
 	public function update($token, $reference)
 	{

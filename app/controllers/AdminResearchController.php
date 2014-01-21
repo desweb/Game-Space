@@ -1,6 +1,6 @@
 <?php
 
-class Admin_ResearchController extends BaseController
+class AdminResearchController extends BaseController
 {
 	public function index()
 	{

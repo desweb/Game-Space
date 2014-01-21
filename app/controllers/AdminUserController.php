@@ -2,7 +2,7 @@
 
 use App\Services\Validators\UserValidator;
 
-class Admin_UserController extends BaseController
+class AdminUserController extends BaseController
 {
 	public function index()
 	{

@@ -2,7 +2,7 @@
 
 use App\Services\Validators\MapValidator;
 
-class Api_MapController extends BaseController
+class ApiMapController extends BaseController
 {
 	public function datas($id)
 	{

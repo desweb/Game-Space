@@ -2,7 +2,7 @@
 
 use App\Services\Validators\WitnessValidator;
 
-class Admin_WitnessController extends BaseController
+class AdminWitnessController extends BaseController
 {
 	public function index()
 	{

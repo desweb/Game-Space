@@ -267,14 +267,6 @@ $(function()
      * Functionnalities
      */
 
-    /**
-     * Debug
-     */
-
-    function render()
-    {
-        //game.debug.renderSpriteInfo(player, 32, 200);
-    }
 });
 </script>
 </body>

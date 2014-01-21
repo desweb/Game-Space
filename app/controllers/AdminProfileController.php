@@ -2,7 +2,7 @@
 
 use App\Services\Validators\ProfileValidator;
 
-class Admin_ProfileController extends BaseController
+class AdminProfileController extends BaseController
 {
 	public function index()
 	{

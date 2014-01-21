@@ -2,7 +2,7 @@
 
 use App\Services\Validators\AchievementValidator;
 
-class Admin_AchievementController extends BaseController
+class AdminAchievementController extends BaseController
 {
 	public function index()
 	{

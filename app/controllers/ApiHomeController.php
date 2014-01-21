@@ -1,6 +1,6 @@
 <?php
 
-class Api_HomeController extends BaseController
+class ApiHomeController extends BaseController
 {
 	public function index()
 	{

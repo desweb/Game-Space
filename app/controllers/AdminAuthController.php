@@ -2,7 +2,7 @@
 
 use App\Services\Validators\AuthValidator;
 
-class Admin_AuthController extends BaseController
+class AdminAuthController extends BaseController
 {
 	public function index()
 	{

@@ -2,7 +2,7 @@
 
 use App\Services\Validators\ContactValidator;
 
-class Admin_ContactController extends BaseController
+class AdminContactController extends BaseController
 {
 	public function index()
 	{

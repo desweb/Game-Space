@@ -1,6 +1,6 @@
 <?php
 
-class Api_RankController extends BaseController
+class ApiRankController extends BaseController
 {
 	public function index()
 	{

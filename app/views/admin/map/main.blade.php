@@ -188,14 +188,6 @@ $(function()
      * Functionnalities
      */
 
-    /**
-     * Debug
-     */
-
-    function render()
-    {
-        game.debug.renderCameraInfo(game.camera, 32, 32);
-    }
 });
 </script>
 </body>

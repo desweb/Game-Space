@@ -2,7 +2,7 @@
 
 use App\Services\Validators\GameValidator;
 
-class Admin_GameController extends BaseController
+class AdminGameController extends BaseController
 {
 	public function __construct()
 	{

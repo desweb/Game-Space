@@ -11,7 +11,7 @@
 |
 */
 
-App::before(function($request)
+App::before(function()
 {
 	LocaleManager::current();
 
@@ -23,12 +23,6 @@ App::before(function($request)
 	Config::set('url_analytics', 'https://www.google.com/analytics/web/?hl=fr&pli=1#report/visitors-overview/a46865258w77998084p80641792/');
 
 	Config::set('email_signature', '<p>L\'équipe GameSpace</p>');
-});
-
-
-App::after(function($request, $response)
-{
-	//
 });
 
 /**
@@ -51,13 +45,6 @@ Route::filter('admin_auth', function()
 /**
  * API
  */
-
-Route::when('api/*', 'api_ajax');
-
-Route::filter('api_ajax', function()
-{
-	//if (!Request::ajax()) return ApiErrorManager::errorLogs(array('It\'s not a ajax request.'));
-});
 
 Route::filter('api_token', function($route)
 {
