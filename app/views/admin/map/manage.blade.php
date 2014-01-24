@@ -45,14 +45,20 @@
     {{ Form::button('Enregistrer'); }}
 </div>
 
-<div id="tools" class="interface">
-    <div class="select-tilemap" id="select-tilemap-1" data-id="1"></div>
-    <div class="select-tilemap" id="select-tilemap-2" data-id="2"></div>
-    <div class="select-tilemap" id="select-tilemap-3" data-id="3"></div>
+<div id="tool-bar" class="interface">
+    <div class="right">
+        <div id="edit-button" class="button interface">Editer informations</div>
+        <div id="save-button" class="button interface">Sauvegarder</div>
+    </div>
+</div>
+<div id="tilemap-container" class="interface">
+    <div id="tilemap-content">
+        <div class="select-tilemap selected-tilemap" id="select-tilemap-1" data-id="1"></div>
+        <div class="select-tilemap" id="select-tilemap-2" data-id="2"></div>
+        <div class="select-tilemap" id="select-tilemap-3" data-id="3"></div>
+    </div>
 </div>
 
-<div id="edit-button" class="button interface">Editer informations</div>
-<div id="save-button" class="button interface">Sauvegarder</div>
 
 <script type="text/javascript">
 $(function()
@@ -62,16 +68,17 @@ $(function()
      */
 
     var game;
-    var map;
-    var tileset;
-    var layer;
 
-    var tilemap_datas = default_map;
+    // Map
+    var map_tilemap;
+    var map_tileset;
+    var map_layer;
+
     var map_object = new Map;
 
     var is_save = false;
 
-    var marker;
+    var marker_graph;
     var current_tile = 1;
 
     @if (isset($map))
@@ -94,21 +101,22 @@ $(function()
 
     function preload()
     {
-        game.load.tilemap('desert', map_object.getTilemapUrl(), null, Phaser.Tilemap.TILED_JSON);
-        game.load.tileset('tiles', '{{ asset('images/tiles.png') }}', 32, 32, -1, 1, 1);
+        game.load.tilemap('map', map_object.getTilemapUrl(), null, Phaser.Tilemap.TILED_JSON);
+        game.load.tileset('map', '{{ asset('images/tiles.png') }}', 32, 32, -1, 1, 1);
     }
 
     function create()
     {
-        map = game.add.tilemap('desert');
-
-        tileset = game.add.tileset('tiles');
+        // Create map
+        map_tilemap = game.add.tilemap('map');
+        map_tileset = game.add.tileset('map');
         
-        layer = game.add.tilemapLayer(10, 10, map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, tileset, map, 0);
+        map_layer = game.add.tilemapLayer(10, 10, map_object.getTilemap().width * 32, map_object.getTilemap().height * 32, map_tileset, map_tilemap, 0);
 
-        marker = game.add.graphics();
-        marker.lineStyle(2, 0x000000, 1);
-        marker.drawRect(0, 0, 32, 32);
+        // Create marker
+        marker_graph = game.add.graphics();
+        marker_graph.lineStyle(2, 0x000000, 1);
+        marker_graph.drawRect(0, 0, 32, 32);
 
         // Display game
         Interface.show(true, function()
@@ -119,18 +127,16 @@ $(function()
 
     function update()
     {
-        marker.x = layer.getTileX(game.input.activePointer.worldX) * 32;
-        marker.y = layer.getTileY(game.input.activePointer.worldY) * 32;
+        marker_graph.x = map_layer.getTileX(game.input.activePointer.worldX) * 32;
+        marker_graph.y = map_layer.getTileY(game.input.activePointer.worldY) * 32;
 
         if (!game.input.mousePointer.isDown) return;
 
-        if (map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)) != current_tile)
+        if (map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y)) != current_tile)
         {
-            map.putTile(current_tile, layer.getTileX(marker.x), layer.getTileY(marker.y));
+            map_tilemap.putTile(current_tile, map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
 
-            var index = layer.getTileY(marker.y) * map_object.getTilemap().width + layer.getTileX(marker.x);
-
-            map_object.getTilemap().layers[0].data[index] = current_tile;
+            map_object.getTilemap().layers[0].data[map_layer.getTileY(marker_graph.y) * map_object.getTilemap().width + map_layer.getTileX(marker_graph.x)] = current_tile;
         }
     }
 
@@ -146,7 +152,7 @@ $(function()
             is_save = true;
 
             if (!map_object.checkCreateForm({
-                    title   : $('#create-form input[name=title]')      .val(),
+                    title   : $('#create-form input[name=title]')   .val(),
                     width   : $('#create-form input[name=width]')   .val(),
                     height  : $('#create-form input[name=height]')  .val()
                 })) return false;
@@ -233,6 +239,9 @@ $(function()
     $('.select-tilemap').click(function(e)
     {
         current_tile = $(this).data('id');
+
+        $('.select-tilemap').removeClass('selected-tilemap');
+        $(this).addClass('selected-tilemap');
     });
 
     $('#save-button').click(function(e)

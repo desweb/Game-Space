@@ -7,7 +7,7 @@ function Interface()
 
 	this.loading = function(complete)
 	{
-		$('body').prepend('<div id="' + _loading_id + '"><p>Chargement...</p></div>');
+		$('body').prepend('<div id="' + _loading_id + '"><img src="http://game-space.desweb-creation.fr/images/loader.gif" alt="Chargement"/> Chargement...</div>');
 		$('body').append('<div id="' + _game_id + '" class="interface"></div>');
 
 		$('#loading').fadeIn(ANIM_TIME, function()
@@ -34,6 +34,11 @@ function Interface()
 			complete();
 			is_complete = true;
 		});
+	};
+
+	this.fadeIn = function(element)
+	{
+
 	};
 
 	/**

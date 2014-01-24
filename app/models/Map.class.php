@@ -63,7 +63,7 @@ class Map extends Eloquent
 
 	public function displayTitle()
 	{
-		return HTML::link(route('admin_map_edit', array('id' => $this->id)), $this->title, array('title' => 'Editer la carte ' . $this->title, 'data-toggle' => 'tooltip'));
+		return HTML::link(route('admin_map_edit', array('id' => $this->id)), $this->title, array('target' => '_blank', 'title' => 'Editer la carte ' . $this->title, 'data-toggle' => 'tooltip'));
 	}
 
 	public function displayCreatedAt()
@@ -73,7 +73,7 @@ class Map extends Eloquent
 
 	public function displayEdit()
 	{
-		return '<a class="actions" href="' . route('admin_map_edit', array('id' => $this->id)) . '" title="Editer la carte ' . $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/edit.png') . '</a>';
+		return '<a class="actions" href="' . route('admin_map_edit', array('id' => $this->id)) . '" target="_blank" title="Editer la carte ' . $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/edit.png') . '</a>';
 	}
 
 	public function displayDelete()

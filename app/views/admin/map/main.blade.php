@@ -13,10 +13,15 @@
     {{ HTML::script('js/classes/API.js') }}
     {{ HTML::script('js/classes/Interface.js') }}
     {{ HTML::script('js/classes/Message.js') }}
+    {{ HTML::script('js/classes/Font.js') }}
 </head>
 <body>
 
-<div id="save-button" class="button interface">Sauvegarder</div>
+<div id="tool-bar">
+    <div class="right">
+        <div id="save-button" class="button interface">Sauvegarder</div>
+    </div>
+</div>
 
 <script type="text/javascript">
 $(function()
@@ -27,15 +32,22 @@ $(function()
 
     Interface.loading();
 
-    var game = new Phaser.Game(4000, 4000, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
+    var game = new Phaser.Game($(window).width(), $(window).height() - 60, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
 
     var is_save = false;
 
-    var default_style = { font:'15px Arial', fill:'#fff', align:'center' };
+    var cursors;
+
+    // Map
+    var map_sprite;
+    var is_map_over = false;
+    var is_map_down = false;
+    var map_old_x;
+    var map_old_y;
 
     // Main game
-    var level_texts		= new Array();
-    var level_sprites	= new Array();
+    var level_texts		= new Array;
+    var level_sprites	= new Array;
     var level_datas		= {
     	id		: {{ $game_main->id }},
     	datas	: {{ $game_main->datas }}
@@ -60,9 +72,9 @@ $(function()
 
     function preload()
     {
-        game.load.image('background',   '{{ asset('images/map.png') }}');
-        game.load.image('level',        '{{ asset('images/phaser.png') }}');
-        game.load.image('game-mini',    '{{ asset('images/phaser.png') }}');
+        game.load.image('map',      '{{ asset('images/map.png') }}');
+        game.load.image('level',    '{{ asset('images/phaser.png') }}');
+        game.load.image('game-mini','{{ asset('images/phaser.png') }}');
     }
 
     /**
@@ -71,10 +83,19 @@ $(function()
 
     function create()
     {
-        // World
-        game.add.tileSprite(0, 0, 4000, 4000, 'background');
+        game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
 
+        // World
         game.world.setBounds(0, 0, 4000, 4000);
+
+        // Map
+        map_sprite = game.add.sprite(0, 0, 'map');
+        map_sprite.inputEnabled = true;
+
+        map_sprite.events.onInputOver  .add(function(e) { is_map_over = true; },   this);
+        map_sprite.events.onInputOut   .add(function(e) { is_map_over = false; },  this);
+        map_sprite.events.onInputDown  .add(function(e) { is_map_down = true; },   this);
+        map_sprite.events.onInputUp    .add(function(e) { is_map_down = false; },  this);
 
         // Main game
     	for (var i in level_datas.datas)
@@ -85,7 +106,7 @@ $(function()
             level_sprites[i].inputEnabled = true;
             level_sprites[i].input.enableDrag(true);
 
-    		level_texts[i] = game.add.text(level_sprites[i].x, level_sprites[i].y, 'Jeu principal - Niveau ' + (parseInt(i) + 1), default_style);
+    		level_texts[i] = game.add.text(level_sprites[i].x, level_sprites[i].y, 'Jeu principal - Niveau ' + (parseInt(i) + 1), Font.default());
     		level_texts[i].anchor.setTo(.5, 2);
     	}
 
@@ -98,12 +119,14 @@ $(function()
             game_sprites[i].inputEnabled = true;
             game_sprites[i].input.enableDrag(true);
 
-    		game_texts[i] = game.add.text(game_sprites[i].x, game_sprites[i].y, game_datas[i].title, default_style);
+    		game_texts[i] = game.add.text(game_sprites[i].x, game_sprites[i].y, game_datas[i].title, Font.default());
     		game_texts[i].anchor.setTo(.5, 2);
     	}
 
+        cursors = game.input.keyboard.createCursorKeys();
+
         // Display game
-        Interface.show(true, function()
+        Interface.show(false, function()
         {
             Message.info('Glisser/Déposer les icônes.');
         });
@@ -111,6 +134,21 @@ $(function()
 
     function update()
     {
+        // Drag & drop map
+        if (is_map_over && is_map_down)
+        {
+            if (map_old_x) game.camera.x += map_old_x - game.input.mousePointer.x;
+            if (map_old_y) game.camera.y += map_old_y - game.input.mousePointer.y;
+
+            map_old_x = game.input.mousePointer.x;
+            map_old_y = game.input.mousePointer.y;
+        }
+        else
+        {
+            map_old_x = null;
+            map_old_y = null;
+        }
+
         // Main game
     	for (var i in level_sprites)
     	{
@@ -124,11 +162,25 @@ $(function()
     		game_texts[i].x = game_sprites[i].x;
     		game_texts[i].y = game_sprites[i].y;
     	}
+
+        if      (cursors.up.isDown)     game.camera.y -= 200;
+        else if (cursors.down.isDown)   game.camera.y += 200;
+
+        if      (cursors.left.isDown)   game.camera.x -= 200;
+        else if (cursors.right.isDown)  game.camera.x += 200;
     }
 
     /**
      * Events
      */
+
+     // Scroll mouse
+    /*game_element.addEventListener('mousewheel', function(e)
+    {
+        var sens = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+
+        // Pending 1.1.4 Phaser framework version to work zoom camera
+    }, false);*/
 
     // Click save button
 	$('#save-button').click(function(e)
@@ -150,9 +202,9 @@ $(function()
     function apiPostMain()
 	{
         // Init
-        var game_ids_param  = new Array();
-        var games_param     = new Array();
-        var game_main_json  = new Array();
+        var game_ids_param  = new Array;
+        var games_param     = new Array;
+        var game_main_json  = new Array;
 
         // Main game
         for (var i in level_sprites)
