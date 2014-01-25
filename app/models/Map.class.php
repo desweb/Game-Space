@@ -76,6 +76,11 @@ class Map extends Eloquent
 		return '<a class="actions" href="' . route('admin_map_edit', array('id' => $this->id)) . '" target="_blank" title="Editer la carte ' . $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/edit.png') . '</a>';
 	}
 
+	public function displayDownload()
+	{
+		return '<a class="actions" href="' . route('admin_map_download', array('id' => $this->id)) . '" title="Télécharger la carte ' . $this->title . '" data-toggle="tooltip"><i class="glyphicon glyphicon-download"></i></a>';
+	}
+
 	public function displayDelete()
 	{
 		return '<a class="actions delete" href="' . route('admin_map_delete', array('id' => $this->id)) . '" title="Supprimer la carte ' . $this->title . '" data-toggle="tooltip">' . HTML::image('images/icons/delete.png') . '</a>';
@@ -83,6 +88,6 @@ class Map extends Eloquent
 
 	public function displayActions()
 	{
-		return $this->displayEdit() . '&nbsp;&nbsp;&nbsp;' . $this->displayDelete();
+		return $this->displayEdit() . '&nbsp;&nbsp;&nbsp;' . $this->displayDownload() . '&nbsp;&nbsp;&nbsp;' . $this->displayDelete();
 	}
 }

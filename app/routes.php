@@ -73,8 +73,9 @@ Route::group(array('prefix' => 'administration'), function()
 		{
 			Route::get('/',					array('as' => 'admin_map',			'uses' => 'AdminMapController@index'));
 			Route::get('gestion',			array('as' => 'admin_map_add',		'uses' => 'AdminMapController@add'));
-			Route::get('{id}/gestion',		array('as' => 'admin_map_edit',		'uses' => 'AdminMapController@edit'))	->where('id', '^\d+$');
-			Route::get('{id}/supprimer',	array('as' => 'admin_map_delete',	'uses' => 'AdminMapController@delete'))	->where('id', '^\d+$');
+			Route::get('{id}/gestion',		array('as' => 'admin_map_edit',		'uses' => 'AdminMapController@edit'))		->where('id', '^\d+$');
+			Route::get('{id}/telecharger',	array('as' => 'admin_map_download',	'uses' => 'AdminMapController@download'))	->where('id', '^\d+$');
+			Route::get('{id}/supprimer',	array('as' => 'admin_map_delete',	'uses' => 'AdminMapController@delete'))		->where('id', '^\d+$');
 			Route::get('gestion-principale',array('as' => 'admin_map_main',		'uses' => 'AdminMapController@main'));
 		});
 

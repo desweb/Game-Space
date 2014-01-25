@@ -69,6 +69,8 @@ function Map()
 
 	this.getTilemapUrl	= function() { return 'http://game-space.desweb-creation.fr/api/map/' + _id + '/datas'; };
 
+	this.getDownloadUrl	= function() { return 'http://game-space.desweb-creation.fr/administration/carte/' + _id + '/telecharger'; };
+
 	/**
 	 * Setters
 	 */

@@ -143,6 +143,10 @@ $(function()
     $('#fullscreen-button').click(function(e)
     {
         game.stage.scale.startFullScreen();
+
+        game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL; //resize your window to see the stage resize too
+game.stage.scale.setShowAll();
+game.stage.scale.refresh();
     });
 
     /**

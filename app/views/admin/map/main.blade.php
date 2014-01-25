@@ -237,11 +237,6 @@ $(function()
             }
         });
 	}
-
-    /**
-     * Functionnalities
-     */
-
 });
 </script>
 </body>

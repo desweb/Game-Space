@@ -51,6 +51,7 @@
     <div class="right">
         <div id="edit-button" class="button">Editer informations</div>
         <div id="save-button" class="button">Sauvegarder</div>
+        <div id="download-button" class="button">Télécharger</div>
     </div>
 </div>
 <div id="tilemap-container" class="interface">
@@ -81,6 +82,7 @@ $(function()
     var map_object = new Map;
 
     var is_save = false;
+    var is_unsave_modif = false;
 
     var marker_graph;
     var current_tile = 1;
@@ -136,9 +138,14 @@ $(function()
         marker_graph.x = map_layer.getTileX(cursor.getWorldPointer().x) * 32;
         marker_graph.y = map_layer.getTileY(cursor.getWorldPointer().y) * 32;
 
+        var map_tile = map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
+
         if (!cursor.isMouseDown() || 
-            map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y)) == current_tile)
+            map_tile === undefined || 
+            map_tile == current_tile)
             return;
+
+        is_unsave_modif = true;
 
         map_tilemap.putTile(current_tile, map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
 
@@ -196,7 +203,6 @@ $(function()
     {
         $('#edit-form').fadeToggle();
 
-        console.log(map_object.getTitle());
         $('#edit-form input[name=title]')           .val(map_object.getTitle());
         $('#edit-form textarea[name=description]')  .val(map_object.getDescription());
     });
@@ -259,6 +265,8 @@ $(function()
             {
                 if (response.error) return;
 
+                is_unsave_modif = false;
+
                 Message.success('Carte sauvegardée');
             },
             fail : function()
@@ -274,10 +282,15 @@ $(function()
         });
     });
 
-    /**
-     * Functionnalities
-     */
+    $('#download-button').click(function(e)
+    {
+        if (is_unsave_modif)
+        {
+            if (!confirm('Attention, des modifications n\'ont pas été enregistrées.\nTélécharger quand même ?')) return false;
+        }
 
+        location.href = map_object.getDownloadUrl();
+    });
 });
 </script>
 </body>
