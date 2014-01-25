@@ -1,25 +1,27 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Gestion de la carte principale</title>
 
     {{ HTML::style('css/base.css') }}
     {{ HTML::style('css/map-main.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
+    {{ HTML::script('js/mobile.js') }}
     {{ HTML::script('js/phaser.min.js') }}
 
     {{ HTML::script('js/classes/API.js') }}
     {{ HTML::script('js/classes/Interface.js') }}
     {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/Font.js') }}
+    {{ HTML::script('js/classes/Cursor.js') }}
 </head>
 <body>
 
-<div id="tool-bar">
+<div id="tool-bar" class="interface">
     <div class="right">
-        <div id="save-button" class="button interface">Sauvegarder</div>
+        <div id="save-button" class="button">Sauvegarder</div>
     </div>
 </div>
 
@@ -34,9 +36,9 @@ $(function()
 
     var game = new Phaser.Game($(window).width(), $(window).height() - 60, Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
 
-    var is_save = false;
+    var cursor;
 
-    var cursors;
+    var is_save = false;
 
     // Map
     var map_sprite;
@@ -54,8 +56,8 @@ $(function()
     };
 
     // Minis games
-    var game_texts	= new Array();
-    var game_sprites= new Array();
+    var game_texts	= new Array;
+    var game_sprites= new Array;
     var game_datas	= [
         @foreach($games as $game)
         	{
@@ -123,13 +125,13 @@ $(function()
     		game_texts[i].anchor.setTo(.5, 2);
     	}
 
-        cursors = game.input.keyboard.createCursorKeys();
-
         // Display game
         Interface.show(false, function()
         {
             Message.info('Glisser/Déposer les icônes.');
         });
+
+        cursor = new Cursor(game, IS_MOBILE);
     }
 
     function update()
@@ -137,11 +139,11 @@ $(function()
         // Drag & drop map
         if (is_map_over && is_map_down)
         {
-            if (map_old_x) game.camera.x += map_old_x - game.input.mousePointer.x;
-            if (map_old_y) game.camera.y += map_old_y - game.input.mousePointer.y;
+            if (map_old_x) game.camera.x += map_old_x - cursor.getPointer().x;
+            if (map_old_y) game.camera.y += map_old_y - cursor.getPointer().y;
 
-            map_old_x = game.input.mousePointer.x;
-            map_old_y = game.input.mousePointer.y;
+            map_old_x = cursor.getPointer().x;
+            map_old_y = cursor.getPointer().y;
         }
         else
         {
@@ -163,11 +165,11 @@ $(function()
     		game_texts[i].y = game_sprites[i].y;
     	}
 
-        if      (cursors.up.isDown)     game.camera.y -= 200;
-        else if (cursors.down.isDown)   game.camera.y += 200;
+        if      (cursor.isTopDown())    game.camera.y -= 200;
+        else if (cursor.isBottomDown()) game.camera.y += 200;
 
-        if      (cursors.left.isDown)   game.camera.x -= 200;
-        else if (cursors.right.isDown)  game.camera.x += 200;
+        if      (cursor.isLeftDown())   game.camera.x -= 200;
+        else if (cursor.isRightDown())  game.camera.x += 200;
     }
 
     /**
@@ -189,7 +191,7 @@ $(function()
 
 		is_save = true;
 
-		$(this).html('Chargement...');
+		$(this).html(Interface.getLoaderMini());
 
 		apiPostMain();
 	});

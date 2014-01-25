@@ -7,7 +7,7 @@ function Interface()
 
 	this.loading = function(complete)
 	{
-		$('body').prepend('<div id="' + _loading_id + '"><img src="http://game-space.desweb-creation.fr/images/loader.gif" alt="Chargement"/> Chargement...</div>');
+		$('body').prepend('<div id="' + _loading_id + '">' + this.getLoader() + '</div>');
 		$('body').append('<div id="' + _game_id + '" class="interface"></div>');
 
 		$('#loading').fadeIn(ANIM_TIME, function()
@@ -46,6 +46,21 @@ function Interface()
 	 */
 
 	this.getGameId = function() { return _game_id; };
+
+	this.getLoaderMini = function()
+	{
+		return '<img src="http://game-space.desweb-creation.fr/images/loader-mini.gif" alt="Chargement"/> Chargement...';
+	};
+
+	this.getLoader = function()
+	{
+		return '<img src="http://game-space.desweb-creation.fr/images/loader.gif" alt="Chargement"/> Chargement...';
+	};
+
+	this.getLoaderLarge = function()
+	{
+		return '<img src="http://game-space.desweb-creation.fr/images/loader-large.gif" alt="Chargement"/> Chargement...';
+	};
 }
 
 var Interface = new Interface;

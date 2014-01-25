@@ -8,6 +8,7 @@
     {{ HTML::style('css/map-manage.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
+    {{ HTML::script('js/mobile.js') }}
     {{ HTML::script('js/phaser.min.js') }}
 
     {{ HTML::script('js/classes/API.js') }}
@@ -15,6 +16,7 @@
     {{ HTML::script('js/classes/Interface.js') }}
     {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/Map.js') }}
+    {{ HTML::script('js/classes/Cursor.js') }}
 
     {{ HTML::script('js/default-map.js') }}
 </head>
@@ -38,7 +40,7 @@
 @endif
 
 <div id="edit-form" class="form">
-    {{ Form::text('name', '', array('placeholder' => 'Titre')); }}
+    {{ Form::text('title', '', array('placeholder' => 'Titre')); }}
 
     {{ Form::textarea('description', '', array('placeholder' => 'Description')); }}
 
@@ -47,8 +49,8 @@
 
 <div id="tool-bar" class="interface">
     <div class="right">
-        <div id="edit-button" class="button interface">Editer informations</div>
-        <div id="save-button" class="button interface">Sauvegarder</div>
+        <div id="edit-button" class="button">Editer informations</div>
+        <div id="save-button" class="button">Sauvegarder</div>
     </div>
 </div>
 <div id="tilemap-container" class="interface">
@@ -68,6 +70,8 @@ $(function()
      */
 
     var game;
+
+    var cursor;
 
     // Map
     var map_tilemap;
@@ -123,21 +127,22 @@ $(function()
         {
             Message.info('Sélectionnez la texture et cliquez sur la carte.');
         });
+
+        cursor = new Cursor(game, IS_MOBILE);
     }
 
     function update()
     {
-        marker_graph.x = map_layer.getTileX(game.input.activePointer.worldX) * 32;
-        marker_graph.y = map_layer.getTileY(game.input.activePointer.worldY) * 32;
+        marker_graph.x = map_layer.getTileX(cursor.getWorldPointer().x) * 32;
+        marker_graph.y = map_layer.getTileY(cursor.getWorldPointer().y) * 32;
 
-        if (!game.input.mousePointer.isDown) return;
+        if (!cursor.isMouseDown() || 
+            map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y)) == current_tile)
+            return;
 
-        if (map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y)) != current_tile)
-        {
-            map_tilemap.putTile(current_tile, map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
+        map_tilemap.putTile(current_tile, map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
 
-            map_object.getTilemap().layers[0].data[map_layer.getTileY(marker_graph.y) * map_object.getTilemap().width + map_layer.getTileX(marker_graph.x)] = current_tile;
-        }
+        map_object.getTilemap().layers[0].data[map_layer.getTileY(marker_graph.y) * map_object.getTilemap().width + map_layer.getTileX(marker_graph.x)] = current_tile;
     }
 
     /**
@@ -157,7 +162,7 @@ $(function()
                     height  : $('#create-form input[name=height]')  .val()
                 })) return false;
 
-            $(this).html('Chargement...');
+            $(this).html(Interface.getLoaderMini());
 
             map_object.setTitle         ($('#create-form input[name=title]')            .val());
             map_object.setDescription   ($('#create-form textarea[name=description]')   .val());
@@ -177,10 +182,6 @@ $(function()
                         launchGame();
                     });
                 },
-                fail : function()
-                {
-
-                },
                 always : function()
                 {
                     $('#create-form button').html('Créer ma carte');
@@ -195,21 +196,22 @@ $(function()
     {
         $('#edit-form').fadeToggle();
 
-        $('#edit-form input[name=title]')           .val(map_object.getTitle);
-        $('#edit-form textarea[name=description]')  .val(map_object.getDescription);
+        console.log(map_object.getTitle());
+        $('#edit-form input[name=title]')           .val(map_object.getTitle());
+        $('#edit-form textarea[name=description]')  .val(map_object.getDescription());
     });
 
     $('#edit-form button').click(function(e)
     {
         if (is_save) return false;
 
-        is_save = true;
-
         if (!map_object.checkEditForm({
                 title : $('#edit-form input[name=title]').val()
             })) return false;
 
-        $(this).html('Chargement...');
+        is_save = true;
+
+        $(this).html(Interface.getLoaderMini());
 
         map_object.setTitle         ($('#edit-form input[name=title]')          .val());
         map_object.setDescription   ($('#edit-form textarea[name=description]') .val());
@@ -250,7 +252,7 @@ $(function()
 
         is_save = true;
 
-        $(this).html('Chargement...');
+        $(this).html(Interface.getLoaderMini());
 
         map_object.save({
             success : function(response)
