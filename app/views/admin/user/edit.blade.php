@@ -36,4 +36,41 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="inner">
+		<div class="row">
+			<div class="col-lg-6" style="position:relative;">
+				<div class="box">
+					<header>
+						<h5>Liste des jeux</h5>
+					</header>
+					<div id="stripedTable" class="body collapse in">
+						@include('admin.user.includes.games')
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6" style="position:relative;">
+				<div class="box">
+					<header>
+						<h5>Liste des trophées</h5>
+					</header>
+					<div id="stripedTable" class="body collapse in">
+						@include('admin.user.includes.achievements')
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12" style="position:relative;">
+				<div class="box">
+					<header>
+						<h5>Liste des témoignages</h5>
+					</header>
+					<div id="stripedTable" class="body collapse in">
+						@include('admin.user.includes.witnesses')
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 @stop

@@ -47,4 +47,13 @@ class UserAchievement extends Eloquent
 			'is_unlock'				=> $this->is_unlock? 1: 0,
 			'achievement_reference'	=> $this->achievement->reference);
 	}
+
+	/**
+	 * Getters
+	 */
+
+	public function displayUnlockLabel()
+	{
+		return $this->is_unlock? '&nbsp;<span class="label label-success">Débloqué</span>&nbsp;': '';
+	}
 }
