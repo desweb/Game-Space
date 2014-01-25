@@ -145,10 +145,11 @@ Route::group(array('prefix' => 'api'), function()
 	// Auth
 	Route::group(array('prefix' => 'auth'), function()
 	{
-		Route::post('/',			array('as' => 'api_auth',			'uses' => 'ApiAuthController@index'));
-		Route::post('add/{hash}',	array('as' => 'api_auth_add',		'uses' => 'ApiAuthController@add'));
-		Route::post('update/{hash}',array('as' => 'api_auth_update',	'uses' => 'ApiAuthController@update'))->where('hash', '^[0-9a-f]{32}$');
-		Route::post('password',		array('as' => 'api_auth_password',	'uses' => 'ApiAuthController@password'));
+		Route::post('/',				array('as' => 'api_auth',			'uses' => 'ApiAuthController@index'));
+		Route::post('add/{hash}',		array('as' => 'api_auth_add',		'uses' => 'ApiAuthController@add'))		->where('hash', '^[0-9a-f]{32}$');
+		Route::post('facebook/{hash}',	array('as' => 'api_auth_facebook',	'uses' => 'ApiAuthController@facebook'))->where('hash', '^[0-9a-f]{32}$');
+		Route::post('update/{hash}',	array('as' => 'api_auth_update',	'uses' => 'ApiAuthController@update'))	->where('hash', '^[0-9a-f]{32}$');
+		Route::post('password',			array('as' => 'api_auth_password',	'uses' => 'ApiAuthController@password'));
 
 		Route::delete('{token}', array('as' => 'api_auth_delete','uses' => 'ApiAuthController@delete'))->where('token', '^[0-9a-f]{32}$');
 	});

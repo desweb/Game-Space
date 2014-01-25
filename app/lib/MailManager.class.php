@@ -86,6 +86,18 @@ class MailManager
 		});
 	}
 
+	public static function userAddFacebook($user, $password)
+	{
+		Mail::send('emails.user.addFacebook',
+			array(
+				'user'		=> $user,
+				'password'	=> $password),
+			function($message) use ($user)
+		{
+			$message->to($user->email, $user->username)->subject('Création de votre compte');
+		});
+	}
+
 	public static function lostPassword($user_token)
 	{
 		Mail::send('emails.auth.password',

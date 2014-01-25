@@ -33,7 +33,7 @@ class ApiAuthController extends BaseController
 		if ($validator->fails())						return ApiErrorManager::errorLogs($validator->errors()->all());
 		if (User::byEmail(Input::get('email')))			return ApiErrorManager::errorLogs(array('Cet email est déjà utilisé.'));
 		if (User::byUsername(Input::get('username')))	return ApiErrorManager::errorLogs(array('Ce pseudo est déjà utilisé.'));
-		if ($this->checkHashAdd())						return ApiErrorManager::errorLogs(array('Hash incorrect.'));
+		if (!$this->checkHashAdd())						return ApiErrorManager::errorLogs(array('Hash incorrect.'));
 
 		$user = new User;
 		$user->username		= Input::get('username');
@@ -45,27 +45,61 @@ class ApiAuthController extends BaseController
 		$user->setPhoto();
 		$user->save();
 
-		$games = Game::all();
-
-		foreach($games as $game)
-		{
-			$game_user = new GameUser;
-			$game_user->user_id = $user->id;
-			$game_user->game_id = $game->id;
-			$game_user->save();
-		}
-
-		$achievements = Achievement::all();
-
-		foreach($achievements as $achievement)
-		{
-			$user_achievement = new UserAchievement;
-			$user_achievement->user_id			= $user->id;
-			$user_achievement->achievement_id	= $achievement->id;
-			$user_achievement->save();
-		}
+		$user->createGames();
+		$user->createAchievements();
 
 		MailManager::userAdd($user);
+
+		$user->login();
+
+		$response = Response::json($user->getApiInformations());
+
+		if ($cookie = $user->getAutoLogin()) $response->withCookie($cookie);
+
+		return $response;
+	}
+
+	public function facebook()
+	{
+		$validator = AuthValidator::facebook();
+
+		if ($validator->fails()) return ApiErrorManager::errorLogs($validator->errors()->all());
+
+		$facebook_datas = json_decode(Input::get('datas'));
+
+		if (!$this->checkHashAddFacebook($facebook_datas->email)) return ApiErrorManager::errorLogs(array('Hash incorrect.'));
+
+		if (!$user = User::byFacebookId($facebook_datas->id))
+		{
+			$user = User::byEmail($facebook_datas->email);
+
+			if ($user)
+			{
+				$user->facebook_id = $facebook_datas->id;
+				$user->save();
+			}
+		}
+
+		if (!$user)
+		{
+			$user = new User;
+			$user->username		= $facebook_datas->username;
+			$user->email		= $facebook_datas->email;
+			$user->setBirthdayAt($facebook_datas->birthday);
+			$user->facebook_id	= $facebook_datas->id;
+			$user->setTypeUser();
+
+			$password = Tools::generatePassword();
+			$user->setPassword($password);
+
+			$user->setPhotoFacebook();
+			$user->save();
+
+			$user->createGames();
+			$user->createAchievements();
+
+			MailManager::userAddFacebook($user, $password);
+		}
 
 		$user->login();
 
@@ -81,7 +115,7 @@ class ApiAuthController extends BaseController
 		$validator = AuthValidator::apiUpdate();
 
 		if ($validator->fails())									return ApiErrorManager::errorLogs($validator->errors()->all());
-		if ($this->checkHashUpdate())								return ApiErrorManager::errorLogs(array('Hash incorrect.'));
+		if (!$this->checkHashUpdate())								return ApiErrorManager::errorLogs(array('Hash incorrect.'));
 		if (!$user = User::userByReference(Input::get('reference')))return ApiErrorManager::errorLogs(array('Référence invalide.'));
 
 		$user->setAuthToken();
@@ -113,6 +147,11 @@ class ApiAuthController extends BaseController
 	private function checkHashAdd()
 	{
 		return Input::get('hash') == md5(self::HASH_ADD . Input::get('email') . Input::get('password') . Input::get('time'));
+	}
+
+	private function checkHashAddFacebook($email)
+	{
+		return Input::get('hash') == md5(self::HASH_ADD . $email . Input::get('time'));
 	}
 
 	private function checkHashUpdate()

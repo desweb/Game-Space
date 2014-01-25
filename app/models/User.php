@@ -114,6 +114,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return self::where('email', $email)->first();
 	}
 
+	public static function byFacebookId($facebook_id)
+	{
+		return self::where('facebook_id', $facebook_id)->first();
+	}
+
 	public static function userById($id, $is_fail = false)
 	{
 		$q = self::where('type',	self::TYPE_USER)
@@ -234,6 +239,32 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return md5(self::SECURITY_HASH . $password);
 	}
 
+	public function createGames()
+	{
+		$games = Game::all();
+
+		foreach($games as $game)
+		{
+			$game_user = new GameUser;
+			$game_user->user_id = $this->id;
+			$game_user->game_id = $game->id;
+			$game_user->save();
+		}
+	}
+
+	public function createAchievements()
+	{
+		$achievements = Achievement::all();
+
+		foreach($achievements as $achievement)
+		{
+			$user_achievement = new UserAchievement;
+			$user_achievement->user_id			= $this->id;
+			$user_achievement->achievement_id	= $achievement->id;
+			$user_achievement->save();
+		}
+	}
+
 	/**
 	 * Overrides
 	 */
@@ -317,6 +348,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 		$image->setOwner($this);
 		$image->upload('photo', false);
+	}
+
+	public function setPhotoFacebook()
+	{
+		$image = new Image;
+		$image->setTypeProfile();
+		$image->setFacebookOwner($this);
 	}
 
 	public function setTypeAdministrator() { $this->type = self::TYPE_ADMINISTRATOR; }

@@ -21,6 +21,18 @@ class AuthValidator
             ));
     }
 
+    public static function facebook()
+    {
+        return Validator::make(
+            Input::all(),
+            array(
+                'datas' => array('required')
+            ),
+            array(
+                'datas.required' => 'Les informations Facebook sont obligatoires.'
+            ));
+    }
+
     public static function lostPassword()
     {
         return Validator::make(
