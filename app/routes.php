@@ -139,6 +139,9 @@ Route::group(array('prefix' => 'api'), function()
 	// Home
 	Route::get('/', array('as' => 'api_home', 'uses' => 'ApiHomeController@index'));
 
+	// Contact
+	Route::post('contact', array('as' => 'api_contact', 'uses' => 'ApiContactController@add'));
+
 	// Auth
 	Route::group(array('prefix' => 'auth'), function()
 	{

@@ -14,6 +14,15 @@ class Contact extends Eloquent
 	protected $table = 'contact';
 
 	/**
+	 * Magic methods
+	 */
+
+	public function __construct()
+	{
+		$this->setStateWaiting();
+	}
+
+	/**
 	 * Global
 	 */
 
