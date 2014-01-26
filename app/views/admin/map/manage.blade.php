@@ -22,29 +22,31 @@
 </head>
 <body>
 
-@if (!isset($map))
-    <div id="create-form" class="form">
-        {{ Form::text('title',   '', array('placeholder' => 'Titre')); }}
+<div id="mask">
+    @if (!isset($map))
+        <div id="create-form" class="form">
+            {{ Form::text('title',   '', array('placeholder' => 'Titre')); }}
 
-        <div class="style-select"> 
-            {{ Form::select('type', Map::types()); }}
+            <div class="style-select"> 
+                {{ Form::select('type', Map::types()); }}
+            </div>
+
+            {{ Form::text('width',  '', array('placeholder' => 'Nombre de case en largueur')); }}
+            {{ Form::text('height', '', array('placeholder' => 'Nombre de case en hauteur')); }}
+
+            {{ Form::textarea('description', '', array('rows' => 2, 'placeholder' => 'Description')); }}
+
+            {{ Form::button('Créer ma carte'); }}
         </div>
+    @endif
 
-        {{ Form::text('width',  '', array('placeholder' => 'Nombre de case en largueur')); }}
-        {{ Form::text('height', '', array('placeholder' => 'Nombre de case en hauteur')); }}
+    <div id="edit-form" class="form">
+        {{ Form::text('title', '', array('placeholder' => 'Titre')); }}
 
-        {{ Form::textarea('description', '', array('placeholder' => 'Description')); }}
+        {{ Form::textarea('description', '', array('rows' => 2, 'placeholder' => 'Description')); }}
 
-        {{ Form::button('Créer ma carte'); }}
+        {{ Form::button('Enregistrer'); }}
     </div>
-@endif
-
-<div id="edit-form" class="form">
-    {{ Form::text('title', '', array('placeholder' => 'Titre')); }}
-
-    {{ Form::textarea('description', '', array('placeholder' => 'Description')); }}
-
-    {{ Form::button('Enregistrer'); }}
 </div>
 
 <div id="tool-bar" class="interface">
@@ -95,7 +97,7 @@ $(function()
 
         launchGame();
     @else
-        $('#create-form').fadeIn();
+        Interface.showMask('create-form');
     @endif
 
     function launchGame()
@@ -140,10 +142,7 @@ $(function()
 
         var map_tile = map_tilemap.getTile(map_layer.getTileX(marker_graph.x), map_layer.getTileY(marker_graph.y));
 
-        if (!cursor.isMouseDown() || 
-            map_tile === undefined || 
-            map_tile == current_tile)
-            return;
+        if (!cursor.isPointerDown() || map_tile === undefined || map_tile == current_tile) return;
 
         is_unsave_modif = true;
 
@@ -155,6 +154,16 @@ $(function()
     /**
      * Events
      */
+
+    $('#mask').click(function(e)
+    {
+        Interface.hideMask();
+    });
+
+    $('.form').click(function(e)
+    {
+        e.stopPropagation();
+    });
 
     @if (!isset($map))
         $('#create-form button').click(function(e)
@@ -183,7 +192,7 @@ $(function()
                 {
                     if (response.error) return;
 
-                    $('#create-form').fadeOut(1000, function()
+                    Interface.hideMask(function()
                     {
                         $('#create-form').remove();
                         launchGame();
@@ -201,7 +210,7 @@ $(function()
 
     $('#edit-button').click(function(e)
     {
-        $('#edit-form').fadeToggle();
+        Interface.showMask('edit-form');
 
         $('#edit-form input[name=title]')           .val(map_object.getTitle());
         $('#edit-form textarea[name=description]')  .val(map_object.getDescription());
@@ -227,13 +236,9 @@ $(function()
             {
                 if (response.error) return;
 
-                $('#edit-form').fadeOut();
+                Interface.hideMask();
 
                 Message.success('Carte sauvegardée');
-            },
-            fail : function()
-            {
-
             },
             always : function()
             {
@@ -268,10 +273,6 @@ $(function()
                 is_unsave_modif = false;
 
                 Message.success('Carte sauvegardée');
-            },
-            fail : function()
-            {
-
             },
             always : function()
             {

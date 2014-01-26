@@ -1,13 +1,6 @@
 <div id="top">
   <nav class="navbar navbar-inverse navbar-static-top">
     <header class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-
       <a href="{{ route('admin_home') }}" class="navbar-brand">
         {{ HTML::image('admin/assets/img/logo.png', 'Logo') }}
       </a>
@@ -16,6 +9,13 @@
     <div class="topnav">
       <div class="btn-toolbar">
         <div class="btn-group">
+          <a data-placement="bottom" data-original-title="{{ $total_witnesses_waiting? $total_witnesses_waiting . ' témoignage' . ($total_witnesses_waiting > 1? 's': '') . ' reçu' . ($total_witnesses_waiting > 1? 's': ''): 'Aucun témoignage non lu' }}" data-toggle="tooltip" class="btn btn-default btn-sm">
+            <i class="fa fa-comment"></i>
+
+            @if ($total_witnesses_waiting)
+              <span class="label label-danger">{{ $total_witnesses_waiting }}</span>
+            @endif
+          </a>
           <a data-placement="bottom" data-original-title="{{ $total_contact_waiting? $total_contact_waiting . ' message' . ($total_contact_waiting > 1? 's': '') . ' reçu' . ($total_contact_waiting > 1? 's': ''): 'Aucun message non lu' }}" data-toggle="tooltip" class="btn btn-default btn-sm">
             <i class="fa fa-envelope"></i>
 

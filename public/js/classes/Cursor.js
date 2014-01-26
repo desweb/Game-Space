@@ -27,9 +27,9 @@ function Cursor(game, is_mobile)
 	 * Checks
 	 */
 
-	this.isMouseDown = function()
+	this.isPointerDown = function()
 	{
-		return _game.input.mousePointer.isDown;
+		return _is_mobile? _game.input.pointer1.isDown: _game.input.mousePointer.isDown;
 	};
 
 	this.isTopDown = function()

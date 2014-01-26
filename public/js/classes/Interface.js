@@ -36,9 +36,32 @@ function Interface()
 		});
 	};
 
-	this.fadeIn = function(element)
+	this.showMask = function(id, complete)
 	{
+		var is_complete = false;
 
+		$('#mask').fadeIn();
+		$('#' + id).fadeIn(function()
+		{
+			if (is_complete || !complete) return;
+
+			complete();
+			is_complete = true;
+		});
+	};
+
+	this.hideMask = function(complete)
+	{
+		var is_complete = false;
+
+		$('#mask').fadeOut();
+		$('.form').fadeOut(function()
+		{
+			if (is_complete || !complete) return;
+
+			complete();
+			is_complete = true;
+		});
 	};
 
 	/**

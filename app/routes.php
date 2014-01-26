@@ -212,7 +212,8 @@ Route::get('victor', array('as' => 'victor', 'uses' => 'HomeController@victor'))
 
 View::composer('admin.partials.header', function($view)
 {
-	$view->total_contact_waiting = Contact::waiting()->count();
+	$view->total_witnesses_waiting	= GameWitness::waiting()->count();
+	$view->total_contact_waiting	= Contact::waiting()	->count();
 });
 
 View::composer('admin.partials.menu', function($view)

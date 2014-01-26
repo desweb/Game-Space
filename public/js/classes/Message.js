@@ -1,7 +1,8 @@
 function Message()
 {
-	var CONTENT_DIV_ID = 'infos';
-	var MESSAGE_DIV_ID = 'message';
+	var CONTAINER_DIV_ID= 'message-container';
+	var CONTENT_DIV_ID	= 'message-content';
+	var MESSAGE_DIV_ID	= 'message';
 
 	var ANIM_TIME	= 500;
 	var DISPLAY_TIME= 2000;
@@ -27,7 +28,7 @@ function Message()
 
 	function display(content)
 	{
-		if (!$('#' + CONTENT_DIV_ID).length) $('body').prepend('<div id="' + CONTENT_DIV_ID + '"/>');
+		if (!$('#' + CONTAINER_DIV_ID).length) $('body').prepend('<div id="' + CONTAINER_DIV_ID + '"><div id="' + CONTENT_DIV_ID + '"></div></div>');
 
 		var message_id = MESSAGE_DIV_ID + '-' + new Date().getTime();
 
@@ -45,6 +46,8 @@ function Message()
 					
 					clearTimeout(timeout);
 					timeout = null;
+
+					if ($('#' + CONTENT_DIV_ID).html() == '') $('#' + CONTAINER_DIV_ID).remove();
 				});
 			}, DISPLAY_TIME);
 		});
