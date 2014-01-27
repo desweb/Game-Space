@@ -7,7 +7,7 @@ function Interface()
 
 	this.loading = function(complete)
 	{
-		$('body').prepend('<div id="' + _loading_id + '">' + this.getLoader() + '</div>');
+		$('body').prepend('<div id="' + _loading_id + '"><p>' + this.getLoader() + '</p></div>');
 		$('body').append('<div id="' + _game_id + '" class="interface"></div>');
 
 		$('#loading').fadeIn(ANIM_TIME, function()

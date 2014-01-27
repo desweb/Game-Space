@@ -4,35 +4,29 @@
     <meta charset="UTF-8" />
     <title>GameSpace</title>
 
-    <style type="text/css">
-        body { padding:0; margin:0; background-color:black; }
-
-        #loading { position:fixed; margin:auto; width:100%; height:100%; background-color:rgba(0, 0, 0, .5); font:20px Arial, sans-serif; color:white; text-align:center; }
-
-        #menu-button { position:absolute; top:10px; left:10px; width:100px; height:50px; background-color:rgba(0, 0, 0, .5); z-index:999; }
-        #menu-button:hover { cursor:pointer; }
-        #menu { position:absolute; left:-200px; width:200px; height:100%; background-color:black; z-index:999; }
-
-        #fullscreen-button { position:absolute; top:10px; right:10px; width:100px; height:50px; background-color:rgba(0, 0, 0, .5); z-index:999; }
-        #fullscreen-button:hover { cursor:pointer; }
-
-        #game { z-index:1; }
-    </style>
+    {{ HTML::style('css/front.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
+    {{ HTML::script('js/mobile.js') }}
     {{ HTML::script('js/phaser.min.js') }}
+
+    {{ HTML::script('js/classes/Console.js') }}
+    {{ HTML::script('js/classes/API.js') }}
+    {{ HTML::script('js/classes/Interface.js') }}
+    {{ HTML::script('js/classes/Message.js') }}
+    {{ HTML::script('js/classes/Font.js') }}
+    {{ HTML::script('js/classes/Cursor.js') }}
+
+    {{ HTML::script('js/classes/GameMain.js') }}
 </head>
 <body>
-<div id="loading">
-    <p>Chargement...</p>
+
+<div id="mask">
+    
 </div>
 
-<div id="menu-button"></div>
-<div id="menu"></div>
+@include('front.partials.menu')
 
-<div id="fullscreen-button"></div>
-
-<div id="game"></div>
 <script type="text/javascript">
 $(function()
 {
@@ -40,93 +34,42 @@ $(function()
      * Init
      */
 
-    var game = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, 'game', { preload:preload, create:create, update:update });
+    var _images = {
+        map         : '{{ asset('images/map.png') }}',
+        level       : '{{ asset('images/phaser.png') }}',
+        game_mini   : '{{ asset('images/phaser.png') }}'
+    };
 
-    var player;
-    var cursors;
+    var _game_main_datas = {
+        id      : {{ $game_main->id }},
+        levels  : {{ $game_main->datas }}
+    };
 
-    var default_style = { font:'65px Arial', fill:'#ff0044', align:'center' };
-
-    var level_datas = [
-        {
-            pos : { top : 800, left : 900 }
-        },
-        {
-            pos : { top : 700, left : 500 }
-        }
+    var _game_datas  = [
+        @foreach($games as $game)
+            {
+                id      : {{ $game->id }},
+                datas   : {{ $game->datas }},
+                title   : "{{ $game->title }}"
+            },
+        @endforeach
     ];
 
-    var game_datas = [
-        {
-            pos : { top : 250, left : 600 }
-        },
-        {
-            pos : { top : 300, left : 200 }
-        }
-    ];
+    var _game_main;
 
     /**
-     * Loading
+     * Main game
      */
 
-    function preload()
-    {
-        game.load.image('background',   '{{ asset('images/map.png') }}');
-        game.load.image('player',       '{{ asset('images/phaser.png') }}');
-        game.load.image('level',        '{{ asset('images/phaser.png') }}');
-        game.load.image('game-mini',    '{{ asset('images/phaser.png') }}');
-    }
+    _game_main = new GameMain;
 
-    function hideLoader()
-    {
-        $('#loading').fadeOut(1000, function()
-        {
-            $('#loading').remove();
-        });
-    }
+    _game_main.init({
+        images          : _images,
+        game_main_datas : _game_main_datas,
+        game_datas      : _game_datas
+    });
 
-    /**
-     * Creation
-     */
-
-    function create()
-    {
-        game.add.tileSprite(0, 0, 4000, 4000, 'background');
-
-        game.world.setBounds(0, 0, 4000, 4000);
-
-        level_datas.forEach(function(level_data)
-        {
-            var level = game.add.sprite(level_data.pos.left, level_data.pos.top, 'level');
-            level.scale.setTo(.1, .1);
-        });
-
-        game_datas.forEach(function(level_data)
-        {
-            var game_mini = game.add.sprite(level_data.pos.left, level_data.pos.top, 'game-mini');
-            game_mini.scale.setTo(.1, .1);
-        });
-
-        player = game.add.sprite(1400, 1400, 'player');
-        player.scale.setTo(.2, .2);
-
-        cursors = game.input.keyboard.createCursorKeys();
-
-        game.camera.follow(player);
-
-        hideLoader();
-    }
-
-    function update()
-    {
-        player.body.velocity.setTo(0, 0);
-
-        if      (cursors.up.isDown)     player.body.velocity.y = -200;
-        else if (cursors.down.isDown)   player.body.velocity.y = 200;
-
-        if      (cursors.left.isDown)   player.body.velocity.x = -200;
-        else if (cursors.right.isDown)  player.body.velocity.x = 200;
-    }
+    _game_main.launch();
 
     /**
      * Events
@@ -139,25 +82,6 @@ $(function()
         $('#menu')          .animate(animation, 1000);
         $('#menu-button')   .animate(animation, 1000);
     });
-
-    $('#fullscreen-button').click(function(e)
-    {
-        game.stage.scale.startFullScreen();
-
-        game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL; //resize your window to see the stage resize too
-game.stage.scale.setShowAll();
-game.stage.scale.refresh();
-    });
-
-    /**
-     * Debug
-     */
-
-    function render()
-    {
-        game.debug.renderCameraInfo(game.camera, 32, 32);
-        game.debug.renderSpriteCoords(player, 32, 200);
-    }
 });
 </script>
 

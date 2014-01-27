@@ -8,10 +8,8 @@ class HomeController extends BaseController
 		if (Auth::check()) User::logout();
 
 		return View::make('front.home')
-					->with('game',			'')
-					->with('games',			array())
-					->with('map',			'')
-					->with('achievements',	array());
+					->with('game_main',	Game::main())
+					->with('games',		Game::allList());
 	}
 
 	public function token($token)
