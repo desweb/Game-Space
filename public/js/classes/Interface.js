@@ -1,16 +1,20 @@
 function Interface()
 {
-	var ANIM_TIME = 500;
+	var _interface_class = 'interface';
 
 	var _loading_id	= 'loading';
 	var _game_id	= 'game';
 
+	/**
+	 * Global
+	 */
+
 	this.loading = function(complete)
 	{
 		$('body').prepend('<div id="' + _loading_id + '"><p>' + this.getLoader() + '</p></div>');
-		$('body').append('<div id="' + _game_id + '" class="interface"></div>');
+		$('body').append('<div id="' + _game_id + '" class="' + _interface_class + '"></div>');
 
-		$('#loading').fadeIn(ANIM_TIME, function()
+		$('#' + _loading_id).fadeIn(function()
 		{
 			if (complete) complete();
 		});
@@ -22,12 +26,12 @@ function Interface()
 
 		var is_complete = false;
 
-		$('#' + _loading_id).fadeOut(ANIM_TIME, function()
+		$('#' + _loading_id).fadeOut(function()
 		{
 			$('#' + _loading_id).remove();
 		});
 
-		$('.interface').fadeIn(ANIM_TIME, function()
+		$('.' + _interface_class).fadeIn(function()
 		{
 			if (is_complete || !complete) return;
 
@@ -36,7 +40,21 @@ function Interface()
 		});
 	};
 
-	this.showMask = function(id, complete)
+	this.hide = function(complete)
+	{
+		$('.' + _interface_class).fadeOut();
+
+		$('#' + _game_id).fadeOut(function()
+		{
+			if (complete) complete();
+		});
+	};
+
+	/**
+	 * Popup
+	 */
+
+	this.showPopup = function(id, complete)
 	{
 		var is_complete = false;
 
@@ -50,12 +68,12 @@ function Interface()
 		});
 	};
 
-	this.hideMask = function(complete)
+	this.hidePopup = function(complete)
 	{
 		var is_complete = false;
 
 		$('#mask').fadeOut();
-		$('.form').fadeOut(function()
+		$('.popup').fadeOut(function()
 		{
 			if (is_complete || !complete) return;
 

@@ -51,4 +51,9 @@ function Cursor(game, is_mobile)
 	{
 		return _cursors.right.isDown;
 	};
+
+	this.isSpaceBarDown = function()
+	{
+		return _game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+	};
 }
