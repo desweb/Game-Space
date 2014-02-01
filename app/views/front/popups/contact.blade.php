@@ -2,15 +2,29 @@
 	<div class="close link"></div>
 	<h2>Contact</h2>
 
-	<div class="popup-content">
-		{{ Form::text('contact-username', Input::old('contact-username'), array('placeholder' => 'Prénom Nom')) }}
-		{{ Form::email('contact-email', Input::old('contact-email'), array('placeholder' => 'Email')) }}
-
+	<div id="contact-form" class="popup-content">
+		{{ Form::text('username', '', array('placeholder' => 'Prénom Nom')) }}
+		<br/>
+		{{ Form::email('email', '', array('placeholder' => 'Email')) }}
+		<br/>
 		<div class="select-style">
-			{{ Form::select('contact-object', Contact::objects()) }}
+			{{ Form::select('object', Contact::objects()) }}
 		</div>
-
-		{{ Form::textarea('contact-message', Input::old('contact-message'), array('placeholder' => 'Mon message')) }}
+		<br/>
+		{{ Form::textarea('message', '', array('placeholder' => 'Mon message')) }}
+		<br/>
 		{{ Form::button('Envoyer') }}
 	</div>
 </div>
+
+<script type="text/javascript">
+$(function()
+{
+	$('#contact-form button').click(function()
+	{
+		Contact.setFormId('contact-form');
+
+		if (Contact.checkFields()) Contact.send();
+	});
+});
+</script>

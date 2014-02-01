@@ -20,6 +20,15 @@ function API()
 	};
 
 	/**
+	 * Contact
+	 */
+
+	this.post_contact = function(datas, response_functions)
+	{
+		postRequest('contact', datas, response_functions);
+	};
+
+	/**
 	 * Map
 	 */
 
@@ -71,6 +80,7 @@ function API()
 
 	function postRequest(url, datas, response_functions)
 	{
+		console.log(datas);
 		$.post(BASE_URL + url, datas,
 		function(response)
 		{

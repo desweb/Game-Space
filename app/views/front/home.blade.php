@@ -19,8 +19,11 @@
     {{ HTML::script('js/classes/Message.js') }}
     {{ HTML::script('js/classes/Font.js') }}
     {{ HTML::script('js/classes/Cursor.js') }}
+    {{ HTML::script('js/classes/Security.js') }}
+    {{ HTML::script('js/classes/Contact.js') }}
 
     {{ HTML::script('js/classes/namespace.js') }}
+
     {{ HTML::script('js/classes/game-main/Game.js') }}
     {{ HTML::script('js/classes/game-main/Map.js') }}
     {{ HTML::script('js/classes/game-main/Player.js') }}
