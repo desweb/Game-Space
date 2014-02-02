@@ -9,6 +9,7 @@
     {{ HTML::style('css/front.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
+    {{ HTML::script('js/jquery.md5.js') }}
     {{ HTML::script('js/mobile.js') }}
     {{ HTML::script('js/phaser.min.js') }}
 
@@ -21,6 +22,7 @@
     {{ HTML::script('js/classes/Cursor.js') }}
     {{ HTML::script('js/classes/Security.js') }}
     {{ HTML::script('js/classes/Contact.js') }}
+    {{ HTML::script('js/classes/User.js') }}
 
     {{ HTML::script('js/classes/namespace.js') }}
 
@@ -65,6 +67,10 @@
 <body>
 
 <div id="mask">
+    @if (Session::has('is_password_reinit'))
+        @include('front.popups.password-reinit')
+    @endif
+
     @include('front.popups.auth')
     @include('front.popups.user')
     @include('front.popups.story')

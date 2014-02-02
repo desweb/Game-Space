@@ -1,5 +1,7 @@
 function Contact()
 {
+	var _is_loading = false;
+
 	var _form_id;
 
 	var _username_element;
@@ -19,7 +21,7 @@ function Contact()
 	};
 
 	/**
-	 * Functionnalities
+	 * Checks
 	 */
 
 	this.checkFields = function()
@@ -32,44 +34,47 @@ function Contact()
 		// Empty
 		if (Security.empty(_username_element.val()))
 		{
-			Message.error('Prénom Nom obligatoire.')
+			Message.error('Prénom Nom obligatoire.');
 			return false;
 		}
 
 		if (Security.empty(_email_element.val()))
 		{
-			Message.error('Email obligatoire.')
+			Message.error('Email obligatoire.');
 			return false;
 		}
 
 		if (Security.empty(_message_element.val()))
 		{
-			Message.error('Message obligatoire.')
+			Message.error('Message obligatoire.');
 			return false;
 		}
 
 		// Email
 		if (!Security.email(_email_element.val()))
 		{
-			Message.error('Email invalide.')
+			Message.error('Email invalide.');
 			return false;
 		}
 
 		return true;
 	};
 
+	/**
+	 * Functionnalities
+	 */
+
 	this.send = function()
 	{
+		if (_is_loading) return;
+
+		_is_loading = true;
+
 		_button_element	= $('#' + _form_id + ' button');
 
 		_button_element.html(Interface.getLoaderMini());
 
-		API.post_contact({
-			username: _username_element	.val(),
-			email	: _email_element	.val(),
-			object	: _object_element	.val(),
-			message	: _message_element	.val()
-		},
+		API.post_contact(_form_id,
 		{
 			success : function(response)
 			{
@@ -87,6 +92,8 @@ function Contact()
 			},
 			always : function()
 			{
+				_is_loading = false;
+
 				_button_element.html('Envoyer');
 			}
 		});

@@ -204,7 +204,8 @@ Route::group(array('prefix' => 'api'), function()
 Route::get('/',			array('as' => 'home',	'uses' => 'HomeController@index'));
 Route::get('{token}',	array('as' => 'token',	'uses' => 'HomeController@token'))->where('token', '^[0-9a-f]{32}$');
 
-Route::get('victor', array('as' => 'victor', 'uses' => 'HomeController@victor'));
+// TMP
+Route::get('victor',array('as' => 'victor', 'uses' => 'HomeController@victor'));
 
 /**
  * Composer

@@ -23,6 +23,9 @@ App::before(function()
 	Config::set('url_analytics', 'https://www.google.com/analytics/web/?hl=fr&pli=1#report/visitors-overview/a46865258w77998084p80641792/');
 
 	Config::set('email_signature', '<p>L\'équipe GameSpace</p>');
+
+	Config::set('facebook_app_id',		'1407465939501094');
+	Config::set('facebook_channel_url',	'http://game-space.desweb-creation.fr/');
 });
 
 /**

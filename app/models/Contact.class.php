@@ -49,7 +49,7 @@ class Contact extends Eloquent
 	 * Functionalities
 	 */
 
-	public function objects()
+	public static function objects()
 	{
 		return self::$objects;
 	}
@@ -103,7 +103,7 @@ class Contact extends Eloquent
 
 	public function displayDelete()
 	{
-		return '<a class="actions delete" href="' . route('admin_witness_delete', array('id' => $this->id)) . '" title="Supprimer le message de ' . $this->username . '" data-toggle="tooltip">' . HTML::image('images/icons/delete.png') . '</a>';
+		return '<a class="actions delete" href="' . route('admin_contact_delete', array('id' => $this->id)) . '" title="Supprimer le message de ' . $this->username . '" data-toggle="tooltip">' . HTML::image('images/icons/delete.png') . '</a>';
 	}
 
 	public function displayActions()

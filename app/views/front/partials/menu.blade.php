@@ -3,12 +3,11 @@
 
 <div id="menu" class="interface">
 	<h1>GameSpace</h1>
-	<ul>
-		<li id="story-button">Histoire</li>
-		<li id="team-button">Equipe</li>
-		<li id="contact-button">Contact</li>
-		<li id="fullscreen-button">Fullscreen</li>
-	</ul>
+
+	<p id="story-button">Histoire</p>
+	<p id="team-button">Equipe</p>
+	<p id="contact-button">Contact</p>
+	<p id="fullscreen-button">Fullscreen</p>
 </div>
 
 <script type="text/javascript">

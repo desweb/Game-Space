@@ -2,7 +2,7 @@
 	<div class="close link"></div>
 	<h2>Contact</h2>
 
-	<div id="contact-form" class="popup-content">
+	<form id="contact-form" class="popup-content">
 		{{ Form::text('username', '', array('placeholder' => 'Prénom Nom')) }}
 		<br/>
 		{{ Form::email('email', '', array('placeholder' => 'Email')) }}
@@ -14,7 +14,7 @@
 		{{ Form::textarea('message', '', array('placeholder' => 'Mon message')) }}
 		<br/>
 		{{ Form::button('Envoyer') }}
-	</div>
+	</form>
 </div>
 
 <script type="text/javascript">

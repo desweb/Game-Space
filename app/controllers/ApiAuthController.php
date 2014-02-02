@@ -14,7 +14,7 @@ class ApiAuthController extends BaseController
 
 		if ($validator->fails())							return ApiErrorManager::errorLogs($validator->errors()->all());
 		if (!$user = User::userByEmail(Input::get('email')))return ApiErrorManager::errorLogs(array('Identifiants de connexion incorrects.'));
-		if (!$user->password == Input::get('password'))		return ApiErrorManager::errorLogs(array('Identifiants de connexion incorrects.'));
+		if ($user->password != Input::get('password'))		return ApiErrorManager::errorLogs(array('Identifiants de connexion incorrects.'));
 		if ($user->isInactive())							return ApiErrorManager::errorLogs(array('Compte désactivé.'));
 
 		$user->login();
