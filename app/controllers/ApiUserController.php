@@ -29,7 +29,7 @@ class ApiUserController extends BaseController
 		Auth::user()->setPhoto();
 		Auth::user()->save();
 
-		return Response::json(array('is_success' => 1));
+		return Response::json(array('is_success' => 1, 'photo_url' => Auth::user()->photo->url));
 	}
 
 	public function password()
@@ -58,9 +58,9 @@ class ApiUserController extends BaseController
 
 	public function delete()
 	{
-		User::logout();
-
 		Auth::user()->delete();
+
+		User::logout();
 
 		return Response::json(array('is_success' => 1));
 	}

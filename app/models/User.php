@@ -297,6 +297,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return Cookie::make('remember', array('email' => $this->email, 'password' => $this->password), time() + self::COOKIE_LIFE_TIME);
 	}
 
+	public function getPhotoUrl()
+	{
+		return $this->photo->url? $this->photo->url: '';
+	}
+
 	public function getApiInformations()
 	{
 		$user_token = UserToken::byUserIdAndType($this->id, UserToken::TYPE_AUTH);

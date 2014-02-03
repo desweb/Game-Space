@@ -1,6 +1,6 @@
-GameMain.Player = function()
+MainGame.Player.Player = function()
 {
-	Console.trace('GameMain.Player', 'constructor');
+	Console.trace('MainGame.Player.Player', 'constructor');
 
 	var _sprite;
 
@@ -16,15 +16,15 @@ GameMain.Player = function()
 
 	function create()
 	{
-		Console.trace('GameMain.Player', 'create');
+		Console.trace('MainGame.Player.Player', 'create');
 
 		// Sprite
-		_sprite = current_game.getGame().add.sprite(0, 0, 'player');
+		_sprite = GameState.phaser().add.sprite(0, 0, 'player');
 		_sprite.anchor.setTo(.5, .5);
 		_sprite.scale.setTo(.3, .3);
 
 		// Fires
-	    _fires = new GameMain.Player.Fires;
+	    _fires = new MainGame.Player.Fires;
 	}
 
 	/**
@@ -33,7 +33,7 @@ GameMain.Player = function()
 
 	function destroy()
 	{
-		Console.trace('GameMain.Player', 'destroy');
+		Console.trace('MainGame.Player.Player', 'destroy');
 
 		_fires.destroy();
 		_fires = null;
@@ -49,8 +49,8 @@ GameMain.Player = function()
 
 	this.update = function()
 	{
-		_sprite.x = current_game.getGame().camera.x + current_game.getGame().camera.width	/2;
-		_sprite.y = current_game.getGame().camera.y + current_game.getGame().camera.height/2;
+		_sprite.x = GameState.phaser().camera.x + GameState.phaser().camera.width	/2;
+		_sprite.y = GameState.phaser().camera.y + GameState.phaser().camera.height/2;
 
 		orientation();
 

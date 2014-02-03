@@ -25,11 +25,12 @@
 				{{ Form::file('photo', array('accept' => 'image/png,image/jpg', 'size' => '1048576', 'data-preview' => 'registration-avatar-preview')) }}
 				<img id="registration-avatar-preview" class="preview" alt="Avatar"/>
 			</div>
-			{{ Form::text('username',	'username', array('placeholder' => 'Pseudo')) }}<br/>
-			{{ Form::email('email',		'email@domaine.com', array('placeholder' => 'Email')) }}<br/>
-			{{ Form::text('birthday_at','21/10/1991', array('placeholder' => 'Date de naissance : 00/00/0000')) }}<br/>
-			{{ Form::input('password', 'password-nocrypt', 'password', array('placeholder' => 'Mot de passe')) }}<br/>
-			{{ Form::input('password', 'password-confirm', 'password', array('placeholder' => 'Confirmation du mot de passe')) }}<br/>
+			<br/>
+			{{ Form::text('username',	'', array('placeholder' => 'Pseudo')) }}<br/>
+			{{ Form::email('email',		'', array('placeholder' => 'Email')) }}<br/>
+			{{ Form::text('birthday_at','', array('placeholder' => 'Date de naissance : 00/00/0000')) }}<br/>
+			{{ Form::input('password', 'password-nocrypt', '', array('placeholder' => 'Mot de passe')) }}<br/>
+			{{ Form::input('password', 'password-confirm', '', array('placeholder' => 'Confirmation du mot de passe')) }}<br/>
 
 			<input type="hidden" name="birthday_time"/>
 			<input type="hidden" name="password"/>
@@ -65,22 +66,26 @@ $(function()
 	{
 		User.setFormId('connexion-form');
 
-		if (User.checkConnexionForm()) User.sendConnexion();
+		if (User.checkConnexionForm()) User.login();
 	});
 
 	$('#registration-form button').click(function()
 	{
 		User.setFormId('registration-form');
 
-		if (User.checkRegistrationForm()) User.sendRegistration();
+		if (User.checkRegistrationForm()) User.registration();
 	});
 
 	$('#password-lost-form button').click(function()
 	{
 		User.setFormId('password-lost-form');
 
-		if (User.checkPasswordLostForm()) User.sendPasswordLost();
+		if (User.checkPasswordLostForm()) User.passwordLost();
 	});
+
+	/**
+	 * Switch form
+	 */
 
 	$('.connexion-link').click(function()
 	{
@@ -140,8 +145,6 @@ $(function()
 	{
 		FB.login(function(response)
 		{
-			console.log('auth : ' + JSON.stringify(response));
-
 			if (!response.authResponse)
 			{
 				Console.info('User cancelled login or did not fully authorize.');
@@ -150,9 +153,7 @@ $(function()
 
 			FB.api('/me', function(response)
 			{
-				console.log('me : ' + JSON.stringify(response));
-
-				User.sendFacebook(response);
+				User.facebook(response);
 			});
 		},
 		{

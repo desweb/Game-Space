@@ -1,6 +1,6 @@
-GameMain.Game = function()
+MainGame.Game = function()
 {
-	Console.trace('GameMain', 'constructor');
+	Console.trace('MainGame.Game', 'constructor');
 
 	var CAMERA_SPEED = 20;
 
@@ -11,9 +11,6 @@ GameMain.Game = function()
 
 	// Cursor : Mouse, Keyboard, touch
 	var _cursor;
-
-	// Assets
-	var _images = {};
 
 	// Map
 	var _map;
@@ -28,38 +25,20 @@ GameMain.Game = function()
 	var _dragon_next_time = 0;
 
 	// Main game
-	var _level_sprites	= new Array;
-	var _level_datas;
+	var _level_sprites = new Array;
 
 	// Minis games
-	var _game_sprites	= new Array;
-	var _game_datas;
+	var _game_sprites = new Array;
 
-	/**
-	 * Init
-	 */
-
-	this.init = function(datas)
-	{
-		Console.trace('GameMain', 'constructor', datas);
-
-		_images = datas.images;
-
-		_id			= datas.game_main_datas.id;
-		_level_datas= datas.game_main_datas.levels;
-
-		_game_datas	= datas.game_datas;
-	};
+	launch();
 
 	/**
 	 * Launch
 	 */
 
-	this.launch = function()
+	function launch()
 	{
-		Console.trace('GameMain', 'launch');
-
-		Interface.loading();
+		Console.trace('MainGame.Game', 'launch');
 
 		_game = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
 	};
@@ -70,14 +49,14 @@ GameMain.Game = function()
 
 	function preload()
 	{
-		Console.trace('GameMain', 'preload');
+		Console.trace('MainGame.Game', 'preload');
 
-		_game.load.image('map',			_images.map);
-		_game.load.image('player',		_images.level);
-		_game.load.image('level',		_images.level);
-		_game.load.image('game-mini',	_images.game_mini);
-		_game.load.image('player-fire',	_images.player_fire);
-		_game.load.image('dragon',		_images.level);
+		_game.load.image('map',			Common.main_game.images.map);
+		_game.load.image('level',		Common.main_game.images.level);
+		_game.load.image('mini-game',	Common.main_game.images.mini_game);
+		_game.load.image('dragon',		Common.main_game.images.dragon);
+		_game.load.image('player',		Common.main_game.images.player.player);
+		_game.load.image('player-fire',	Common.main_game.images.player.fire);
 	}
 
 	/**
@@ -86,7 +65,7 @@ GameMain.Game = function()
 
 	function create()
 	{
-		Console.trace('GameMain', 'create');
+		Console.trace('MainGame.Game', 'create');
 
 		_game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
 
@@ -94,29 +73,29 @@ GameMain.Game = function()
 		_game.world.setBounds(0, 0, 4000, 4000);
 
 		// Cursor
-		_cursor = new Cursor(_game, IS_MOBILE);
+		_cursor = new Cursor;
 
 		// Map
-		_map = new GameMain.Map(_game, _cursor);
+		_map = new MainGame.Map;
 
 		// Main game
-		for (var i in _level_datas)
+		for (var i in Common.main_game.levels)
 		{
-			_level_sprites[i] = _game.add.sprite(_level_datas[i].pos.x, _level_datas[i].pos.y, 'level');
+			_level_sprites[i] = _game.add.sprite(Common.main_game.levels[i].pos.x, Common.main_game.levels[i].pos.y, 'level');
 			_level_sprites[i].anchor.setTo(.5, .5);
 			_level_sprites[i].scale.setTo(.1, .1);
 		}
 
 		// Minis games
-		for (var i in _game_datas)
+		for (var i in Common.main_game.mini_games)
 		{
-			_game_sprites[i] = _game.add.sprite(_game_datas[i].datas.pos.x, _game_datas[i].datas.pos.y, 'game-mini');
+			_game_sprites[i] = _game.add.sprite(Common.main_game.mini_games[i].datas.pos.x, Common.main_game.mini_games[i].datas.pos.y, 'mini-game');
 			_game_sprites[i].anchor.setTo(.5, .5);
 			_game_sprites[i].scale.setTo(.1, .1);
 		}
 
 		// Player
-		_player = new GameMain.Player;
+		_player = new MainGame.Player.Player;
 
 		// Display game
 		Interface.show(false, function()
@@ -136,7 +115,7 @@ GameMain.Game = function()
 
 	this.destroy = function()
 	{
-		Console.trace('GameMain', 'destroy');
+		Console.trace('MainGame.Game', 'destroy');
 
 		// Cursor
 		_cursor.destroy();
@@ -173,10 +152,7 @@ GameMain.Game = function()
 		_dragons = null;
 
 		// Datas
-		_id			= null;
-		_images		= null;
-		_level_datas= null;
-		_game_datas	= null;
+		_id = null;
 
 		// Game
 		_game.removeAll();
@@ -212,7 +188,7 @@ GameMain.Game = function()
 		// Create dragons
 		if (_game.time.now > _dragon_next_time)
 		{
-			_dragons[_dragons.length] = new GameMain.Dragon;
+			_dragons[_dragons.length] = new MainGame.Dragon;
 
 			_dragon_next_time = _game.time.now + _dragon_rate_time;
 		}

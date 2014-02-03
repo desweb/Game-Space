@@ -19,6 +19,7 @@ return array(
     'AdminUserController' => $baseDir . '/app/controllers/AdminUserController.php',
     'AdminWitnessController' => $baseDir . '/app/controllers/AdminWitnessController.php',
     'ApiAuthController' => $baseDir . '/app/controllers/ApiAuthController.php',
+    'ApiContactController' => $baseDir . '/app/controllers/ApiContactController.php',
     'ApiErrorManager' => $baseDir . '/app/lib/ApiErrorManager.class.php',
     'ApiGameUserController' => $baseDir . '/app/controllers/ApiGameUserController.php',
     'ApiHomeController' => $baseDir . '/app/controllers/ApiHomeController.php',

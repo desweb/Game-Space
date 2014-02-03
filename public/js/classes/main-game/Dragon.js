@@ -1,6 +1,6 @@
-GameMain.Dragon = function()
+MainGame.Dragon = function()
 {
-	Console.trace('GameMain.Dragon', 'constructor');
+	Console.trace('MainGame.Dragon', 'constructor');
 
 	var _sprite;
 
@@ -16,18 +16,18 @@ GameMain.Dragon = function()
 
 	function create()
 	{
-		Console.trace('GameMain.Dragon', 'create');
+		Console.trace('MainGame.Dragon', 'create');
 
 		// Sprite
-		_sprite = current_game.getGame().add.sprite(current_game.getGame().world.randomX, current_game.getGame().world.randomY, 'dragon');
+		_sprite = GameState.phaser().add.sprite(GameState.phaser().world.randomX, GameState.phaser().world.randomY, 'dragon');
 		_sprite.anchor.setTo(.5, .5);
 		_sprite.scale.setTo(.2, .2);
 
 		_sprite.body.immovable = true;
 
-		_sprite.angle = current_game.getGame().rnd.angle();
+		_sprite.angle = GameState.phaser().rnd.angle();
 
-		current_game.getGame().physics.velocityFromRotation(_sprite.rotation, 100, _sprite.body.velocity);
+		GameState.phaser().physics.velocityFromRotation(_sprite.rotation, 100, _sprite.body.velocity);
 	}
 
 	/**
@@ -38,7 +38,7 @@ GameMain.Dragon = function()
 	{
 		if (_is_destroy) return;
 
-		Console.trace('GameMain.Dragon', 'destroy');
+		Console.trace('MainGame.Dragon', 'destroy');
 
 		_is_destroy = true;
 
@@ -51,8 +51,8 @@ GameMain.Dragon = function()
 
 	this.update = function()
 	{
-		if (_sprite.x < -50 || _sprite.x > current_game.getGame().world.width || 
-			_sprite.y < -50 || _sprite.y > current_game.getGame().world.height)
+		if (_sprite.x < -50 || _sprite.x > GameState.phaser().world.width || 
+			_sprite.y < -50 || _sprite.y > GameState.phaser().world.height)
 			destroy();
 	};
 

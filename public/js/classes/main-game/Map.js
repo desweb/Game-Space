@@ -1,9 +1,6 @@
-GameMain.Map = function(game, cursor)
+MainGame.Map = function()
 {
-	Console.trace('GameMain.Map', 'constructor');
-
-	var _game	= game;
-	var _cursor	= cursor;
+	Console.trace('MainGame.Map', 'constructor');
 
 	var _sprite;
 
@@ -20,9 +17,9 @@ GameMain.Map = function(game, cursor)
 
 	function create()
 	{
-		Console.trace('GameMain.Map', 'create');
+		Console.trace('MainGame.Map', 'create');
 
-		_sprite = _game.add.sprite(0, 0, 'map');
+		_sprite = GameState.phaser().add.sprite(0, 0, 'map');
 		_sprite.inputEnabled = true;
 
 		_sprite.events.onInputOver	.add(overSprite,this);
@@ -37,7 +34,7 @@ GameMain.Map = function(game, cursor)
 
 	function destroy()
 	{
-		Console.trace('GameMain.Map', 'destroy');
+		Console.trace('MainGame.Map', 'destroy');
 
 		_old_position	= null;
 		_is_over		= null;
@@ -55,11 +52,11 @@ GameMain.Map = function(game, cursor)
 		// Drag & drop
 		if (_is_over && _is_down)
 		{
-			if (_old_position.x) _game.camera.x += _old_position.x - _cursor.getPointer().x;
-			if (_old_position.y) _game.camera.y += _old_position.y - _cursor.getPointer().y;
+			if (_old_position.x) GameState.phaser().camera.x += _old_position.x - GameState.cursor().getPointer().x;
+			if (_old_position.y) GameState.phaser().camera.y += _old_position.y - GameState.cursor().getPointer().y;
 
-			_old_position.x = _cursor.getPointer().x;
-			_old_position.y = _cursor.getPointer().y;
+			_old_position.x = GameState.cursor.getPointer().x;
+			_old_position.y = GameState.cursor.getPointer().y;
 		}
 		else
 		{

@@ -13,7 +13,9 @@
     {{ HTML::script('js/mobile.js') }}
     {{ HTML::script('js/phaser.min.js') }}
 
+    {{ HTML::script('js/classes/GameState.js') }}
     {{ HTML::script('js/classes/Console.js') }}
+    {{ HTML::script('js/classes/Common.js') }}
     {{ HTML::script('js/classes/API.js') }}
     {{ HTML::script('js/classes/Tools.js') }}
     {{ HTML::script('js/classes/Interface.js') }}
@@ -26,11 +28,11 @@
 
     {{ HTML::script('js/classes/namespace.js') }}
 
-    {{ HTML::script('js/classes/game-main/Game.js') }}
-    {{ HTML::script('js/classes/game-main/Map.js') }}
-    {{ HTML::script('js/classes/game-main/Player.js') }}
-    {{ HTML::script('js/classes/game-main/player/Fires.js') }}
-    {{ HTML::script('js/classes/game-main/Dragon.js') }}
+    {{ HTML::script('js/classes/main-game/Game.js') }}
+    {{ HTML::script('js/classes/main-game/Map.js') }}
+    {{ HTML::script('js/classes/main-game/Dragon.js') }}
+    {{ HTML::script('js/classes/main-game/player/Player.js') }}
+    {{ HTML::script('js/classes/main-game/player/Fires.js') }}
 
     <script type="text/javascript">
 
@@ -38,19 +40,20 @@
          * Init
          */
 
-        var images = {
-            map         : '{{ asset('images/map.png') }}',
-            level       : '{{ asset('images/phaser.png') }}',
-            game_mini   : '{{ asset('images/phaser.png') }}',
-            player_fire : '{{ asset('images/game-main/fire.png') }}'
-        };
-
-        var game_main_datas = {
+        Common.main_game = {
             id      : {{ $game_main->id }},
-            levels  : {{ $game_main->datas }}
-        };
-
-        var game_datas  = [
+            images  : {
+                map         : '{{ asset('images/main-game/map.png') }}',
+                level       : '{{ asset('images/main-game/level.png') }}',
+                mini_game   : '{{ asset('images/main-game/mini-game.png') }}',
+                dragon      : '{{ asset('images/main-game/dragon.png') }}',
+                player      : {
+                    player  : '{{ asset('images/main-game/player/player.png') }}',
+                    fire    : '{{ asset('images/main-game/player/fire.png') }}'
+                }
+            },
+            levels      : {{ $game_main->datas }},
+            mini_games  : [
             @foreach($games as $game)
                 {
                     id      : {{ $game->id }},
@@ -58,9 +61,8 @@
                     title   : "{{ $game->title }}"
                 },
             @endforeach
-        ];
-
-        var current_game;
+            ]
+        };
 
     </script>
 </head>
@@ -86,18 +88,10 @@
 $(function()
 {
     /**
-     * Main game
+     * Launch
      */
 
-    current_game = new GameMain.Game;
-
-    current_game.init({
-        images          : images,
-        game_main_datas : game_main_datas,
-        game_datas      : game_datas
-    });
-
-    current_game.launch();
+    GameState.launchMainGame();
 
     /**
      * Events

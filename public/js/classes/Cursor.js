@@ -1,9 +1,6 @@
-function Cursor(game, is_mobile)
+function Cursor()
 {
-	var _game		= game;
-	var _is_mobile	= is_mobile;
-
-	var _cursors = _game.input.keyboard.createCursorKeys();
+	var _cursors = GameState.phaser().input.keyboard.createCursorKeys();
 
 	/**
 	 * Functionnalities
@@ -15,7 +12,7 @@ function Cursor(game, is_mobile)
 
 	this.getPointer = function()
 	{
-		return _is_mobile? _game.input.pointer1: _game.input.mousePointer;
+		return IS_MOBILE? GameState.phaser().input.pointer1: GameState.phaser().input.mousePointer;
 	};
 
 	this.getWorldPointer = function()
@@ -29,7 +26,7 @@ function Cursor(game, is_mobile)
 
 	this.isPointerDown = function()
 	{
-		return _is_mobile? _game.input.pointer1.isDown: _game.input.mousePointer.isDown;
+		return IS_MOBILE? GameState.phaser().input.pointer1.isDown: GameState.phaser().input.mousePointer.isDown;
 	};
 
 	this.isTopDown = function()
@@ -54,6 +51,6 @@ function Cursor(game, is_mobile)
 
 	this.isSpaceBarDown = function()
 	{
-		return _game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+		return GameState.phaser().input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
 	};
 }
