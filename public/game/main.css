@@ -1,0 +1,37 @@
+/* Z-index order */
+
+#user-button, #menu-button, #menu { z-index:997; }
+
+/**
+ * Popup
+ */
+
+#user-popup #delete-link { padding:5px 10px; background-color:red; border-radius:3px; display:inline-block; }
+
+/**
+ * Form
+ */
+
+#registration-form, #password-lost-form, #avatar-form, #password-form { display:none; }
+
+#connexion-form #facebook-link { padding:5px 10px; background-color:#3B5999; border-radius:3px; display:inline-block; }
+
+#avatar-form .preview-content { width:100px; height:100px; }
+
+/**
+ * Social networks
+ */
+
+#social-networks-share { position:fixed; right:100px; padding:10px 5px; background-color:rgba(0, 0, 0, .5); border-bottom-left-radius:3px; border-bottom-right-radius:3px; }
+.social-networks-share { float:left; width:130px; height:20px; text-align:center; vertical-align:middle; }
+
+#social-networks-share:hover { cursor:default; }
+
+/**
+ * Menu
+ */
+
+#user-button{ position:fixed; top:10px; right:10px; }
+#menu-button{ position:fixed; top:10px; left:10px; }
+#menu		{ position:fixed; left:-200px; width:200px; height:100%; background-color:black; color:white; text-align:center; opacity:0; }
+

@@ -1,2 +1,0 @@
-var MainGame	= {};
-MainGame.Player	= {};

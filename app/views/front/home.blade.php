@@ -1,40 +1,44 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8">
+
     <title>GameSpace</title>
 
     {{ HTML::style('http://fonts.googleapis.com/css?family=Kite+One') }}
 
-    {{ HTML::style('css/front.css') }}
+    {{ HTML::style('global/css/main.css') }}
+    {{ HTML::style('game/main.css') }}
 
     {{ HTML::script('http://code.jquery.com/jquery-latest.min.js') }}
-    {{ HTML::script('js/jquery.md5.js') }}
-    {{ HTML::script('js/mobile.js') }}
-    {{ HTML::script('js/phaser.min.js') }}
+    {{ HTML::script('global/js/libs/jquery.md5.js') }}
+    {{ HTML::script('global/js/libs/is-mobile.js') }}
+    {{ HTML::script('global/js/libs/phaser.min.js') }}
 
-    {{ HTML::script('js/classes/GameState.js') }}
-    {{ HTML::script('js/classes/Console.js') }}
-    {{ HTML::script('js/classes/Common.js') }}
-    {{ HTML::script('js/classes/API.js') }}
-    {{ HTML::script('js/classes/Tools.js') }}
-    {{ HTML::script('js/classes/Interface.js') }}
-    {{ HTML::script('js/classes/Message.js') }}
-    {{ HTML::script('js/classes/Font.js') }}
-    {{ HTML::script('js/classes/Cursor.js') }}
-    {{ HTML::script('js/classes/Security.js') }}
-    {{ HTML::script('js/classes/Contact.js') }}
-    {{ HTML::script('js/classes/User.js') }}
+    {{ HTML::script('global/js/classes/Console.js') }}
+    {{ HTML::script('global/js/classes/Font.js') }}
+    {{ HTML::script('global/js/classes/Interface.js') }}
+    {{ HTML::script('global/js/classes/Message.js') }}
+    {{ HTML::script('global/js/classes/Security.js') }}
+    {{ HTML::script('global/js/classes/Tools.js') }}
 
-    {{ HTML::script('js/classes/namespace.js') }}
+    {{ HTML::script('game/_namespace.js') }}
 
-    {{ HTML::script('js/classes/main-game/Game.js') }}
-    {{ HTML::script('js/classes/main-game/Map.js') }}
-    {{ HTML::script('js/classes/main-game/Dragon.js') }}
-    {{ HTML::script('js/classes/main-game/player/Player.js') }}
-    {{ HTML::script('js/classes/main-game/player/Fires.js') }}
+    {{ HTML::script('game/GameState.js') }}
+    {{ HTML::script('game/Common.js') }}
+    {{ HTML::script('game/API.js') }}
+    {{ HTML::script('game/Cursor.js') }}
+    {{ HTML::script('game/User.js') }}
 
-    <script type="text/javascript">
+    {{ HTML::script('game/validators/ContactValidator.js') }}
+
+    {{ HTML::script('game/main-game/Game.js') }}
+    {{ HTML::script('game/main-game/Map.js') }}
+    {{ HTML::script('game/main-game/Dragon.js') }}
+    {{ HTML::script('game/main-game/player/Player.js') }}
+    {{ HTML::script('game/main-game/player/Fires.js') }}
+
+    <script>
 
         /**
          * Init
@@ -84,7 +88,7 @@
 
 @include('front.partials.menu')
 
-<script type="text/javascript">
+<script>
 $(function()
 {
     /**
@@ -92,36 +96,6 @@ $(function()
      */
 
     GameState.launchMainGame();
-
-    /**
-     * Events
-     */
-
-    /* Popup */
-
-    $('#mask').click(function()
-    {
-        Interface.hidePopup();
-    });
-
-    $('.popup').click(function(e)
-    {
-        e.stopPropagation();
-    });
-
-    $('.popup .close').click(function()
-    {
-        Interface.hidePopup();
-    });
-
-    /* Form */
-
-    $('input[type=file]').change(function()
-    {
-        if (!$(this).data('preview')) return false;
-
-        Tools.previewImage($(this).data('preview'), this);
-    });
 });
 </script>
 
