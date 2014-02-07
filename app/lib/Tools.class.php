@@ -2,6 +2,11 @@
 
 class Tools
 {
+	public static function stringBold($str_bold, $str)
+	{
+		return preg_replace('/' . $str_bold . '/i', '<b>' . $str_bold . '</b>', $str);
+	}
+
 	/**
 	 * Generation
 	 */

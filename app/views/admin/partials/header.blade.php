@@ -109,6 +109,9 @@
           <i class="fa fa-envelope"></i> Messages
         @elseif (Route::currentRouteName() == 'admin_contact_show')
           <i class="fa fa-envelope"></i> Répondre au message
+
+        @elseif (Route::currentRouteName() == 'admin_research')
+          <i class="fa fa-search"></i> Recherche avancée : <b>{{ Input::get('research') }}</b>
         @endif
       </h3>
     </div>

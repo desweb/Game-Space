@@ -90,7 +90,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public static function research($research)
 	{
-		return self::where('type', self::TYPE_USER)
+		$users = self::where('type', self::TYPE_USER)
 					->where(function($q) use ($research)
 					{
 						$q->where('reference',		'like', '%' . $research . '%')
@@ -98,6 +98,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 							->orWhere('email',		'like', '%' . $research . '%');
 					})
 					->get();
+
+		foreach ($users as $user)
+		{
+			$user->reference= Tools::stringBold($research, $user->reference);
+			$user->username	= Tools::stringBold($research, $user->username);
+			$user->email	= Tools::stringBold($research, $user->email);
+		}
+
+		return $users;
 	}
 
 	/**
@@ -311,7 +320,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 			'reference'		=> $this->reference,
 			'username'		=> $this->username,
 			'email'			=> $this->email,
-			'birthday_at'	=> strtotime($this->birthday_at),
+			'birthday_time'	=> strtotime($this->birthday_at) * 1000,
 			'is_newsletter'	=> $this->is_newsletter? 1: 0,
 			'facebook_id'	=> $this->facebook_id? $this->facebook_id: 0,
 			'photo_url'		=> $this->photo->url);
@@ -430,7 +439,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public function displayUsername()
 	{
-		return HTML::link(route('admin_user_edit', array('id' => $this->id)), $this->username, array('title' => 'Editer l\'utilisateur ' . $this->username, 'data-toggle' => 'tooltip'));
+		return '<a href="' . route('admin_user_edit', array('id' => $this->id)) . '" title="Editer l\'utilisateur ' . $this->username . '" data-toggle="tooltip">' . $this->username . '</a>';
 	}
 
 	public function displayStateLabel()
