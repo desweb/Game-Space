@@ -1,16 +1,25 @@
 <?php
 
 /**
+ * Error
+ */
+
+App::missing(function($exception)
+{
+	return Redirect::route(App::environment() == 'admin'? 'admin_home': 'home');
+});
+
+/**
  * Global
  */
 
 Route::get('lang/{lang}', array('as' => 'lang', 'uses' => 'LocaleController@index'));
 
 /**
- * Backoffice
+ * Admin
  */
 
-Route::group(array('prefix' => 'administration'), function()
+Route::group(array('domain' => 'admin.game-space.desweb-creation.fr'), function()
 {
 	// Auth
 	Route::group(array('before' => 'admin_unauth'), function()
@@ -188,11 +197,11 @@ Route::group(array('prefix' => 'api'), function()
 	// Map
 	Route::group(array('prefix' => 'map', 'before' => 'api_auth_admin'), function()
 	{
-		Route::get('{id}/datas', array('as' => 'api_map_datas', 'uses' => 'ApiMapController@datas'))->where('reference', '^\d+$');
+		Route::get('{id}/datas', array('as' => 'api_map_datas', 'uses' => 'ApiMapController@datas'))->where('id', '^\d+$');
 
 		Route::post('main',	array('as' => 'api_map_main_update','uses' => 'ApiMapController@main'));
 		Route::post('/',	array('as' => 'api_map_add',		'uses' => 'ApiMapController@add'));
-		Route::post('{id}',	array('as' => 'api_map_update',		'uses' => 'ApiMapController@update'))->where('reference', '^\d+$');
+		Route::post('{id}',	array('as' => 'api_map_update',		'uses' => 'ApiMapController@update'))->where('id', '^\d+$');
 	});
 });
 
@@ -205,7 +214,7 @@ Route::get('/',			array('as' => 'home',	'uses' => 'HomeController@index'));
 Route::get('{token}',	array('as' => 'token',	'uses' => 'HomeController@token'))->where('token', '^[0-9a-f]{32}$');
 
 // TMP
-Route::get('victor',array('as' => 'victor', 'uses' => 'HomeController@victor'));
+Route::get('victor', array('as' => 'victor', 'uses' => 'HomeController@victor'));
 
 /**
  * Composer
