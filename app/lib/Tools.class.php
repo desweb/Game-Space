@@ -7,6 +7,17 @@ class Tools
 		return preg_replace('/' . $str_bold . '/i', '<b>' . $str_bold . '</b>', $str);
 	}
 
+	public static function stringBoldRemove($str)
+	{
+		$str = preg_replace('/<b>/i',	'', $str);
+		return preg_replace('/<\/b>/i',	'', $str);
+	}
+
+	public static function plurial($count, $is_x = false)
+	{
+		return $count > 1? ($is_x? 'x': 's'): '';
+	}
+
 	/**
 	 * Generation
 	 */

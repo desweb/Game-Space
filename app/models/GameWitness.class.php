@@ -30,6 +30,16 @@ class GameWitness extends Eloquent
 		return self::where('state', self::STATE_WAITING);
 	}
 
+	public static function research($research)
+	{
+		$witnesses = self::where('message', 'like', '%' . $research . '%')->get();
+
+		foreach ($witnesses as $witness)
+			$witness->message = Tools::stringBold($research, $witness->message);
+
+		return $witnesses;
+	}
+
 	/**
 	 * Specify
 	 */

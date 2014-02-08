@@ -109,6 +109,27 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 		return $users;
 	}
 
+	public static function adminResearch($research)
+	{
+		$users = self::where('type', self::TYPE_ADMINISTRATOR)
+					->where(function($q) use ($research)
+					{
+						$q->where('reference',		'like', '%' . $research . '%')
+							->orWhere('username',	'like', '%' . $research . '%')
+							->orWhere('email',		'like', '%' . $research . '%');
+					})
+					->get();
+
+		foreach ($users as $user)
+		{
+			$user->reference= Tools::stringBold($research, $user->reference);
+			$user->username	= Tools::stringBold($research, $user->username);
+			$user->email	= Tools::stringBold($research, $user->email);
+		}
+
+		return $users;
+	}
+
 	/**
 	 * Specify
 	 */
@@ -439,7 +460,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 	public function displayUsername()
 	{
-		return '<a href="' . route('admin_user_edit', array('id' => $this->id)) . '" title="Editer l\'utilisateur ' . $this->username . '" data-toggle="tooltip">' . $this->username . '</a>';
+		return '<a href="' . route('admin_user_edit', array('id' => $this->id)) . '" title="Editer l\'utilisateur ' . Tools::stringBoldRemove($this->username) . '" data-toggle="tooltip">' . $this->username . '</a>';
 	}
 
 	public function displayStateLabel()

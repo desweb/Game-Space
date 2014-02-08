@@ -29,6 +29,26 @@ class Game extends Eloquent
 					->get();
 	}
 
+	public static function research($research)
+	{
+		$games = self::where(function($q) use ($research)
+					{
+						$q->where('reference',		'like', '%' . $research . '%')
+							->orWhere('title',		'like', '%' . $research . '%')
+							->orWhere('description','like', '%' . $research . '%');
+					})
+					->get();
+
+		foreach ($games as $game)
+		{
+			$game->reference	= Tools::stringBold($research, $game->reference);
+			$game->title		= Tools::stringBold($research, $game->title);
+			$game->description	= Tools::stringBold($research, $game->description);
+		}
+
+		return $games;
+	}
+
 	/**
 	 * Specify
 	 */

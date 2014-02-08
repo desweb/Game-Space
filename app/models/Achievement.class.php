@@ -26,6 +26,26 @@ class Achievement extends Eloquent
 		return self::orderBy('created_at', 'desc')->get();
 	}
 
+	public static function research($research)
+	{
+		$achievements = self::where(function($q) use ($research)
+					{
+						$q->where('reference',		'like', '%' . $research . '%')
+							->orWhere('title',		'like', '%' . $research . '%')
+							->orWhere('description','like', '%' . $research . '%');
+					})
+					->get();
+
+		foreach ($achievements as $achievement)
+		{
+			$achievement->reference		= Tools::stringBold($research, $achievement->reference);
+			$achievement->title			= Tools::stringBold($research, $achievement->title);
+			$achievement->description	= Tools::stringBold($research, $achievement->description);
+		}
+
+		return $achievements;
+	}
+
 	/**
 	 * Specify
 	 */

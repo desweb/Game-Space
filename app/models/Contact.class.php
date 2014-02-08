@@ -36,6 +36,26 @@ class Contact extends Eloquent
 		return self::where('state', self::STATE_WAITING);
 	}
 
+	public static function research($research)
+	{
+		$contacts = self::where(function($q) use ($research)
+					{
+						$q->where('username',	'like', '%' . $research . '%')
+							->orWhere('email',	'like', '%' . $research . '%')
+							->orWhere('message','like', '%' . $research . '%');
+					})
+					->get();
+
+		foreach ($contacts as $contact)
+		{
+			$contact->username	= Tools::stringBold($research, $contact->username);
+			$contact->email		= Tools::stringBold($research, $contact->email);
+			$contact->message	= Tools::stringBold($research, $contact->message);
+		}
+
+		return $contacts;
+	}
+
 	/**
 	 * Specify
 	 */

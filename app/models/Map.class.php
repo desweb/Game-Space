@@ -17,6 +17,24 @@ class Map extends Eloquent
 		return self::orderBy('created_at', 'desc')->get();
 	}
 
+	public static function research($research)
+	{
+		$maps = self::where(function($q) use ($research)
+					{
+						$q->where('title',			'like', '%' . $research . '%')
+							->orWhere('description','like', '%' . $research . '%');
+					})
+					->get();
+
+		foreach ($maps as $map)
+		{
+			$map->title			= Tools::stringBold($research, $map->title);
+			$map->description	= Tools::stringBold($research, $map->description);
+		}
+
+		return $maps;
+	}
+
 	/**
 	 * Specify
 	 */
