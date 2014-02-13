@@ -1,6 +1,5 @@
 function Message()
 {
-	var CONTAINER_DIV_ID= 'message-container';
 	var CONTENT_DIV_ID	= 'message-content';
 	var MESSAGE_DIV_ID	= 'message';
 
@@ -28,7 +27,12 @@ function Message()
 
 	function display(content)
 	{
-		if (!$('#' + CONTAINER_DIV_ID).length) $('body').prepend('<div id="' + CONTAINER_DIV_ID + '"><div id="' + CONTENT_DIV_ID + '"></div></div>');
+		if (!$('#' + CONTENT_DIV_ID).length)
+		{
+			$('body').prepend('<div id="' + CONTENT_DIV_ID + '"></div>');
+
+			$('#' + CONTENT_DIV_ID).css('left', ($(window).width() - 400) / 2);
+		}
 
 		var message_id = MESSAGE_DIV_ID + '-' + new Date().getTime();
 
@@ -47,7 +51,7 @@ function Message()
 					clearTimeout(timeout);
 					timeout = null;
 
-					if ($('#' + CONTENT_DIV_ID).html() == '') $('#' + CONTAINER_DIV_ID).remove();
+					if ($('#' + CONTENT_DIV_ID).html() == '') $('#' + CONTENT_DIV_ID).remove();
 				});
 			}, DISPLAY_TIME);
 		});
