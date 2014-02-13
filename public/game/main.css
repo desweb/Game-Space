@@ -8,6 +8,8 @@
 
 #user-popup #delete-link { padding:5px 10px; background-color:red; border-radius:3px; display:inline-block; }
 
+#story-popup p { padding:5px; }
+
 /**
  * Form
  */
