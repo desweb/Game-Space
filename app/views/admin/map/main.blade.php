@@ -28,7 +28,9 @@
     {{ HTML::script('admin/main-map/GameState.js') }}
 
     {{ HTML::script('admin/main-map/game/Game.js') }}
-    {{ HTML::script('admin/main-map/game/Map.js') }}
+    {{ HTML::script('admin/main-map/game/map/Map.js') }}
+    {{ HTML::script('admin/main-map/game/map/Level.js') }}
+    {{ HTML::script('admin/main-map/game/map/MiniGame.js') }}
 
     <script>
 
@@ -61,7 +63,7 @@
 
 <div id="tool-bar" class="interface">
     <div class="right">
-        <div id="save-button" class="button">Sauvegarder</div>
+        <button id="save-button">Sauvegarder</button>
     </div>
 </div>
 

@@ -15,6 +15,8 @@
     {{ HTML::script('global/js/libs/is-mobile.js') }}
     {{ HTML::script('global/js/libs/phaser.min.js') }}
 
+    {{ HTML::script('global/js/main.js') }}
+
     {{ HTML::script('global/js/classes/Console.js') }}
     {{ HTML::script('global/js/classes/Font.js') }}
     {{ HTML::script('global/js/classes/Interface.js') }}

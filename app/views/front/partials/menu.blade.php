@@ -15,7 +15,7 @@ $(function()
 {
 	$('#user-button').click(function()
 	{
-		Interface.showPopup('auth-popup');
+		Interface.showPopup((User.isConnected()? 'user': 'auth') + '-popup');
 	});
 
 	$('#menu-button').click(function()
@@ -49,13 +49,13 @@ $(function()
 
 	$('#fullscreen-button').click(function()
 	{
-		if (!_game) return false;
+		if (!GameState.phaser()) return false;
 
-		_game.getGame().stage.scale.startFullScreen();
+		GameState.phaser().stage.scale.startFullScreen();
 
-		_game.getGame().stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-		_game.getGame().stage.scale.setShowAll();
-		_game.getGame().stage.scale.refresh();
+		GameState.phaser().stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+		GameState.phaser().stage.scale.setShowAll();
+		GameState.phaser().stage.scale.refresh();
 	});
 });
 </script>

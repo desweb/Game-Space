@@ -3,7 +3,6 @@ composer.lock
 Thumbs.db
 sftp-config.json
 /bootstrap/compiled.php
-/bootstrap/start.php
 /app/config/app.php
 /app/config/database.php
 /public/admin/assets/*
