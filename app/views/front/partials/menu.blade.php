@@ -1,5 +1,5 @@
 <button id="user-button" class="interface">User</button>
-<button id="menu-button" class="interface">Menu</button>
+<button id="menu-button" class="interface"></button>
 
 <div id="menu" class="interface">
 	<h1>GameSpace</h1>
