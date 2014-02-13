@@ -58,12 +58,15 @@ function Interface()
 	{
 		var is_complete = false;
 
+		if (GameState.game()) GameState.game().setIsStop(true);
+
 		$('#mask').fadeIn();
 		$('#' + id).fadeIn(function()
 		{
 			if (is_complete || !complete) return;
 
 			complete();
+
 			is_complete = true;
 		});
 	};
@@ -75,10 +78,13 @@ function Interface()
 		$('#mask').fadeOut();
 		$('.popup').fadeOut(function()
 		{
-			if (is_complete || !complete) return;
+			if (is_complete) return;
 
-			complete();
+			if (complete) complete();
+
 			is_complete = true;
+
+			if (GameState.game()) GameState.game().setIsStop(false);
 		});
 	};
 

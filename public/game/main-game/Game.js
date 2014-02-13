@@ -6,6 +6,8 @@ MainGame.Game = function()
 
 	var _id;
 
+	var _is_stop = false;
+
 	// Game
 	var _game;
 
@@ -166,24 +168,12 @@ MainGame.Game = function()
 
 	function update()
 	{
+		if (_is_stop) return;
+
 		_map	.update();
 		_player	.update();
 
 		for (var i in _dragons) _dragons[i].update();
-
-		// Main game
-		/*for (var i in _level_sprites)
-		{
-			_level_texts[i].x = _level_sprites[i].x;
-			_level_texts[i].y = _level_sprites[i].y;
-		}
-
-		// Minis games
-		for (var i in _game_sprites)
-		{
-			_game_texts[i].x = _game_sprites[i].x;
-			_game_texts[i].y = _game_sprites[i].y;
-		}*/
 
 		// Create dragons
 		if (_game.time.now > _dragon_next_time)
@@ -228,5 +218,14 @@ MainGame.Game = function()
 	this.getDragon = function(i)
 	{
 		return _dragons[i];
+	};
+
+	/**
+	 * Getters
+	 */
+
+	this.setIsStop = function(is_stop)
+	{
+		_is_stop = is_stop;
 	};
 };
