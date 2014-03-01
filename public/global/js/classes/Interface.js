@@ -51,6 +51,15 @@ function Interface()
 	};
 
 	/**
+	 * Game
+	 */
+
+	this.destroyGame = function(complete)
+	{
+		$('#' + _game_id).remove();
+	};
+
+	/**
 	 * Popup
 	 */
 

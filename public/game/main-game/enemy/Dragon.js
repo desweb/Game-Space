@@ -1,6 +1,6 @@
-MainGame.Dragon = function()
+MainGame.Enemy.Dragon = function()
 {
-	Console.trace('MainGame.Dragon', 'constructor');
+	Console.trace('MainGame.Enemy.Dragon', 'constructor');
 
 	var _sprite;
 
@@ -16,12 +16,11 @@ MainGame.Dragon = function()
 
 	function create()
 	{
-		Console.trace('MainGame.Dragon', 'create');
+		Console.trace('MainGame.Enemy.Dragon', 'create');
 
 		// Sprite
 		_sprite = GameState.phaser().add.sprite(GameState.phaser().world.randomX, GameState.phaser().world.randomY, 'dragon');
 		_sprite.anchor.setTo(.5, .5);
-		_sprite.scale.setTo(.2, .2);
 
 		_sprite.body.immovable = true;
 
@@ -34,16 +33,16 @@ MainGame.Dragon = function()
 	 * Destroy
 	 */
 
-	function destroy()
+	this.destroy = function()
 	{
 		if (_is_destroy) return;
 
-		Console.trace('MainGame.Dragon', 'destroy');
+		Console.trace('MainGame.Enemy.Dragon', 'destroy');
 
 		_is_destroy = true;
 
 		Tools.destroySprite(_sprite);
-	}
+	};
 
 	/**
 	 * Update
@@ -53,7 +52,7 @@ MainGame.Dragon = function()
 	{
 		if (_sprite.x < -50 || _sprite.x > GameState.phaser().world.width || 
 			_sprite.y < -50 || _sprite.y > GameState.phaser().world.height)
-			destroy();
+			this.destroy();
 	};
 
 	/**
@@ -73,6 +72,6 @@ MainGame.Dragon = function()
 	{
 		_life--;
 
-		if (_life <= 0) destroy();
+		if (_life <= 0) this.destroy();
 	};
 };

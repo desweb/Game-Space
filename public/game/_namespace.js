@@ -1,3 +1,7 @@
-var Validator	= {};
-var MainGame	= {};
-MainGame.Player	= {};
+var Validator = {};
+
+var MainGame = {
+	Map		: {},
+	Player	: {},
+	Enemy	: {}
+};

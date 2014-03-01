@@ -35,10 +35,12 @@
     {{ HTML::script('game/validators/ContactValidator.js') }}
 
     {{ HTML::script('game/main-game/Game.js') }}
-    {{ HTML::script('game/main-game/Map.js') }}
-    {{ HTML::script('game/main-game/Dragon.js') }}
+    {{ HTML::script('game/main-game/map/Map.js') }}
+    {{ HTML::script('game/main-game/map/Level.js') }}
+    {{ HTML::script('game/main-game/map/MiniGame.js') }}
     {{ HTML::script('game/main-game/player/Player.js') }}
     {{ HTML::script('game/main-game/player/Fires.js') }}
+    {{ HTML::script('game/main-game/enemy/Dragon.js') }}
 
     <script>
 
@@ -49,10 +51,10 @@
         Common.main_game = {
             id      : {{ $game_main->id }},
             images  : {
-                map         : '{{ asset('images/main-game/map.png') }}',
-                level       : '{{ asset('images/main-game/level.png') }}',
-                mini_game   : '{{ asset('images/main-game/mini-game.png') }}',
-                dragon      : '{{ asset('images/main-game/dragon.png') }}',
+                map         : '{{ asset('images/main-game/map/map.png') }}',
+                level       : '{{ asset('images/main-game/map/level.png') }}',
+                mini_game   : '{{ asset('images/main-game/map/mini-game.png') }}',
+                dragon      : '{{ asset('images/main-game/enemy/dragon.png') }}',
                 player      : {
                     player  : '{{ asset('images/main-game/player/player.png') }}',
                     fire    : '{{ asset('images/main-game/player/fire.png') }}'

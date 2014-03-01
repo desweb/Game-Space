@@ -29,7 +29,7 @@ MainGame.Player.Fires = function()
 	 * Destroy
 	 */
 
-	function destroy()
+	this.destroy = function()
 	{
 		Console.trace('MainGame.Player.Fires', 'destroy');
 
@@ -39,7 +39,7 @@ MainGame.Player.Fires = function()
 
 		_rate_time = null;
 		_next_time = null;
-	}
+	};
 
 	/**
 	 * Update
@@ -47,8 +47,6 @@ MainGame.Player.Fires = function()
 
 	this.update = function()
 	{
-		if (GameState.cursor().isSpaceBarDown()) fire();
-
 		for (var i in GameState.game().getDragons())
 		{
 			if (!GameState.game().getDragon(i).getSprite().alive) continue;
@@ -61,7 +59,7 @@ MainGame.Player.Fires = function()
 	 * Functionnalities
 	 */
 
-	function fire()
+	this.fire = function()
 	{
 		if (GameState.phaser().time.now < _next_time || _group.countDead() < 0) return;
 
@@ -72,7 +70,7 @@ MainGame.Player.Fires = function()
 		fire.reset(GameState.player().getSprite().x, GameState.player().getSprite().y);
 
 		fire.rotation = GameState.phaser().physics.moveToPointer(fire, 1000);
-	}
+	};
 
 	function hitDragon(dragon, fire)
 	{

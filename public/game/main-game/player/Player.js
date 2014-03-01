@@ -21,7 +21,6 @@ MainGame.Player.Player = function()
 		// Sprite
 		_sprite = GameState.phaser().add.sprite(0, 0, 'player');
 		_sprite.anchor.setTo(.5, .5);
-		_sprite.scale.setTo(.3, .3);
 
 		// Fires
 	    _fires = new MainGame.Player.Fires;
@@ -31,7 +30,7 @@ MainGame.Player.Player = function()
 	 * Destroy
 	 */
 
-	function destroy()
+	this.destroy = function()
 	{
 		Console.trace('MainGame.Player.Player', 'destroy');
 
@@ -41,7 +40,7 @@ MainGame.Player.Player = function()
 		_old_position = null;
 
 		Tools.destroySprite(_sprite);
-	}
+	};
 
 	/**
 	 * Update
@@ -50,7 +49,7 @@ MainGame.Player.Player = function()
 	this.update = function()
 	{
 		_sprite.x = GameState.phaser().camera.x + GameState.phaser().camera.width	/2;
-		_sprite.y = GameState.phaser().camera.y + GameState.phaser().camera.height/2;
+		_sprite.y = GameState.phaser().camera.y + GameState.phaser().camera.height	/2;
 
 		orientation();
 
@@ -69,6 +68,11 @@ MainGame.Player.Player = function()
 	/**
 	 * Functionnalities
 	 */
+
+	this.fire = function()
+	{
+		_fires.fire();
+	};
 
 	function orientation()
 	{

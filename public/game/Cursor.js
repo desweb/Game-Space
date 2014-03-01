@@ -1,6 +1,32 @@
 function Cursor()
 {
-	var _cursors = GameState.phaser().input.keyboard.createCursorKeys();
+	Console.trace('Cursor', 'constructor');
+
+	var _cursors;
+
+	create();
+
+	/**
+	 * Create
+	 */
+
+	function create()
+	{
+		Console.trace('Cursor', 'create');
+
+		_cursors = GameState.phaser().input.keyboard.createCursorKeys();
+	}
+
+	/**
+	 * Destroy
+	 */
+
+	this.destroy = function()
+	{
+		Console.trace('Cursor', 'destroy');
+
+		_cursors = null;
+	};
 
 	/**
 	 * Getters

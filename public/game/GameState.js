@@ -11,12 +11,26 @@ function GameState()
 		_game = new MainGame.Game;
 	};
 
+	this.launchLevelMainGame = function(id)
+	{
+		Interface.loading();
+
+		_destroyGame();
+
+		//_game = new MainGame.Game;
+	};
+
 	function _destroyGame()
 	{
 		if (!_game) return;
 
-		_game.destroy();
-		_game = null;
+		Interface.hide(function()
+		{
+			_game.destroy();
+			_game = null;
+
+			Interface.destroyGame();
+		});
 	}
 
 	this.game	= function() { return _game; };

@@ -78,23 +78,13 @@ MainGame.Game = function()
 		_cursor = new Cursor;
 
 		// Map
-		_map = new MainGame.Map;
+		_map = new MainGame.Map.Map;
 
 		// Main game
-		for (var i in Common.main_game.levels)
-		{
-			_level_sprites[i] = _game.add.sprite(Common.main_game.levels[i].pos.x, Common.main_game.levels[i].pos.y, 'level');
-			_level_sprites[i].anchor.setTo(.5, .5);
-			_level_sprites[i].scale.setTo(.1, .1);
-		}
+		for (var i in Common.main_game.levels) _level_sprites[i] = new MainGame.Map.Level(i);
 
 		// Minis games
-		for (var i in Common.main_game.mini_games)
-		{
-			_game_sprites[i] = _game.add.sprite(Common.main_game.mini_games[i].datas.pos.x, Common.main_game.mini_games[i].datas.pos.y, 'mini-game');
-			_game_sprites[i].anchor.setTo(.5, .5);
-			_game_sprites[i].scale.setTo(.1, .1);
-		}
+		for (var i in Common.main_game.mini_games) _game_sprites[i] = new MainGame.Map.MiniGame(i);
 
 		// Player
 		_player = new MainGame.Player.Player;
@@ -129,7 +119,7 @@ MainGame.Game = function()
 		// Main game
 		for (var i in _level_sprites)
 		{
-			Tools.destroySprite(_level_sprites[i])
+			_level_sprites[i].destroy();
 			_level_sprites[i] = null;
 		}
 		_level_sprites = null;
@@ -137,7 +127,7 @@ MainGame.Game = function()
 		// Minis games
 		for (var i in _game_sprites)
 		{
-			Tools.destroySprite(_game_sprites[i]);
+			_game_sprites[i].destroy();
 			_game_sprites[i] = null;
 		}
 		_game_sprites = null;
@@ -148,7 +138,7 @@ MainGame.Game = function()
 		// Dragons
 		for (var i in _dragons)
 		{
-			Tools.destroySprite(_dragons[i])
+			_dragons[i].destroy();
 			_dragons[i] = null;
 		}
 		_dragons = null;
@@ -157,7 +147,6 @@ MainGame.Game = function()
 		_id = null;
 
 		// Game
-		_game.removeAll();
 		_game.destroy();
 		_game = null;
 	};
@@ -170,15 +159,14 @@ MainGame.Game = function()
 	{
 		if (_is_stop) return;
 
-		_map	.update();
-		_player	.update();
+		_player.update();
 
 		for (var i in _dragons) _dragons[i].update();
 
 		// Create dragons
 		if (_game.time.now > _dragon_next_time)
 		{
-			_dragons[_dragons.length] = new MainGame.Dragon;
+			_dragons[_dragons.length] = new MainGame.Enemy.Dragon;
 
 			_dragon_next_time = _game.time.now + _dragon_rate_time;
 		}
@@ -221,7 +209,7 @@ MainGame.Game = function()
 	};
 
 	/**
-	 * Getters
+	 * Setters
 	 */
 
 	this.setIsStop = function(is_stop)
