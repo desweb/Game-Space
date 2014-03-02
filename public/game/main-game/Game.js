@@ -1,18 +1,13 @@
-MainGame.Game = function()
+MainGame.Game = function(is_first)
 {
 	Console.trace('MainGame.Game', 'constructor');
 
 	var CAMERA_SPEED = 20;
 
-	var _id;
+	var _is_first = is_first;
 
-	var _is_stop = false;
-
-	// Game
-	var _game;
-
-	// Cursor : Mouse, Keyboard, touch
-	var _cursor;
+	var _is_stop	= false;
+	var _is_destroy	= false;
 
 	// Map
 	var _map;
@@ -32,34 +27,7 @@ MainGame.Game = function()
 	// Minis games
 	var _game_sprites = new Array;
 
-	launch();
-
-	/**
-	 * Launch
-	 */
-
-	function launch()
-	{
-		Console.trace('MainGame.Game', 'launch');
-
-		_game = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
-	};
-
-	/**
-	 * Loading
-	 */
-
-	function preload()
-	{
-		Console.trace('MainGame.Game', 'preload');
-
-		_game.load.image('map',			Common.main_game.images.map);
-		_game.load.image('level',		Common.main_game.images.level);
-		_game.load.image('mini-game',	Common.main_game.images.mini_game);
-		_game.load.image('dragon',		Common.main_game.images.dragon);
-		_game.load.image('player',		Common.main_game.images.player.player);
-		_game.load.image('player-fire',	Common.main_game.images.player.fire);
-	}
+	create();
 
 	/**
 	 * Creation
@@ -69,13 +37,8 @@ MainGame.Game = function()
 	{
 		Console.trace('MainGame.Game', 'create');
 
-		_game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-
 		// World
-		_game.world.setBounds(0, 0, 4000, 4000);
-
-		// Cursor
-		_cursor = new Cursor;
+		GameState.phaser().world.setBounds(0, 0, 4000, 4000);
 
 		// Map
 		_map = new MainGame.Map.Map;
@@ -92,11 +55,11 @@ MainGame.Game = function()
 		// Display game
 		Interface.show(false, function()
 		{
-			Message.info('Bienvenue dans la GameSpace.');
+			if (_is_first) Message.info('Bienvenue dans la GameSpace.');
 
 			setTimeout(function()
 			{
-				Message.info('Appuis sur la barre d\'espace pour tirer.');
+				Message.info('Sers toi des flèches pour te déplacer et du clic droit pour tirer.');
 			}, 1000);
 		});
 	}
@@ -107,14 +70,11 @@ MainGame.Game = function()
 
 	this.destroy = function()
 	{
+		if (_is_destroy) return;
+
 		Console.trace('MainGame.Game', 'destroy');
 
-		// Cursor
-		_cursor.destroy();
-		_cursor = null;
-
-		// Map
-		_map.destroy();
+		_is_destroy = true;
 
 		// Main game
 		for (var i in _level_sprites)
@@ -138,60 +98,52 @@ MainGame.Game = function()
 		// Dragons
 		for (var i in _dragons)
 		{
+			if (!_dragons[i]) continue;
+
 			_dragons[i].destroy();
 			_dragons[i] = null;
 		}
 		_dragons = null;
 
-		// Datas
-		_id = null;
-
-		// Game
-		_game.destroy();
-		_game = null;
+		// Map
+		_map.destroy();
 	};
 
 	/**
 	 * Update
 	 */
 
-	function update()
+	//function update()
+	this.update = function()
 	{
-		if (_is_stop) return;
+		if (_is_stop || _is_destroy) return;
 
 		_player.update();
 
-		for (var i in _dragons) _dragons[i].update();
+		for (var i in _dragons)
+		{
+			if (_dragons[i]) _dragons[i].update();
+		}
 
 		// Create dragons
-		if (_game.time.now > _dragon_next_time)
+		if (GameState.phaser().time.now > _dragon_next_time)
 		{
-			_dragons[_dragons.length] = new MainGame.Enemy.Dragon;
+			_dragons[_dragons.length] = new MainGame.Enemy.Dragon(_dragons.length);
 
-			_dragon_next_time = _game.time.now + _dragon_rate_time;
+			_dragon_next_time = GameState.phaser().time.now + _dragon_rate_time;
 		}
 
 		// Move camera
-		if		(_cursor.isTopDown())	_game.camera.y -= CAMERA_SPEED;
-		else if	(_cursor.isBottomDown())_game.camera.y += CAMERA_SPEED;
+		if		(GameState.cursor().isTopDown())	GameState.phaser().camera.y -= CAMERA_SPEED;
+		else if	(GameState.cursor().isBottomDown()) GameState.phaser().camera.y += CAMERA_SPEED;
 
-		if		(_cursor.isLeftDown())	_game.camera.x -= CAMERA_SPEED;
-		else if (_cursor.isRightDown())	_game.camera.x += CAMERA_SPEED;
-	}
+		if		(GameState.cursor().isLeftDown())	GameState.phaser().camera.x -= CAMERA_SPEED;
+		else if (GameState.cursor().isRightDown())	GameState.phaser().camera.x += CAMERA_SPEED;
+	};
 
 	/**
 	 * Getters
 	 */
-
-	this.getGame = function()
-	{
-		return _game;
-	};
-
-	this.getCursor = function()
-	{
-		return _cursor;
-	};
 
 	this.getPlayer = function()
 	{
@@ -215,5 +167,14 @@ MainGame.Game = function()
 	this.setIsStop = function(is_stop)
 	{
 		_is_stop = is_stop;
+	};
+
+	/**
+	 * Functionnalities
+	 */
+
+	this.killDragonArray = function(i)
+	{
+		_dragons[i] = null;
 	};
 };

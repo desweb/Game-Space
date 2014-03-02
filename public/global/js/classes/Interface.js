@@ -12,7 +12,6 @@ function Interface()
 	this.loading = function(complete)
 	{
 		$('body').prepend('<div id="' + _loading_id + '"><p>' + this.getLoader() + '</p></div>');
-		$('body').append('<div id="' + _game_id + '" class="' + _interface_class + '"></div>');
 
 		$('#' + _loading_id).fadeIn(function()
 		{
@@ -51,15 +50,6 @@ function Interface()
 	};
 
 	/**
-	 * Game
-	 */
-
-	this.destroyGame = function(complete)
-	{
-		$('#' + _game_id).remove();
-	};
-
-	/**
 	 * Popup
 	 */
 
@@ -94,6 +84,23 @@ function Interface()
 			is_complete = true;
 
 			if (GameState.game()) GameState.game().setIsStop(false);
+		});
+	};
+
+	/**
+	 * Game
+	 */
+
+	this.showGame = function(complete)
+	{
+		$('#' + _loading_id).fadeOut(function()
+		{
+			$('#' + _loading_id).remove();
+		});
+
+		$('#' + _game_id).fadeIn(function()
+		{
+			complete();
 		});
 	};
 

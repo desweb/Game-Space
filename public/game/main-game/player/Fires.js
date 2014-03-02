@@ -49,7 +49,7 @@ MainGame.Player.Fires = function()
 	{
 		for (var i in GameState.game().getDragons())
 		{
-			if (!GameState.game().getDragon(i).getSprite().alive) continue;
+			if (!GameState.game().getDragon(i)) continue;
 
 			GameState.phaser().physics.collide(_group, GameState.game().getDragon(i).getSprite(), hitDragon, null, this);
 		}

@@ -42,6 +42,8 @@
     {{ HTML::script('game/main-game/player/Fires.js') }}
     {{ HTML::script('game/main-game/enemy/Dragon.js') }}
 
+    {{ HTML::script('game/level-main-game/Game.js') }}
+
     <script>
 
         /**
@@ -92,16 +94,7 @@
 
 @include('front.partials.menu')
 
-<script>
-$(function()
-{
-    /**
-     * Launch
-     */
-
-    GameState.launchMainGame();
-});
-</script>
+<div id="game" class="interface"></div>
 
 @include('front.universal-analytics')
 </body>

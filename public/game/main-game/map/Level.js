@@ -23,6 +23,7 @@ MainGame.Map.Level = function(id)
 		_sprite.events.onInputOver	.add(over,	this);
 		_sprite.events.onInputOut	.add(out,	this);
 		_sprite.events.onInputDown	.add(down,	this);
+		_sprite.events.onInputUp	.add(up,	this);
 	}
 
 	/**
@@ -53,6 +54,11 @@ MainGame.Map.Level = function(id)
 	}
 
 	function down()
+	{
+		//GameState.launchLevelMainGame(_id);
+	}
+
+	function up()
 	{
 		GameState.launchLevelMainGame(_id);
 	}

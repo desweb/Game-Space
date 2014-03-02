@@ -5,3 +5,7 @@ var MainGame = {
 	Player	: {},
 	Enemy	: {}
 };
+
+var LevelMainGame = {
+
+};

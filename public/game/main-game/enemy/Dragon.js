@@ -1,6 +1,8 @@
-MainGame.Enemy.Dragon = function()
+MainGame.Enemy.Dragon = function(id)
 {
 	Console.trace('MainGame.Enemy.Dragon', 'constructor');
+
+	var _id = id;
 
 	var _sprite;
 
@@ -33,7 +35,9 @@ MainGame.Enemy.Dragon = function()
 	 * Destroy
 	 */
 
-	this.destroy = function()
+	this.destroy = function() { _destroy(); };
+
+	function _destroy()
 	{
 		if (_is_destroy) return;
 
@@ -42,7 +46,7 @@ MainGame.Enemy.Dragon = function()
 		_is_destroy = true;
 
 		Tools.destroySprite(_sprite);
-	};
+	}
 
 	/**
 	 * Update
@@ -72,6 +76,9 @@ MainGame.Enemy.Dragon = function()
 	{
 		_life--;
 
-		if (_life <= 0) this.destroy();
+		if (_life) return;
+
+		_destroy();
+		GameState.game().killDragonArray(_id);
 	};
 };

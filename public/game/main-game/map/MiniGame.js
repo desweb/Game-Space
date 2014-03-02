@@ -20,7 +20,10 @@ MainGame.Map.MiniGame = function(id)
 		_sprite.anchor.setTo(.5, .5);
 
 		_sprite.inputEnabled = true;
-		_sprite.events.onInputDown.add(listener, this);
+		_sprite.events.onInputOver	.add(over,	this);
+		_sprite.events.onInputOut	.add(out,	this);
+		_sprite.events.onInputDown	.add(down,	this);
+		_sprite.events.onInputUp	.add(up,	this);
 	}
 
 	/**
@@ -40,9 +43,23 @@ MainGame.Map.MiniGame = function(id)
 	 * Events
 	 */
 
-	function listener(e)
+	function over()
 	{
-		Console.log('MainGame.Map.MiniGame');
+		_sprite.scale.setTo(1.1, 1.1);
 	}
 
+	function out()
+	{
+		_sprite.scale.setTo(1, 1);
+	}
+
+	function down()
+	{
+		//GameState.launchLevelMainGame(_id);
+	}
+
+	function up()
+	{
+		GameState.launchLevelMainGame(_id);
+	}
 };
