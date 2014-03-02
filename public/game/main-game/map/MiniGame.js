@@ -18,11 +18,11 @@ MainGame.Map.MiniGame = function(id)
 
 		_sprite = GameState.phaser().add.sprite(Common.main_game.mini_games[_id].datas.pos.x, Common.main_game.mini_games[_id].datas.pos.y, 'mini-game');
 		_sprite.anchor.setTo(.5, .5);
+		_sprite.alpha = .5;
 
 		_sprite.inputEnabled = true;
 		_sprite.events.onInputOver	.add(over,	this);
 		_sprite.events.onInputOut	.add(out,	this);
-		_sprite.events.onInputDown	.add(down,	this);
 		_sprite.events.onInputUp	.add(up,	this);
 	}
 
@@ -45,17 +45,14 @@ MainGame.Map.MiniGame = function(id)
 
 	function over()
 	{
-		_sprite.scale.setTo(1.1, 1.1);
+		GameState.phaser().add.tween(_sprite.scale)	.to({ x : 1.2 , y : 1.2 },	1000, Phaser.Easing.Bounce.Out, true, 0, false);
+		GameState.phaser().add.tween(_sprite)		.to({ alpha : 1 },			1000, Phaser.Easing.Bounce.Out, true, 0, false);
 	}
 
 	function out()
 	{
-		_sprite.scale.setTo(1, 1);
-	}
-
-	function down()
-	{
-		//GameState.launchLevelMainGame(_id);
+		GameState.phaser().add.tween(_sprite.scale)	.to({ x : 1 , y : 1 },	1000, Phaser.Easing.Bounce.Out, true, 0, false);
+		GameState.phaser().add.tween(_sprite)		.to({ alpha : .5 },		1000, Phaser.Easing.Bounce.Out, true, 0, false);
 	}
 
 	function up()

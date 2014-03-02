@@ -2,9 +2,18 @@ function GameState()
 {
 	Console.trace('GameState', 'constructor');
 
-	var _phaser = new Phaser.Game($(window).width(), $(window).height(), Phaser.CANVAS, Interface.getGameId(), { preload:preload, create:create, update:update });
+	var _main_phaser = new Phaser.Game($(window).width(),	$(window).height(),	Phaser.CANVAS, Interface.getMainId(), { preload:mainPreload, create:mainCreate, update:mainUpdate });
+	var _game_phaser = new Phaser.Game(800,					600,				Phaser.CANVAS, Interface.getGameId(), { preload:gamePreload, create:gameCreate, update:gameUpdate });
 
-	var _cursor;
+	var _main_cursor;
+	var _game_cursor;
+
+	var _is_main		= false;
+	var _is_game		= false;
+	var _is_main_load	= false;
+	var _is_game_load	= false;
+
+	var _is_stop = false;
 
 	var _game;
 
@@ -12,27 +21,57 @@ function GameState()
 	 * Preload
 	 */
 
-	function preload()
+	function mainPreload()
 	{
 		Console.trace('MainGame.Game', 'preload');
 
-		_phaser.load.image('map',			Common.main_game.images.map);
-		_phaser.load.image('level',			Common.main_game.images.level);
-		_phaser.load.image('mini-game',		Common.main_game.images.mini_game);
-		_phaser.load.image('dragon',		Common.main_game.images.dragon);
-		_phaser.load.image('player',		Common.main_game.images.player.player);
-		_phaser.load.image('player-fire',	Common.main_game.images.player.fire);
+		_main_phaser.load.image('map',			Common.main_game.images.map);
+		_main_phaser.load.image('level',		Common.main_game.images.level);
+		_main_phaser.load.image('mini-game',	Common.main_game.images.mini_game);
+		_main_phaser.load.image('dragon',		Common.main_game.images.dragon);
+		_main_phaser.load.image('player',		Common.main_game.images.player.player);
+		_main_phaser.load.image('player-fire',	Common.main_game.images.player.fire);
+	}
+
+	function gamePreload()
+	{
+		Console.trace('MainGame.Game', 'preload');
+
+		_game_phaser.load.image('map',		Common.main_game.images.map);
+		_game_phaser.load.image('mini-game',Common.main_game.images.mini_game);
 	}
 
 	/**
 	 * Create
 	 */
 
-	function create()
+	function mainCreate()
 	{
-		_phaser.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+		_main_phaser.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+		_main_phaser.stage.backgroundColor = '#000';
 
-		_cursor = new Cursor;
+		_main_cursor = new Cursor(_main_phaser);
+
+		_is_main_load = true;
+
+		launch();
+	}
+
+	function gameCreate()
+	{
+		_game_phaser.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+		_game_phaser.stage.backgroundColor = '#000';
+
+		_game_cursor = new Cursor(_game_phaser);
+
+		_is_game_load = true;
+
+		launch();
+	}
+
+	function launch()
+	{
+		if (!_is_main_load || !_is_game_load) return;
 
 		_launchMainGame(true);
 	}
@@ -41,9 +80,19 @@ function GameState()
 	 * Update
 	 */
 
+	function mainUpdate()
+	{
+		if (_is_main) update();
+	}
+
+	function gameUpdate()
+	{
+		if (_is_game) update();
+	}
+
 	function update()
 	{
-		if (!_game) return;
+		if (!_game || _is_stop) return;
 
 		_game.update();
 	}
@@ -53,9 +102,15 @@ function GameState()
 	 */
 
 	this.game	= function() { return _game; };
-	this.phaser	= function() { return _phaser; };
+	this.phaser	= function() { return _is_main? _main_phaser: _game_phaser; };
 	this.player	= function() { return _game.getPlayer(); };
-	this.cursor	= function() { return _cursor; };
+	this.cursor	= function() { return _is_main? _main_cursor: _game_cursor; };
+
+	/**
+	 * Setters
+	 */
+
+	this.setIsStop = function(is_stop) { _is_stop = is_stop; };
 
 	/**
 	 * Functionnalities
@@ -67,6 +122,9 @@ function GameState()
 	{
 		_changeGame(function()
 		{
+			_is_game = false;
+			_is_main = true;
+
 			_game = new MainGame.Game(is_first);
 		});
 	}
@@ -75,6 +133,9 @@ function GameState()
 	{
 		_changeGame(function()
 		{
+			_is_main = false;
+			_is_game = true;
+
 			_game = new LevelMainGame.Game;
 		});
 	};
@@ -94,8 +155,10 @@ function GameState()
 			_game.destroy();
 			_game = null;
 
-			_phaser.camera.x = 0;
-			_phaser.camera.y = 0;
+			_main_phaser.camera.x = 0;
+			_main_phaser.camera.y = 0;
+			_game_phaser.camera.x = 0;
+			_game_phaser.camera.y = 0;
 
 			complete();
 		});

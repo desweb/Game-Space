@@ -6,9 +6,6 @@ MainGame.Game = function(is_first)
 
 	var _is_first = is_first;
 
-	var _is_stop	= false;
-	var _is_destroy	= false;
-
 	// Map
 	var _map;
 
@@ -70,11 +67,7 @@ MainGame.Game = function(is_first)
 
 	this.destroy = function()
 	{
-		if (_is_destroy) return;
-
 		Console.trace('MainGame.Game', 'destroy');
-
-		_is_destroy = true;
 
 		// Main game
 		for (var i in _level_sprites)
@@ -116,8 +109,6 @@ MainGame.Game = function(is_first)
 	//function update()
 	this.update = function()
 	{
-		if (_is_stop || _is_destroy) return;
-
 		_player.update();
 
 		for (var i in _dragons)
@@ -158,15 +149,6 @@ MainGame.Game = function(is_first)
 	this.getDragon = function(i)
 	{
 		return _dragons[i];
-	};
-
-	/**
-	 * Setters
-	 */
-
-	this.setIsStop = function(is_stop)
-	{
-		_is_stop = is_stop;
 	};
 
 	/**

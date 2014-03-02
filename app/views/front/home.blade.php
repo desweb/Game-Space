@@ -94,7 +94,8 @@
 
 @include('front.partials.menu')
 
-<div id="game" class="interface"></div>
+<div id="main" class="interface"></div>
+<div id="game"></div>
 
 @include('front.universal-analytics')
 </body>

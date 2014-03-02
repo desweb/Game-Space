@@ -1,5 +1,9 @@
 /* Z-index order */
 
+#main { z-index:1; }
+#game { z-index:2; }
+
+#social-networks-share { z-index:996; }
 #user-button, #menu-button, #menu { z-index:997; }
 
 /**
@@ -37,3 +41,12 @@
 #menu-button{ position:fixed; top:10px; left:10px; width:36px; height:26px; background:url(../global/images/menu-button.png); }
 #menu		{ position:fixed; left:-200px; width:200px; height:100%; background-color:black; color:white; text-align:center; opacity:0; }
 
+/**
+ * Phaser
+ */
+
+#main, #game { position:absolute; width:100%; height:100%; }
+
+#game { display:none; }
+
+#main canvas, #game canvas { margin:auto; }

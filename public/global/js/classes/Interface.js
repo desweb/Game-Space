@@ -3,6 +3,7 @@ function Interface()
 	var _interface_class = 'interface';
 
 	var _loading_id	= 'loading';
+	var _main_id	= 'main';
 	var _game_id	= 'game';
 
 	/**
@@ -21,7 +22,7 @@ function Interface()
 
 	this.show = function(is_scroll, complete)
 	{
-		if (is_scroll) $('#' + _game_id).css('overflow', 'visible');
+		if (is_scroll) $('#' + _main_id).css('overflow', 'visible');
 
 		var is_complete = false;
 
@@ -43,7 +44,8 @@ function Interface()
 	{
 		$('.' + _interface_class).fadeOut();
 
-		$('#' + _game_id).fadeOut(function()
+		$('#' + _game_id).fadeOut();
+		$('#' + _main_id).fadeOut(function()
 		{
 			if (complete) complete();
 		});
@@ -57,7 +59,7 @@ function Interface()
 	{
 		var is_complete = false;
 
-		if (GameState.game()) GameState.game().setIsStop(true);
+		if (GameState.game()) GameState.setIsStop(true);
 
 		$('#mask').fadeIn();
 		$('#' + id).fadeIn(function()
@@ -83,13 +85,26 @@ function Interface()
 
 			is_complete = true;
 
-			if (GameState.game()) GameState.game().setIsStop(false);
+			if (GameState.game()) GameState.setIsStop(false);
 		});
 	};
 
 	/**
-	 * Game
+	 * Phaser
 	 */
+
+	this.showMain = function(complete)
+	{
+		$('#' + _loading_id).fadeOut(function()
+		{
+			$('#' + _loading_id).remove();
+		});
+
+		$('#' + _main_id).fadeIn(function()
+		{
+			complete();
+		});
+	};
 
 	this.showGame = function(complete)
 	{
@@ -108,6 +123,7 @@ function Interface()
 	 * Getters
 	 */
 
+	this.getMainId = function() { return _main_id; };
 	this.getGameId = function() { return _game_id; };
 
 	this.getLoaderMini = function()

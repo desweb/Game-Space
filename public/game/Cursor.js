@@ -1,7 +1,8 @@
-function Cursor()
+function Cursor(phaser)
 {
 	Console.trace('Cursor', 'constructor');
 
+	var _phaser = phaser;
 	var _cursors;
 
 	create();
@@ -14,7 +15,7 @@ function Cursor()
 	{
 		Console.trace('Cursor', 'create');
 
-		_cursors = GameState.phaser().input.keyboard.createCursorKeys();
+		_cursors = _phaser.input.keyboard.createCursorKeys();
 	}
 
 	/**
@@ -34,7 +35,7 @@ function Cursor()
 
 	this.getPointer = function()
 	{
-		return IS_MOBILE? GameState.phaser().input.pointer1: GameState.phaser().input.mousePointer;
+		return IS_MOBILE? _phaser.input.pointer1: _phaser.input.mousePointer;
 	};
 
 	this.getWorldPointer = function()
@@ -48,7 +49,7 @@ function Cursor()
 
 	this.isPointerDown = function()
 	{
-		return IS_MOBILE? GameState.phaser().input.pointer1.isDown: GameState.phaser().input.mousePointer.isDown;
+		return IS_MOBILE? _phaser.input.pointer1.isDown: _phaser.input.mousePointer.isDown;
 	};
 
 	this.isTopDown = function()
@@ -73,6 +74,6 @@ function Cursor()
 
 	this.isSpaceBarDown = function()
 	{
-		return GameState.phaser().input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+		return _phaser.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
 	};
 }
